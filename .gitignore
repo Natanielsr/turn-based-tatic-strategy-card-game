@@ -1,0 +1,51 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Godot import and export folders (auto-generated)
+.import/
+.export/
+
+# Exported builds (adjust based on your export folder)
+bin/
+build/
+dist/
+export/
+
+# Godot local machine-specific config files
+*.tmp
+*.log
+*.cfg
+*.translation
+
+# Godot temporary backup files (auto-saves, temporary scene states)
+*.godot.tmp
+*.godot.import
+
+# Godot cache (for newer versions)
+.cache/
+
+# VS Code settings
+.vscode/
+
+# JetBrains Rider settings
+.idea/
+
+# Mono / C# build files (if using Godot C#)
+mono/
+*.csproj
+*.sln
+*.user
+*.suo
+*.tmp/
+obj/
+bin/
+
+# Generic backup or temporary files
+*.bak
+
