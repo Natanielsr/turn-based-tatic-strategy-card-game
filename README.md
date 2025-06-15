@@ -17,7 +17,7 @@ This is a tactical strategy game where players use cards to perform actions on a
 
 ## 🛠️ Built With:
 
-- **Engine:** [Godot Engine](https://godotengine.org/) (Version 3.x / 4.x)
+- **Engine:** [Godot Engine](https://godotengine.org/) (Version 4.4.1)
 - **Language:** GDScript
 - **Art / Assets:** [OpenGameArt.org](https://opengameart.org/) OpenGameArt.org
 
