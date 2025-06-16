@@ -1,11 +1,17 @@
-[gd_scene load_steps=7 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=11 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="Texture2D" uid="uid://bceaxqo8urdso" path="res://textures/hyptosis_tile-art-batch-1.png" id="1_pvqg0"]
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
 [ext_resource type="Script" uid="uid://bi0ytuabwhuhp" path="res://scripts/troop.gd" id="3_h5ip5"]
 [ext_resource type="Script" uid="uid://dc448mrb0lb5" path="res://scripts/grid_controller.gd" id="3_t45w4"]
+[ext_resource type="Script" uid="uid://cty7218jvpjqi" path="res://scripts/game_controller.gd" id="4_vqfsp"]
 [ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/path.gd" id="6_xvvcp"]
+[ext_resource type="Texture2D" uid="uid://jsq3kp42pm87" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/goblin.png" id="7_hh5oj"]
+[ext_resource type="Script" uid="uid://bh3bxpswhs048" path="res://scripts/mobile_troop.gd" id="8_i6jx3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vqfsp"]
+size = Vector2(32, 32)
 
 [node name="Base" type="Node2D"]
 
@@ -20,13 +26,17 @@ tile_set = ExtResource("2_40w10")
 [node name="GridController" type="Node" parent="."]
 script = ExtResource("3_t45w4")
 
+[node name="GameController" type="Node2D" parent="."]
+script = ExtResource("4_vqfsp")
+
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
 
-[node name="Path" type="Node2D" parent="."]
+[node name="DrawGrid" type="Node2D" parent="."]
 script = ExtResource("6_xvvcp")
 
 [node name="Troop" type="Node2D" parent="."]
+process_mode = 4
 position = Vector2(-240, 16)
 script = ExtResource("3_h5ip5")
 
@@ -38,3 +48,25 @@ region_rect = Rect2(32, 832, 32, 32)
 [node name="OverlayTileMapLayer" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAACAP//AgATAAcAAAA=")
 tile_set = ExtResource("2_baglu")
+
+[node name="Goblin" type="Area2D" parent="."]
+position = Vector2(-208, -16)
+script = ExtResource("8_i6jx3")
+
+[node name="Sprite2D" type="Sprite2D" parent="Goblin"]
+position = Vector2(0, -4)
+texture = ExtResource("7_hh5oj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Goblin"]
+shape = SubResource("RectangleShape2D_vqfsp")
+
+[node name="Goblin2" type="Area2D" parent="."]
+position = Vector2(-208, 16)
+script = ExtResource("8_i6jx3")
+
+[node name="Sprite2D" type="Sprite2D" parent="Goblin2"]
+position = Vector2(0, -4)
+texture = ExtResource("7_hh5oj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Goblin2"]
+shape = SubResource("RectangleShape2D_vqfsp")
