@@ -25,13 +25,17 @@ func set_walkble_tiles():
 			if not is_walkable_tile(tile_position):
 				astar_grid.set_point_solid(tile_position)
 				
+func set_walkable_position(position : Vector2, walkable : bool):
+	var tile_position = tile_grid.local_to_map(position)
+	var tile_data = tile_grid.get_cell_tile_data(tile_position)
+	astar_grid.set_point_solid(tile_position, not walkable)
+				
 func calculate_path(start : Vector2, end : Vector2) -> Array[Vector2i]:
 
-	if not is_walkable_tile(tile_grid.local_to_map(end)):
+	if not is_walkable_tile_position(end):
 		return []
 		
 	var destination = tile_grid.local_to_map(end)
-	print(destination)
 	var id_path = astar_grid.get_id_path(
 		tile_grid.local_to_map(start),
 		tile_grid.local_to_map(end)
@@ -41,7 +45,7 @@ func calculate_path(start : Vector2, end : Vector2) -> Array[Vector2i]:
 	
 func calculate_point_path(start : Vector2, end : Vector2) -> PackedVector2Array:
 	
-	if not is_walkable_tile(tile_grid.local_to_map(end)):
+	if not is_walkable_tile_position(end):
 		return []
 		
 	var current_point_path = astar_grid.get_point_path(
@@ -54,8 +58,12 @@ func calculate_point_path(start : Vector2, end : Vector2) -> PackedVector2Array:
 		
 	return current_point_path
 	
-func is_walkable_tile(tile_position):
-	var tile_data = tile_grid.get_cell_tile_data(tile_position)			
+func is_walkable_tile_position(position : Vector2) -> bool:
+	return is_walkable_tile(tile_grid.local_to_map(position))
+	
+func is_walkable_tile(tile_position : Vector2i) -> bool:
+	var tile_data = tile_grid.get_cell_tile_data(tile_position)	
+	
 	if tile_data == null:
 		return false
 	elif tile_data.get_custom_data("walkable") == false:
@@ -63,6 +71,6 @@ func is_walkable_tile(tile_position):
 	else:
 		return true
 	
-func get_tile_data(tile_position):
+func get_tile_data(tile_position : Vector2i):
 	var tile_data = tile_grid.get_cell_tile_data(tile_position)	
 	return tile_data
