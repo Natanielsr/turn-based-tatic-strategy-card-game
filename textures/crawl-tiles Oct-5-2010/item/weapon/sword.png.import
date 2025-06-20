@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dyrbly7p0ivrj"
-path="res://.godot/imported/sword.png-65587e3d2ea08b897c3b6295b79d1e5e.ctex"
+path="res://.godot/imported/sword.png-33148dbf131d7e6a731e2255f211922a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/crawl-tiles Oct-5-2010/UNUSED/spells/components/sword.png"
-dest_files=["res://.godot/imported/sword.png-65587e3d2ea08b897c3b6295b79d1e5e.ctex"]
+source_file="res://textures/crawl-tiles Oct-5-2010/item/weapon/sword.png"
+dest_files=["res://.godot/imported/sword.png-33148dbf131d7e6a731e2255f211922a.ctex"]
 
 [params]
 
