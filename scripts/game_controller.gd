@@ -2,65 +2,146 @@ extends Node2D
 
 class_name GameController
 
+signal changed_turn(turn : Turn)
+
 var selected_troop : MobileTroop
+var target: Entity
 
 @onready var grid_controller: GridController = $"../GridController"
+@onready var action_buttons: Control = $"../../UI/ActionButtons"
+@onready var player_statue: PlayerStatue = $"../../Statues/PlayerStatue"
+
 var current_id_path: Array[Vector2i]
 var current_point_path: PackedVector2Array
 
+var possible_path
+
+enum Turn{
+	PLAYER,
+	ENEMY
+}
+var turn : Turn = Turn.PLAYER
+	
+func shift_turn():
+	
+	if selected_troop and selected_troop.is_moving:
+		return
+	
+	deselect_troop()
+	deselect_target()
+	
+	if turn == Turn.PLAYER:
+		turn = Turn.ENEMY
+		print("Enemy Turn")
+	else:
+		turn = Turn.PLAYER
+		print("Player Turn")
+		
+	emit_signal("changed_turn", turn)
+	
+
+func _ready() -> void:
+	show_action_buttons(false)
+	
+func click_on_entity(entity : Entity):
+	if turn == Turn.ENEMY:
+		return
+	
+	match entity.faction:
+		Entity.EntityFaction.ALLY:
+			select_a_troop(entity)
+		Entity.EntityFaction.ENEMY:
+			mark_target(entity)
+
 func _input(event):
+	
+	if turn == Turn.ENEMY:
+		return
+	
 	if event.is_action_pressed("left_click"):
-		if selected_troop == null:
-			select_troop()
-		else:
-			move_troop()
+		left_click()
 			
 	if event.is_action_pressed("right_click"):
-		
-		if selected_troop != null and not selected_troop.is_moving:
-			selected_troop = null
+		if selected_troop and not selected_troop.is_moving:
+			deselect_troop()
+		if target:
+			deselect_target()
+	
+func left_click():
+	if not selected_troop:
+		return
+	
+	match current_troop_state():
+		MobileTroop.TroopState.WALK:
+			move_troop()
+		MobileTroop.TroopState.ATTACK:
+			pass
 			
 func move_troop():
-	if selected_troop.is_moving:
-		return
+	var is_moving = selected_troop.move_troop()
+	if is_moving:
+		show_action_buttons(false)
 		
-	#calculate the path
-	var id_path = grid_controller.calculate_path(
-		selected_troop.global_position,
-		get_global_mouse_position())
-	
-	if id_path == null or id_path.is_empty():
-		return
-	
-	#calculate points to draw	
-	current_id_path = id_path
-	
-	current_point_path = grid_controller.calculate_point_path(
-		selected_troop.global_position,
-		get_global_mouse_position())
-	
-	selected_troop.move_troop(current_id_path)		
+func mark_target(enemy : Entity):
+	if target:
+		deselect_target()
 
-func select_troop():
+	target = enemy
+	print("target marked: ",target.name)
+	target.toggle_outline(true)
 	
-	var mouse_pos = get_global_mouse_position()
-	var space_state = get_world_2d().direct_space_state
-	var params = PhysicsPointQueryParameters2D.new()
-	params.position = mouse_pos
-	params.collide_with_areas = true  # Se quiser detectar Area2D
-	#params.collide_with_bodies = true  # Se quiser detectar PhysicsBody2D
-	var result = space_state.intersect_point(params)
-	if result.size() > 0:
-		var clicked_node = result[0].collider
+	if current_troop_state() == MobileTroop.TroopState.ATTACK:
+		attack()
+
+func attack():
+	selected_troop.attack(target)
+
+func select_a_troop(troop : Entity):
+	if not troop is MobileTroop:
+		return
+	if troop.faction != Entity.EntityFaction.ALLY:
+		return
+	if selected_troop and selected_troop.is_moving:
+		return
 		
-		if clicked_node is MobileTroop:
-			selected_troop = clicked_node
-			print("Tropa selecionada: ", selected_troop.name)
-		else:
-			print("O objeto clicado nao e uma tropa")
+	deselect_troop()
+	selected_troop = troop
+	show_action_buttons(true)
+	selected_troop.toggle_outline(true)
+	print("troop selected: ",selected_troop.name)
 			
+func deselect_troop():
+	if selected_troop != null:
+		change_troop_state(MobileTroop.TroopState.NONE)
+		show_action_buttons(false)
+		selected_troop.toggle_outline(false)
+		selected_troop = null
+		
+func change_troop_state(state : MobileTroop.TroopState):
+	if selected_troop != null:
+		selected_troop.change_state(state)
+		
+	
+func current_troop_state():
+	if selected_troop != null:
+		return selected_troop.get_current_state()
+	
+func show_action_buttons(show_btns : bool):
+	action_buttons.visible = show_btns
+	if show_btns == true:
+		var btn_pos = selected_troop.global_position - Vector2(20, 40)
+		action_buttons.global_position = btn_pos
+		
 func has_troop_moving():
 	if selected_troop == null:
 		return false
 		
 	return selected_troop.is_moving
+	
+func deselect_target():
+	if not target:
+		return
+		
+	target.toggle_outline(false)
+	target = null
+	
