@@ -1,6 +1,6 @@
 extends Node2D
 
-class_name Troop
+class_name Troop2
 
 @onready var tile_grid: TileMapLayer = $"../TileGrid"
 @onready var grid_controller: GridController = $"../GridController"
@@ -30,7 +30,7 @@ func _input(event):
 	current_id_path = id_path
 	current_point_path = grid_controller.calculate_point_path(global_position, get_global_mouse_position())
 	
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if current_id_path.is_empty(): #verify have path
 		return
 		
