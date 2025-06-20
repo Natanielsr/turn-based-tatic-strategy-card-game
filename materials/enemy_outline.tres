@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://btrnbvbwi8d1m"]
+
+[ext_resource type="Shader" uid="uid://coafmmfc4a13" path="res://shaders/outline_faction.gdshader" id="1_fsem5"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_fsem5")
+shader_parameter/ally_color = Color(0, 0.5, 1, 1)
+shader_parameter/enemy_color = Color(1, 0, 0, 1)
+shader_parameter/outline_width = 0.5
+shader_parameter/is_ally = false
