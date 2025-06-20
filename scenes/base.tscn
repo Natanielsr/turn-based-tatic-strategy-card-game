@@ -1,72 +1,355 @@
-[gd_scene load_steps=11 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=25 format=4 uid="uid://bxv4lsegobjck"]
 
-[ext_resource type="Texture2D" uid="uid://bceaxqo8urdso" path="res://textures/hyptosis_tile-art-batch-1.png" id="1_pvqg0"]
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
-[ext_resource type="Script" uid="uid://bi0ytuabwhuhp" path="res://scripts/troop.gd" id="3_h5ip5"]
 [ext_resource type="Script" uid="uid://dc448mrb0lb5" path="res://scripts/grid_controller.gd" id="3_t45w4"]
 [ext_resource type="Script" uid="uid://cty7218jvpjqi" path="res://scripts/game_controller.gd" id="4_vqfsp"]
-[ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/path.gd" id="6_xvvcp"]
+[ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/draw_grid.gd" id="6_xvvcp"]
 [ext_resource type="Texture2D" uid="uid://jsq3kp42pm87" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/goblin.png" id="7_hh5oj"]
 [ext_resource type="Script" uid="uid://bh3bxpswhs048" path="res://scripts/mobile_troop.gd" id="8_i6jx3"]
+[ext_resource type="Material" uid="uid://b7w588gjmshvi" path="res://materials/ally_outline.tres" id="9_jn13j"]
+[ext_resource type="Texture2D" uid="uid://b1xvafovwjof1" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/hobgoblin.png" id="11_6irmp"]
+[ext_resource type="Texture2D" uid="uid://clfln8e51ruhi" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/armour/shield_of_reflection.png" id="11_vciil"]
+[ext_resource type="Script" uid="uid://bl63w6mprwffw" path="res://scripts/action_buttons.gd" id="12_dmaw2"]
+[ext_resource type="Texture2D" uid="uid://g1xfsjbyyifb" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/unseen_weapon.png" id="12_vciil"]
+[ext_resource type="Texture2D" uid="uid://snd47pf1fcpy" path="res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png" id="13_517kj"]
+[ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="13_isyof"]
+[ext_resource type="Texture2D" uid="uid://bmh63053cptng" path="res://textures/crawl-tiles Oct-5-2010/item/weapon/long_sword1.png" id="14_ot4hf"]
+[ext_resource type="Texture2D" uid="uid://dxi6a7vjipgwr" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/statues/wucad_mu_statue.png" id="17_ycryd"]
+[ext_resource type="Script" uid="uid://d33yuisyg4cjx" path="res://scripts/player_statue.gd" id="17_ystrd"]
+[ext_resource type="Script" uid="uid://xekf8f5bi1lf" path="res://scripts/ui.gd" id="18_aomoi"]
+[ext_resource type="Script" uid="uid://codrdv67s42us" path="res://scripts/enemy_statue.gd" id="20_uo6h6"]
+[ext_resource type="Texture2D" uid="uid://c6l757nlejvwj" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/spells/symbol_of_torment.png" id="21_aomoi"]
+[ext_resource type="Material" uid="uid://btrnbvbwi8d1m" path="res://materials/enemy_outline.tres" id="21_b085t"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vqfsp"]
 size = Vector2(32, 32)
 
+[sub_resource type="LabelSettings" id="LabelSettings_uo6h6"]
+font_size = 20
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uo6h6"]
+size = Vector2(61, 127)
+
 [node name="Base" type="Node2D"]
 
-[node name="TerrainTileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAAAAP//AgALABMAAAAAAP7/AgALABQAAAABAP7/AgAKABQAAAABAP//AgALABMAAAACAP7/AgAKABMAAAACAP//AgALABQAAAADAP//AgALABMAAAAEAP7/AgALABQAAAAEAP//AgAKABQAAAAFAP7/AgAKABMAAAAFAP//AgAKABMAAAAGAP7/AgALABMAAAAGAP//AgALABMAAAAHAP7/AgAKABQAAAAHAP//AgAKABMAAAAAAPz/AgALABIAAAABAPz/AgALABIAAAABAP3/AgALABMAAAACAPz/AgALABIAAAACAP3/AgALABQAAAADAPz/AgALABIAAAADAP3/AgALABMAAAAEAPz/AgALABIAAAAEAP3/AgAKABMAAAAFAPz/AgALABIAAAAFAP3/AgAKABQAAAAGAPz/AgALABIAAAAGAP3/AgALABQAAAAHAPz/AgALABIAAAAHAP3/AgALABMAAAADAP7/AgALABMAAAAAAP3/AgAKABMAAAD3//z/AgAKABIAAAD3//3/AgAKABMAAAD4//z/AgALABIAAAD4//3/AgALABMAAAD5//z/AgALABIAAAD5//3/AgALABQAAAD6//z/AgALABIAAAD6//3/AgAKABQAAAD7//z/AgALABIAAAD7//3/AgALABQAAAD8//z/AgALABIAAAD8//3/AgALABMAAAD7//7/AgAKABQAAAD7////AgAKABQAAAD8//7/AgALABMAAAD8////AgAKABMAAAD9//7/AgAKABMAAAD9////AgALABQAAAD+//7/AgAKABMAAAD+////AgAKABQAAAD///7/AgAKABQAAAD/////AgAKABMAAAD///z/AgALABIAAAD///3/AgAKABMAAAD9//z/AgALABIAAAD9//3/AgAKABQAAAD+//z/AgALABIAAAD+//3/AgAKABMAAAD5//7/AgAKABMAAAD5////AgAKABQAAAD6//7/AgALABMAAAD6////AgALABQAAAD3//7/AgAKABQAAAD3////AgAKABQAAAD4////AgALABQAAAD3/wAAAgALABQAAAD3/wEAAgALABMAAAD4/wAAAgALABMAAAD4/wEAAgAKABMAAAD3/wIAAgAKABMAAAD3/wMAAgALABQAAAD4/wIAAgAKABQAAAD4/wMAAgALABQAAAD3/wQAAgALABMAAAD4/wQAAgALABQAAAD5/wQAAgALABMAAAD6/wQAAgAKABQAAAD7/wIAAgAKABMAAAD7/wMAAgALABMAAAD8/wIAAgALABQAAAD8/wMAAgALABMAAAD9/wIAAgAKABQAAAD9/wMAAgALABMAAAD+/wIAAgALABMAAAD+/wMAAgALABQAAAD//wIAAgALABMAAAD//wMAAgALABQAAAAAAAIAAgALABQAAAAAAAMAAgAKABQAAAABAAIAAgALABQAAAABAAMAAgAKABQAAAACAAIAAgAKABQAAAACAAMAAgAKABQAAAADAAIAAgAKABMAAAADAAMAAgALABMAAAAEAAIAAgAKABMAAAAEAAMAAgAKABQAAAAFAAIAAgALABMAAAAFAAMAAgAKABMAAAAGAAIAAgALABMAAAAGAAMAAgALABMAAAAHAAIAAgALABQAAAAHAAMAAgALABMAAAAIAAIAAgAKABMAAAAIAAMAAgAKABQAAAAFAAAAAgALABQAAAAFAAEAAgAKABQAAAAGAAAAAgALABQAAAAGAAEAAgALABMAAAAHAAAAAgAKABQAAAAHAAEAAgAKABMAAAAIAAAAAgALABQAAAAIAAEAAgALABMAAAADAAAAAgAKABQAAAADAAEAAgALABQAAAAEAAAAAgALABMAAAAEAAEAAgALABQAAAABAAAAAgAKABQAAAABAAEAAgALABMAAAACAAAAAgALABQAAAACAAEAAgALABMAAAD//wAAAgAKABQAAAD//wEAAgALABQAAAAAAAAAAgAKABQAAAAAAAEAAgALABQAAAD9/wAAAgAKABQAAAD9/wEAAgAKABQAAAD+/wAAAgAKABQAAAD+/wEAAgAKABQAAAD7/wAAAgAKABMAAAD7/wEAAgAKABMAAAD8/wAAAgALABMAAAD8/wEAAgAKABMAAAD5/wAAAgAKABQAAAD5/wEAAgAKABMAAAD6/wAAAgAKABMAAAD6/wEAAgAKABQAAAD5/wIAAgAKABQAAAD5/wMAAgALABQAAAD6/wIAAgAKABQAAAD6/wMAAgAKABMAAAD7/wQAAgAKABMAAAD8/wQAAgAKABMAAAD9/wQAAgALABMAAAD+/wQAAgALABMAAAD//wQAAgAKABQAAAAAAAQAAgAKABQAAAABAAQAAgAKABMAAAACAAQAAgALABMAAAADAAQAAgAKABMAAAAEAAQAAgALABMAAAAFAAQAAgALABMAAAAGAAQAAgAKABQAAAAHAAQAAgAKABQAAAAIAPz/AgAIABcAAAAIAP3/AgALABQAAAAIAP7/AgALABMAAAAIAP//AgAKABQAAAD3//v/AgAKABEAAAD4//v/AgALABEAAAD5//v/AgALABEAAAD6//v/AgALABEAAAD7//v/AgALABEAAAD8//v/AgALABEAAAD9//v/AgALABEAAAD+//v/AgALABEAAAD///v/AgALABEAAAAAAPv/AgALABEAAAABAPv/AgALABEAAAACAPv/AgALABEAAAADAPv/AgALABEAAAAEAPv/AgALABEAAAAFAPv/AgALABEAAAAGAPv/AgALABEAAAAHAPv/AgALABEAAAAIAPv/AgAIABYAAAAHAPr/AgAKABEAAAAIAPr/AgALABEAAAAFAPr/AgAKABEAAAAGAPr/AgALABEAAAADAPr/AgAKABEAAAAEAPr/AgALABEAAAABAPr/AgAKABEAAAACAPr/AgALABEAAAD///r/AgAKABEAAAAAAPr/AgALABEAAAD9//r/AgAKABEAAAD+//r/AgALABEAAAD7//r/AgALABEAAAD8//r/AgALABEAAAD5//r/AgALABEAAAD6//r/AgALABEAAAD3//r/AgAKABEAAAD4//r/AgALABEAAAAIAAQAAgAKABMAAAD4//7/AgALABMAAAA=")
+[node name="Tiles" type="Node2D" parent="."]
+
+[node name="TerrainTileMapLayer" type="TileMapLayer" parent="Tiles"]
+tile_map_data = PackedByteArray("AAAAAP//AgALABMAAAAAAP7/AgALABQAAAABAP7/AgAKABQAAAABAP//AgALABMAAAACAP7/AgAKABMAAAACAP//AgALABQAAAADAP//AgALABMAAAAEAP7/AgALABQAAAAEAP//AgAKABQAAAAFAP7/AgAKABMAAAAFAP//AgAKABMAAAAGAP7/AgALABMAAAAGAP//AgAKABMAAAAHAP7/AgAKABQAAAAHAP//AgAKABMAAAAAAPz/AgALABIAAAABAPz/AgALABIAAAABAP3/AgALABMAAAACAPz/AgALABIAAAACAP3/AgALABQAAAADAPz/AgALABIAAAADAP3/AgALABMAAAAEAPz/AgALABIAAAAEAP3/AgAKABMAAAAFAPz/AgALABIAAAAFAP3/AgAKABQAAAAGAPz/AgALABIAAAAGAP3/AgALABQAAAAHAPz/AgALABIAAAAHAP3/AgALABMAAAADAP7/AgALABMAAAAAAP3/AgAKABMAAAD3//z/AgALABIAAAD3//3/AgAKABMAAAD4//z/AgALABIAAAD4//3/AgALABMAAAD5//z/AgALABIAAAD5//3/AgALABQAAAD6//z/AgALABIAAAD6//3/AgAKABQAAAD7//z/AgALABIAAAD7//3/AgALABQAAAD8//z/AgALABIAAAD8//3/AgALABMAAAD7//7/AgAKABQAAAD7////AgAKABQAAAD8//7/AgALABMAAAD8////AgAKABMAAAD9//7/AgAKABMAAAD9////AgALABQAAAD+//7/AgAKABMAAAD+////AgAKABQAAAD///7/AgAKABQAAAD/////AgAKABMAAAD///z/AgALABIAAAD///3/AgAKABMAAAD9//z/AgALABIAAAD9//3/AgAKABQAAAD+//z/AgALABIAAAD+//3/AgAKABMAAAD5//7/AgAKABMAAAD5////AgAKABQAAAD6//7/AgALABMAAAD6////AgALABQAAAD3//7/AgAKABQAAAD3////AgAKABQAAAD4////AgALABQAAAD3/wAAAgALABQAAAD3/wEAAgALABMAAAD4/wAAAgALABMAAAD4/wEAAgAKABMAAAD3/wIAAgAKABMAAAD3/wMAAgALABQAAAD4/wIAAgAKABQAAAD4/wMAAgALABQAAAD3/wQAAgALABMAAAD4/wQAAgALABQAAAD5/wQAAgALABMAAAD6/wQAAgAKABQAAAD7/wIAAgAKABMAAAD7/wMAAgALABMAAAD8/wIAAgALABQAAAD8/wMAAgALABMAAAD9/wIAAgAKABQAAAD9/wMAAgALABMAAAD+/wIAAgALABMAAAD+/wMAAgALABQAAAD//wIAAgALABMAAAD//wMAAgALABQAAAAAAAIAAgALABQAAAAAAAMAAgAKABQAAAABAAIAAgALABQAAAABAAMAAgAKABQAAAACAAIAAgAKABQAAAACAAMAAgAKABQAAAADAAIAAgAKABMAAAADAAMAAgALABMAAAAEAAIAAgAKABMAAAAEAAMAAgAKABQAAAAFAAIAAgALABMAAAAFAAMAAgAKABMAAAAGAAIAAgALABQAAAAGAAMAAgALABMAAAAHAAIAAgAKABMAAAAHAAMAAgALABMAAAAIAAIAAgAKABMAAAAIAAMAAgAKABQAAAAFAAAAAgALABQAAAAFAAEAAgAKABQAAAAGAAAAAgAKABMAAAAGAAEAAgALABMAAAAHAAAAAgALABQAAAAHAAEAAgAKABMAAAAIAAAAAgALABQAAAAIAAEAAgALABMAAAADAAAAAgAKABQAAAADAAEAAgALABQAAAAEAAAAAgALABMAAAAEAAEAAgALABQAAAABAAAAAgAKABQAAAABAAEAAgALABMAAAACAAAAAgALABQAAAACAAEAAgALABMAAAD//wAAAgAKABQAAAD//wEAAgALABQAAAAAAAAAAgAKABQAAAAAAAEAAgALABQAAAD9/wAAAgAKABQAAAD9/wEAAgAKABQAAAD+/wAAAgAKABQAAAD+/wEAAgAKABQAAAD7/wAAAgAKABMAAAD7/wEAAgAKABMAAAD8/wAAAgALABMAAAD8/wEAAgAKABMAAAD5/wAAAgAKABQAAAD5/wEAAgAKABMAAAD6/wAAAgAKABMAAAD6/wEAAgAKABQAAAD5/wIAAgAKABQAAAD5/wMAAgALABQAAAD6/wIAAgAKABQAAAD6/wMAAgAKABMAAAD7/wQAAgAKABMAAAD8/wQAAgAKABMAAAD9/wQAAgALABMAAAD+/wQAAgALABMAAAD//wQAAgAKABQAAAAAAAQAAgAKABQAAAABAAQAAgAKABMAAAACAAQAAgALABMAAAADAAQAAgAKABMAAAAEAAQAAgALABMAAAAFAAQAAgALABMAAAAGAAQAAgAKABQAAAAHAAQAAgAKABQAAAAIAPz/AgALABIAAAAIAP3/AgALABQAAAAIAP7/AgALABMAAAAIAP//AgAKABQAAAD3//v/AgAKABEAAAD4//v/AgALABEAAAD5//v/AgAKABEAAAD6//v/AgALABEAAAD7//v/AgAKABEAAAD8//v/AgALABEAAAD9//v/AgAKABEAAAD+//v/AgALABEAAAD///v/AgAKABEAAAAAAPv/AgALABEAAAABAPv/AgAKABEAAAACAPv/AgALABEAAAADAPv/AgAKABEAAAAEAPv/AgALABEAAAAFAPv/AgAKABEAAAAGAPv/AgALABEAAAAHAPv/AgAKABEAAAAIAPv/AgALABEAAAAHAPr/AgALABEAAAAIAPr/AgALABEAAAAFAPr/AgALABEAAAAGAPr/AgALABEAAAADAPr/AgALABEAAAAEAPr/AgALABEAAAABAPr/AgALABEAAAACAPr/AgALABEAAAD///r/AgALABEAAAAAAPr/AgALABEAAAD9//r/AgALABEAAAD+//r/AgALABEAAAD7//r/AgALABEAAAD8//r/AgALABEAAAD5//r/AgALABEAAAD6//r/AgALABEAAAD3//r/AgALABEAAAD4//r/AgALABEAAAAIAAQAAgAKABMAAAD4//7/AgALABMAAAD1//3/AgAKABMAAAD1//7/AgAKABMAAAD1////AgAKABQAAAD1/wAAAgALABMAAAD1/wEAAgAKABMAAAD1/wIAAgALABQAAAD1/wMAAgAKABMAAAD1/wQAAgAKABQAAAD2//3/AgAKABQAAAD2//7/AgALABMAAAD2////AgAKABQAAAD2/wAAAgAKABQAAAD2/wEAAgAKABQAAAD2/wIAAgAKABMAAAD2/wMAAgALABQAAAD2/wQAAgAKABQAAAD1/wUAAgAKABQAAAD2/wUAAgALABMAAAD3/wUAAgAKABQAAAD4/wUAAgAKABMAAAD5/wUAAgALABQAAAD6/wUAAgAKABQAAAD7/wUAAgAKABMAAAD8/wUAAgALABQAAAD9/wUAAgAKABQAAAD+/wUAAgALABQAAAD//wUAAgALABQAAAAAAAUAAgALABQAAAABAAUAAgALABQAAAACAAUAAgAKABQAAAADAAUAAgALABQAAAAEAAUAAgAKABQAAAAFAAUAAgALABMAAAAGAAUAAgALABMAAAAHAAUAAgAKABMAAAAIAAUAAgAKABMAAAD2//z/AgALABIAAAD1//z/AgALABIAAAD2//v/AgALABEAAAD1//v/AgAKABEAAAD2//r/AgALABEAAAD1//r/AgALABEAAAA=")
 tile_set = ExtResource("2_baglu")
 
-[node name="TileGrid" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAD5////AAAdAB0AAAD3//3/AAAdAB0AAAD3//7/AAAdAB0AAAD3////AAAdAB0AAAD3/wAAAAAdAB0AAAD3/wEAAAAdAB0AAAD3/wIAAAAdAB0AAAD3/wMAAAAdAB0AAAD3/wQAAAAdAB0AAAD4//3/AAAdAB0AAAD4//7/AAAdAB0AAAD4////AAAdAB0AAAD4/wAAAAAdAB0AAAD4/wEAAAAdAB0AAAD4/wIAAAAdAB0AAAD4/wMAAAAdAB0AAAD4/wQAAAAdAB0AAAD5//3/AAAdAB0AAAD5//7/AAAdAB0AAAD5/wAAAAAdAB0AAAD5/wEAAAAdAB0AAAD5/wIAAAAdAB0AAAD5/wMAAAAdAB0AAAD5/wQAAAAdAB0AAAD6//3/AAAXABkAAAD6//7/AAAXABoAAAD6////AAAdAB0AAAD6/wAAAAAdAB0AAAD6/wEAAAAdAB0AAAD6/wIAAAAdAB0AAAD6/wMAAAAdAB0AAAD6/wQAAAAdAB0AAAD7//7/AAAYABoAAAD7/wAAAAAMAAEAAAD7/wEAAAAMAAIAAAD7/wIAAAAOAAMAAAD7/wMAAAAdAB0AAAD7/wQAAAAdAB0AAAD8//3/AAAdAB0AAAD8//7/AAAdAB0AAAD8////AAAdAB0AAAD8/wAAAAAdAB0AAAD8/wEAAAAdAB0AAAD8/wIAAAAdAB0AAAD8/wMAAAAdAB0AAAD8/wQAAAAdAB0AAAD9//3/AAAdAB0AAAD9//7/AAAdAB0AAAD9////AAARAAQAAAD9/wAAAAARAAQAAAD9/wEAAAATAAUAAAD9/wIAAAAQAAYAAAD9/wQAAAAOAA8AAAD+//3/AAAdAB0AAAD+//7/AAAdAB0AAAD+////AAAdAB0AAAD+/wAAAAAdAB0AAAD+/wEAAAAdAB0AAAD+/wIAAAAdAB0AAAD+/wMAAAAdAB0AAAD+/wQAAAAdAB0AAAD///3/AAARAAQAAAD///7/AAARAAQAAAD/////AAARAAQAAAD//wAAAAARAAQAAAD//wEAAAARAAQAAAD//wIAAAAMAAMAAAD//wMAAAAdAB0AAAD//wQAAAAdAB0AAAAAAP3/AAAdAB0AAAAAAP7/AAAdAB0AAAAAAP//AAAdAB0AAAAAAAAAAAAdAB0AAAAAAAEAAAAdAB0AAAAAAAIAAAAdAB0AAAAAAAMAAAAdAB0AAAAAAAQAAAAdAB0AAAABAP3/AAAdAB0AAAABAP7/AAAdAB0AAAABAP//AAAdAB0AAAABAAAAAAAdAB0AAAABAAEAAAAdAB0AAAABAAIAAAAdAB0AAAABAAMAAAAdAB0AAAABAAQAAAAdAB0AAAACAP3/AAAdAB0AAAACAP7/AAAdAB0AAAACAAAAAAATAAgAAAACAAEAAAARAAQAAAACAAIAAAARAAQAAAACAAMAAAARAAQAAAACAAQAAAARAAQAAAADAP3/AAAdAB0AAAADAP7/AAAdAB0AAAADAP//AAAdAB0AAAADAAAAAAAdAB0AAAADAAEAAAAdAB0AAAADAAIAAAAdAB0AAAADAAMAAAAdAB0AAAADAAQAAAAdAB0AAAAEAP3/AAAdAB0AAAAEAP7/AAAdAB0AAAAEAP//AAAdAB0AAAAEAAAAAAAdAB0AAAAEAAEAAAAdAB0AAAAEAAIAAAAdAB0AAAAEAAMAAAAdAB0AAAAEAAQAAAAdAB0AAAAFAP3/AAARAAQAAAAFAP7/AAARAAQAAAAFAP//AAARAAQAAAAFAAAAAAARAAQAAAAFAAEAAAARAAQAAAAFAAIAAAARAAQAAAAFAAMAAAAdAB0AAAAFAAQAAAAdAB0AAAAGAP3/AAAdAB0AAAAGAP7/AAAdAB0AAAAGAP//AAAdAB0AAAAGAAAAAAAdAB0AAAAGAAEAAAAdAB0AAAAGAAIAAAAdAB0AAAAGAAMAAAAdAB0AAAAGAAQAAAAdAB0AAAAHAP3/AAAdAB0AAAAHAP7/AAAdAB0AAAAHAP//AAAdAB0AAAAHAAAAAAAdAB0AAAAHAAEAAAAdAB0AAAAHAAIAAAAdAB0AAAAHAAMAAAAdAB0AAAAHAAQAAAAdAB0AAAAIAP3/AAAdAB0AAAAIAP7/AAAdAB0AAAAIAP//AAAdAB0AAAAIAAAAAAAdAB0AAAAIAAEAAAAdAB0AAAAIAAIAAAAdAB0AAAAIAAMAAAAdAB0AAAAIAAQAAAAdAB0AAAACAP//AAAdAB0AAAD7//3/AAAYABkAAAD7////AAARAAQAAAD9/wMAAAAOAA8AAAA=")
+[node name="TileGrid" type="TileMapLayer" parent="Tiles"]
+tile_map_data = PackedByteArray("AAD5////AAAdAB0AAAD3//3/AAAdAB0AAAD3//7/AAAdAB0AAAD3////AAABAAcAAAD3/wAAAAABAAcAAAD3/wEAAAABAAcAAAD3/wIAAAABAAcAAAD3/wMAAAAdAB0AAAD3/wQAAAAdAB0AAAD4//3/AAAdAB0AAAD4//7/AAAdAB0AAAD4////AAAdAB0AAAD4/wAAAAAdAB0AAAD4/wEAAAAdAB0AAAD4/wIAAAAdAB0AAAD4/wMAAAAdAB0AAAD4/wQAAAAdAB0AAAD5//3/AAAdAB0AAAD5//7/AAAdAB0AAAD5/wAAAAAdAB0AAAD5/wEAAAAdAB0AAAD5/wIAAAAdAB0AAAD5/wMAAAAdAB0AAAD5/wQAAAAdAB0AAAD6//3/AAAXABkAAAD6//7/AAAXABoAAAD6////AAAdAB0AAAD6/wAAAAAdAB0AAAD6/wEAAAAdAB0AAAD6/wIAAAAdAB0AAAD6/wMAAAAdAB0AAAD6/wQAAAAdAB0AAAD7//7/AAAYABoAAAD7/wAAAAAMAAEAAAD7/wEAAAAMAAIAAAD7/wIAAAAOAAMAAAD7/wMAAAAdAB0AAAD7/wQAAAAdAB0AAAD8//3/AAAdAB0AAAD8//7/AAAdAB0AAAD8////AAAdAB0AAAD8/wAAAAAdAB0AAAD8/wEAAAAdAB0AAAD8/wIAAAAdAB0AAAD8/wMAAAAdAB0AAAD8/wQAAAAdAB0AAAD9//3/AAAdAB0AAAD9//7/AAAdAB0AAAD9////AAARAAQAAAD9/wAAAAARAAQAAAD9/wEAAAATAAUAAAD9/wIAAAAQAAYAAAD9/wQAAAAOAA8AAAD+//3/AAAdAB0AAAD+//7/AAAdAB0AAAD+////AAAdAB0AAAD+/wAAAAAdAB0AAAD+/wEAAAAdAB0AAAD+/wIAAAAdAB0AAAD+/wMAAAAdAB0AAAD+/wQAAAAdAB0AAAD///3/AAARAAQAAAD///7/AAARAAQAAAD/////AAARAAQAAAD//wAAAAARAAQAAAD//wEAAAARAAQAAAD//wIAAAAMAAMAAAD//wMAAAAdAB0AAAD//wQAAAAdAB0AAAAAAP3/AAAdAB0AAAAAAP7/AAAdAB0AAAAAAP//AAAdAB0AAAAAAAAAAAAdAB0AAAAAAAEAAAAdAB0AAAAAAAIAAAAdAB0AAAAAAAMAAAAdAB0AAAAAAAQAAAAdAB0AAAABAP3/AAAdAB0AAAABAP7/AAAdAB0AAAABAP//AAAdAB0AAAABAAAAAAAdAB0AAAABAAEAAAAdAB0AAAABAAIAAAAdAB0AAAABAAMAAAAdAB0AAAABAAQAAAAdAB0AAAACAP3/AAAdAB0AAAACAP7/AAAdAB0AAAACAAAAAAATAAgAAAACAAEAAAARAAQAAAACAAIAAAARAAQAAAACAAMAAAARAAQAAAACAAQAAAARAAQAAAADAP3/AAAdAB0AAAADAP7/AAAdAB0AAAADAP//AAAdAB0AAAADAAAAAAAdAB0AAAADAAEAAAAdAB0AAAADAAIAAAAdAB0AAAADAAMAAAAdAB0AAAADAAQAAAAdAB0AAAAEAP3/AAAdAB0AAAAEAP7/AAAdAB0AAAAEAP//AAAdAB0AAAAEAAEAAAAdAB0AAAAEAAIAAAAdAB0AAAAEAAMAAAAdAB0AAAAEAAQAAAAdAB0AAAAFAP3/AAAdAB0AAAAFAP7/AAAdAB0AAAAFAP//AAAAAAcAAAAFAAAAAAAAAAcAAAAFAAEAAAAAAAcAAAAFAAMAAAAdAB0AAAAFAAQAAAAdAB0AAAACAP//AAAdAB0AAAD7//3/AAAYABkAAAD7////AAARAAQAAAD9/wMAAAAOAA8AAAAEAAAAAAAdAB0AAAAFAAIAAAAAAAcAAAA=")
 tile_set = ExtResource("2_40w10")
 
-[node name="GridController" type="Node" parent="."]
-script = ExtResource("3_t45w4")
-
-[node name="GameController" type="Node2D" parent="."]
-script = ExtResource("4_vqfsp")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
-
-[node name="DrawGrid" type="Node2D" parent="."]
-script = ExtResource("6_xvvcp")
-
-[node name="Troop" type="Node2D" parent="."]
-process_mode = 4
-position = Vector2(-240, 16)
-script = ExtResource("3_h5ip5")
-
-[node name="Sprite2D" type="Sprite2D" parent="Troop"]
-texture = ExtResource("1_pvqg0")
-region_enabled = true
-region_rect = Rect2(32, 832, 32, 32)
-
-[node name="OverlayTileMapLayer" type="TileMapLayer" parent="."]
+[node name="OverlayTileMapLayer" type="TileMapLayer" parent="Tiles"]
+z_index = 2
 tile_map_data = PackedByteArray("AAACAP//AgATAAcAAAA=")
 tile_set = ExtResource("2_baglu")
 
-[node name="Goblin" type="Area2D" parent="."]
-position = Vector2(-208, -16)
-script = ExtResource("8_i6jx3")
+[node name="Controllers" type="Node2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="Goblin"]
-position = Vector2(0, -4)
+[node name="GridController" type="Node" parent="Controllers"]
+script = ExtResource("3_t45w4")
+
+[node name="GameController" type="Node2D" parent="Controllers"]
+script = ExtResource("4_vqfsp")
+
+[node name="Troops" type="Node2D" parent="."]
+
+[node name="Goblin" type="Area2D" parent="Troops"]
+position = Vector2(144, -16)
+script = ExtResource("8_i6jx3")
+faction = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Troops/Goblin"]
+material = ExtResource("9_jn13j")
+position = Vector2(-0.999995, -8)
 texture = ExtResource("7_hh5oj")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Goblin"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Troops/Goblin"]
 shape = SubResource("RectangleShape2D_vqfsp")
 
-[node name="Goblin2" type="Area2D" parent="."]
-position = Vector2(-208, 16)
-script = ExtResource("8_i6jx3")
+[node name="LifeSprite" type="Sprite2D" parent="Troops/Goblin"]
+position = Vector2(12, 9)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("11_vciil")
 
-[node name="Sprite2D" type="Sprite2D" parent="Goblin2"]
-position = Vector2(0, -4)
+[node name="AttackSprite" type="Sprite2D" parent="Troops/Goblin"]
+position = Vector2(-11, 8)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("12_vciil")
+
+[node name="LifePoints" type="Label" parent="Troops/Goblin"]
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 16.0
+text = "99"
+label_settings = ExtResource("13_isyof")
+horizontal_alignment = 1
+
+[node name="AtkPoints" type="Label" parent="Troops/Goblin"]
+offset_left = -15.0
+offset_top = 2.0
+offset_right = -7.0
+offset_bottom = 16.0
+text = "99"
+label_settings = ExtResource("13_isyof")
+horizontal_alignment = 1
+
+[node name="Goblin2" type="Area2D" parent="Troops"]
+position = Vector2(175, 16)
+script = ExtResource("8_i6jx3")
+faction = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Troops/Goblin2"]
+material = ExtResource("9_jn13j")
+position = Vector2(-0.999995, -8)
 texture = ExtResource("7_hh5oj")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Goblin2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Troops/Goblin2"]
 shape = SubResource("RectangleShape2D_vqfsp")
+
+[node name="LifeSprite" type="Sprite2D" parent="Troops/Goblin2"]
+position = Vector2(12, 9)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("11_vciil")
+
+[node name="AttackSprite" type="Sprite2D" parent="Troops/Goblin2"]
+position = Vector2(-11, 8)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("12_vciil")
+
+[node name="LifePoints" type="Label" parent="Troops/Goblin2"]
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 16.0
+text = "99"
+label_settings = ExtResource("13_isyof")
+horizontal_alignment = 1
+
+[node name="AtkPoints" type="Label" parent="Troops/Goblin2"]
+offset_left = -15.0
+offset_top = 2.0
+offset_right = -7.0
+offset_bottom = 16.0
+text = "99"
+label_settings = ExtResource("13_isyof")
+horizontal_alignment = 1
+
+[node name="Hobglobin" type="Area2D" parent="Troops"]
+position = Vector2(-271, -15)
+script = ExtResource("8_i6jx3")
+walk_distance = 7
+total_life_points = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="Troops/Hobglobin"]
+material = ExtResource("9_jn13j")
+position = Vector2(-3.09944e-06, -8)
+texture = ExtResource("11_6irmp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Troops/Hobglobin"]
+shape = SubResource("RectangleShape2D_vqfsp")
+
+[node name="LifeSprite" type="Sprite2D" parent="Troops/Hobglobin"]
+position = Vector2(12, 9)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("11_vciil")
+
+[node name="AttackSprite" type="Sprite2D" parent="Troops/Hobglobin"]
+position = Vector2(-11, 8)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("12_vciil")
+
+[node name="LifePoints" type="Label" parent="Troops/Hobglobin"]
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 16.0
+text = "99"
+label_settings = ExtResource("13_isyof")
+horizontal_alignment = 1
+
+[node name="AtkPoints" type="Label" parent="Troops/Hobglobin"]
+offset_left = -15.0
+offset_top = 2.0
+offset_right = -7.0
+offset_bottom = 16.0
+text = "99"
+label_settings = ExtResource("13_isyof")
+horizontal_alignment = 1
+
+[node name="Hobglobin2" type="Area2D" parent="Troops"]
+position = Vector2(-271, 17)
+script = ExtResource("8_i6jx3")
+walk_distance = 7
+total_life_points = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="Troops/Hobglobin2"]
+material = ExtResource("9_jn13j")
+position = Vector2(-3.09944e-06, -8)
+texture = ExtResource("11_6irmp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Troops/Hobglobin2"]
+shape = SubResource("RectangleShape2D_vqfsp")
+
+[node name="LifeSprite" type="Sprite2D" parent="Troops/Hobglobin2"]
+position = Vector2(12, 9)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("11_vciil")
+
+[node name="AttackSprite" type="Sprite2D" parent="Troops/Hobglobin2"]
+position = Vector2(-11, 8)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("12_vciil")
+
+[node name="LifePoints" type="Label" parent="Troops/Hobglobin2"]
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 18.0
+offset_bottom = 16.0
+text = "99"
+label_settings = ExtResource("13_isyof")
+horizontal_alignment = 1
+
+[node name="AtkPoints" type="Label" parent="Troops/Hobglobin2"]
+offset_left = -15.0
+offset_top = 2.0
+offset_right = -7.0
+offset_bottom = 16.0
+text = "99"
+label_settings = ExtResource("13_isyof")
+horizontal_alignment = 1
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-48, -1)
+zoom = Vector2(2.115, 2.115)
+
+[node name="Statues" type="Node2D" parent="."]
+
+[node name="PlayerStatue" type="Node2D" parent="Statues"]
+position = Vector2(-321, 15)
+script = ExtResource("17_ystrd")
+total_life_points = 10
+
+[node name="Sprite2D" type="Sprite2D" parent="Statues/PlayerStatue"]
+scale = Vector2(2, 2)
+texture = ExtResource("17_ycryd")
+
+[node name="LifeSprite" type="Sprite2D" parent="Statues/PlayerStatue"]
+position = Vector2(0, 50)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("11_vciil")
+
+[node name="LifePoints" type="Label" parent="Statues/PlayerStatue"]
+offset_left = -15.0
+offset_top = 30.0
+offset_right = 15.0
+offset_bottom = 60.0
+text = "99"
+label_settings = SubResource("LabelSettings_uo6h6")
+horizontal_alignment = 1
+
+[node name="TurnSprite" type="Sprite2D" parent="Statues/PlayerStatue"]
+position = Vector2(-1, -51)
+texture = ExtResource("21_aomoi")
+
+[node name="EnemyStatue" type="Area2D" parent="Statues"]
+position = Vector2(223, 15)
+script = ExtResource("20_uo6h6")
+total_life_points = 10
+faction = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Statues/EnemyStatue"]
+material = ExtResource("21_b085t")
+use_parent_material = true
+scale = Vector2(2, 2)
+texture = ExtResource("17_ycryd")
+flip_h = true
+
+[node name="LifeSprite" type="Sprite2D" parent="Statues/EnemyStatue"]
+position = Vector2(0, 50)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("11_vciil")
+
+[node name="LifePoints" type="Label" parent="Statues/EnemyStatue"]
+offset_left = -15.0
+offset_top = 30.0
+offset_right = 15.0
+offset_bottom = 60.0
+text = "99"
+label_settings = SubResource("LabelSettings_uo6h6")
+horizontal_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Statues/EnemyStatue"]
+position = Vector2(1.5, 17.5)
+shape = SubResource("RectangleShape2D_uo6h6")
+
+[node name="TurnSprite" type="Sprite2D" parent="Statues/EnemyStatue"]
+position = Vector2(-1, -51)
+texture = ExtResource("21_aomoi")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("18_aomoi")
+
+[node name="ActionButtons" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -339.0
+offset_top = -76.0
+offset_right = -298.0
+offset_bottom = -56.0
+script = ExtResource("12_dmaw2")
+
+[node name="MoveBtn" type="Button" parent="UI/ActionButtons"]
+z_index = 1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.5, 0.5)
+icon = ExtResource("13_517kj")
+
+[node name="AtkBtn" type="Button" parent="UI/ActionButtons"]
+z_index = 1
+layout_mode = 0
+offset_left = 21.0
+offset_right = 61.0
+offset_bottom = 40.0
+scale = Vector2(0.5, 0.5)
+icon = ExtResource("14_ot4hf")
+
+[node name="FinishTurnBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = -347.0
+offset_top = 88.0
+offset_right = -293.0
+offset_bottom = 142.0
+text = "Finish
+Turn"
+
+[node name="EnemyFinishTurnBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 102.0
+offset_right = 253.0
+offset_bottom = 156.0
+text = "Enemy
+Finish"
+
+[node name="DrawGrid" type="Control" parent="UI"]
+anchors_preset = 0
+script = ExtResource("6_xvvcp")
+
+[connection signal="pressed" from="UI/ActionButtons/MoveBtn" to="UI/ActionButtons" method="_on_move_btn_pressed"]
+[connection signal="pressed" from="UI/ActionButtons/AtkBtn" to="UI/ActionButtons" method="_on_atk_btn_pressed"]
+[connection signal="pressed" from="UI/FinishTurnBtn" to="UI" method="_on_finish_turn_pressed"]
+[connection signal="pressed" from="UI/EnemyFinishTurnBtn" to="UI" method="_on_enemy_finish_turn_pressed"]
