@@ -7,9 +7,11 @@ const ENEMY_OUTLINE = preload("res://materials/enemy_outline.tres")
 
 @onready var game_controller: GameController = $"../../Controllers/GameController"
 @onready var grid_controller: GridController = $"../../Controllers/GridController"
-@onready var life_points_label: Label = $"./LifePoints"
+@onready var life_points_label: Label = $"./Status/LifePoints"
+@onready var life_background_sprite: Sprite2D = $"./Status/LifeSprite"
 @export var total_life_points : int = 2
 var current_life_points : int
+
 
 enum EntityFaction{
 	ALLY,
@@ -52,6 +54,7 @@ func update_life_label():
 func _input_event(_viewport, event, _shape_idx):
 	if event.is_action_pressed("left_click"):
 		game_controller.click_on_entity(self)
+		print('click')
 		
 func toggle_outline(show_outline: bool):
 	$Sprite2D.use_parent_material = not show_outline	
@@ -59,9 +62,9 @@ func toggle_outline(show_outline: bool):
 func set_faction():
 	if faction == EntityFaction.ENEMY:
 		$Sprite2D.material = ENEMY_OUTLINE
-		$LifeSprite.modulate = Color(1, 0, 0)
-		if has_node("AttackSprite"):
-			$AttackSprite.modulate = Color(1, 0, 0) 
+		life_background_sprite.modulate = Color(1, 0, 0)
+		
+			
 			
 	elif faction == EntityFaction.ALLY:
 		$Sprite2D.material = ALLY_OUTLINE

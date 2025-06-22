@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3 uid="uid://bpom7g3kfsc52"]
+
+[ext_resource type="Script" uid="uid://bh3bxpswhs048" path="res://scripts/mobile_troop.gd" id="1_t7qpj"]
+[ext_resource type="Material" uid="uid://b7w588gjmshvi" path="res://materials/ally_outline.tres" id="2_0c1ip"]
+[ext_resource type="Texture2D" uid="uid://b1xvafovwjof1" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/hobgoblin.png" id="3_sh8uy"]
+[ext_resource type="PackedScene" uid="uid://ddnsdqnpbw23m" path="res://prefabs/troop_status.tscn" id="4_dteq7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vqfsp"]
+size = Vector2(32, 32)
+
+[node name="Hobglobin" type="Area2D"]
+script = ExtResource("1_t7qpj")
+walk_distance = 7
+total_life_points = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = ExtResource("2_0c1ip")
+position = Vector2(-3.09944e-06, -8)
+texture = ExtResource("3_sh8uy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_vqfsp")
+
+[node name="Status" parent="." instance=ExtResource("4_dteq7")]

@@ -1,19 +1,14 @@
-[gd_scene load_steps=25 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=18 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
 [ext_resource type="Script" uid="uid://dc448mrb0lb5" path="res://scripts/grid_controller.gd" id="3_t45w4"]
 [ext_resource type="Script" uid="uid://cty7218jvpjqi" path="res://scripts/game_controller.gd" id="4_vqfsp"]
 [ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/draw_grid.gd" id="6_xvvcp"]
-[ext_resource type="Texture2D" uid="uid://jsq3kp42pm87" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/goblin.png" id="7_hh5oj"]
-[ext_resource type="Script" uid="uid://bh3bxpswhs048" path="res://scripts/mobile_troop.gd" id="8_i6jx3"]
-[ext_resource type="Material" uid="uid://b7w588gjmshvi" path="res://materials/ally_outline.tres" id="9_jn13j"]
-[ext_resource type="Texture2D" uid="uid://b1xvafovwjof1" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/hobgoblin.png" id="11_6irmp"]
-[ext_resource type="Texture2D" uid="uid://clfln8e51ruhi" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/armour/shield_of_reflection.png" id="11_vciil"]
+[ext_resource type="PackedScene" uid="uid://b1ed0nfs8p63k" path="res://prefabs/statue_status.tscn" id="9_ycryd"]
+[ext_resource type="PackedScene" uid="uid://bpom7g3kfsc52" path="res://prefabs/hobglobin.tscn" id="11_33mrd"]
 [ext_resource type="Script" uid="uid://bl63w6mprwffw" path="res://scripts/action_buttons.gd" id="12_dmaw2"]
-[ext_resource type="Texture2D" uid="uid://g1xfsjbyyifb" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/unseen_weapon.png" id="12_vciil"]
 [ext_resource type="Texture2D" uid="uid://snd47pf1fcpy" path="res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png" id="13_517kj"]
-[ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="13_isyof"]
 [ext_resource type="Texture2D" uid="uid://bmh63053cptng" path="res://textures/crawl-tiles Oct-5-2010/item/weapon/long_sword1.png" id="14_ot4hf"]
 [ext_resource type="Texture2D" uid="uid://dxi6a7vjipgwr" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/statues/wucad_mu_statue.png" id="17_ycryd"]
 [ext_resource type="Script" uid="uid://d33yuisyg4cjx" path="res://scripts/player_statue.gd" id="17_ystrd"]
@@ -22,20 +17,13 @@
 [ext_resource type="Texture2D" uid="uid://c6l757nlejvwj" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/spells/symbol_of_torment.png" id="21_aomoi"]
 [ext_resource type="Material" uid="uid://btrnbvbwi8d1m" path="res://materials/enemy_outline.tres" id="21_b085t"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_vqfsp"]
-size = Vector2(32, 32)
-
-[sub_resource type="LabelSettings" id="LabelSettings_uo6h6"]
-font_size = 20
-outline_size = 10
-outline_color = Color(0, 0, 0, 1)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uo6h6"]
 size = Vector2(61, 127)
 
 [node name="Base" type="Node2D"]
 
 [node name="Tiles" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
 
 [node name="TerrainTileMapLayer" type="TileMapLayer" parent="Tiles"]
 tile_map_data = PackedByteArray("AAAAAP//AgALABMAAAAAAP7/AgALABQAAAABAP7/AgAKABQAAAABAP//AgALABMAAAACAP7/AgAKABMAAAACAP//AgALABQAAAADAP//AgALABMAAAAEAP7/AgALABQAAAAEAP//AgAKABQAAAAFAP7/AgAKABMAAAAFAP//AgAKABMAAAAGAP7/AgALABMAAAAGAP//AgAKABMAAAAHAP7/AgAKABQAAAAHAP//AgAKABMAAAAAAPz/AgALABIAAAABAPz/AgALABIAAAABAP3/AgALABMAAAACAPz/AgALABIAAAACAP3/AgALABQAAAADAPz/AgALABIAAAADAP3/AgALABMAAAAEAPz/AgALABIAAAAEAP3/AgAKABMAAAAFAPz/AgALABIAAAAFAP3/AgAKABQAAAAGAPz/AgALABIAAAAGAP3/AgALABQAAAAHAPz/AgALABIAAAAHAP3/AgALABMAAAADAP7/AgALABMAAAAAAP3/AgAKABMAAAD3//z/AgALABIAAAD3//3/AgAKABMAAAD4//z/AgALABIAAAD4//3/AgALABMAAAD5//z/AgALABIAAAD5//3/AgALABQAAAD6//z/AgALABIAAAD6//3/AgAKABQAAAD7//z/AgALABIAAAD7//3/AgALABQAAAD8//z/AgALABIAAAD8//3/AgALABMAAAD7//7/AgAKABQAAAD7////AgAKABQAAAD8//7/AgALABMAAAD8////AgAKABMAAAD9//7/AgAKABMAAAD9////AgALABQAAAD+//7/AgAKABMAAAD+////AgAKABQAAAD///7/AgAKABQAAAD/////AgAKABMAAAD///z/AgALABIAAAD///3/AgAKABMAAAD9//z/AgALABIAAAD9//3/AgAKABQAAAD+//z/AgALABIAAAD+//3/AgAKABMAAAD5//7/AgAKABMAAAD5////AgAKABQAAAD6//7/AgALABMAAAD6////AgALABQAAAD3//7/AgAKABQAAAD3////AgAKABQAAAD4////AgALABQAAAD3/wAAAgALABQAAAD3/wEAAgALABMAAAD4/wAAAgALABMAAAD4/wEAAgAKABMAAAD3/wIAAgAKABMAAAD3/wMAAgALABQAAAD4/wIAAgAKABQAAAD4/wMAAgALABQAAAD3/wQAAgALABMAAAD4/wQAAgALABQAAAD5/wQAAgALABMAAAD6/wQAAgAKABQAAAD7/wIAAgAKABMAAAD7/wMAAgALABMAAAD8/wIAAgALABQAAAD8/wMAAgALABMAAAD9/wIAAgAKABQAAAD9/wMAAgALABMAAAD+/wIAAgALABMAAAD+/wMAAgALABQAAAD//wIAAgALABMAAAD//wMAAgALABQAAAAAAAIAAgALABQAAAAAAAMAAgAKABQAAAABAAIAAgALABQAAAABAAMAAgAKABQAAAACAAIAAgAKABQAAAACAAMAAgAKABQAAAADAAIAAgAKABMAAAADAAMAAgALABMAAAAEAAIAAgAKABMAAAAEAAMAAgAKABQAAAAFAAIAAgALABMAAAAFAAMAAgAKABMAAAAGAAIAAgALABQAAAAGAAMAAgALABMAAAAHAAIAAgAKABMAAAAHAAMAAgALABMAAAAIAAIAAgAKABMAAAAIAAMAAgAKABQAAAAFAAAAAgALABQAAAAFAAEAAgAKABQAAAAGAAAAAgAKABMAAAAGAAEAAgALABMAAAAHAAAAAgALABQAAAAHAAEAAgAKABMAAAAIAAAAAgALABQAAAAIAAEAAgALABMAAAADAAAAAgAKABQAAAADAAEAAgALABQAAAAEAAAAAgALABMAAAAEAAEAAgALABQAAAABAAAAAgAKABQAAAABAAEAAgALABMAAAACAAAAAgALABQAAAACAAEAAgALABMAAAD//wAAAgAKABQAAAD//wEAAgALABQAAAAAAAAAAgAKABQAAAAAAAEAAgALABQAAAD9/wAAAgAKABQAAAD9/wEAAgAKABQAAAD+/wAAAgAKABQAAAD+/wEAAgAKABQAAAD7/wAAAgAKABMAAAD7/wEAAgAKABMAAAD8/wAAAgALABMAAAD8/wEAAgAKABMAAAD5/wAAAgAKABQAAAD5/wEAAgAKABMAAAD6/wAAAgAKABMAAAD6/wEAAgAKABQAAAD5/wIAAgAKABQAAAD5/wMAAgALABQAAAD6/wIAAgAKABQAAAD6/wMAAgAKABMAAAD7/wQAAgAKABMAAAD8/wQAAgAKABMAAAD9/wQAAgALABMAAAD+/wQAAgALABMAAAD//wQAAgAKABQAAAAAAAQAAgAKABQAAAABAAQAAgAKABMAAAACAAQAAgALABMAAAADAAQAAgAKABMAAAAEAAQAAgALABMAAAAFAAQAAgALABMAAAAGAAQAAgAKABQAAAAHAAQAAgAKABQAAAAIAPz/AgALABIAAAAIAP3/AgALABQAAAAIAP7/AgALABMAAAAIAP//AgAKABQAAAD3//v/AgAKABEAAAD4//v/AgALABEAAAD5//v/AgAKABEAAAD6//v/AgALABEAAAD7//v/AgAKABEAAAD8//v/AgALABEAAAD9//v/AgAKABEAAAD+//v/AgALABEAAAD///v/AgAKABEAAAAAAPv/AgALABEAAAABAPv/AgAKABEAAAACAPv/AgALABEAAAADAPv/AgAKABEAAAAEAPv/AgALABEAAAAFAPv/AgAKABEAAAAGAPv/AgALABEAAAAHAPv/AgAKABEAAAAIAPv/AgALABEAAAAHAPr/AgALABEAAAAIAPr/AgALABEAAAAFAPr/AgALABEAAAAGAPr/AgALABEAAAADAPr/AgALABEAAAAEAPr/AgALABEAAAABAPr/AgALABEAAAACAPr/AgALABEAAAD///r/AgALABEAAAAAAPr/AgALABEAAAD9//r/AgALABEAAAD+//r/AgALABEAAAD7//r/AgALABEAAAD8//r/AgALABEAAAD5//r/AgALABEAAAD6//r/AgALABEAAAD3//r/AgALABEAAAD4//r/AgALABEAAAAIAAQAAgAKABMAAAD4//7/AgALABMAAAD1//3/AgAKABMAAAD1//7/AgAKABMAAAD1////AgAKABQAAAD1/wAAAgALABMAAAD1/wEAAgAKABMAAAD1/wIAAgALABQAAAD1/wMAAgAKABMAAAD1/wQAAgAKABQAAAD2//3/AgAKABQAAAD2//7/AgALABMAAAD2////AgAKABQAAAD2/wAAAgAKABQAAAD2/wEAAgAKABQAAAD2/wIAAgAKABMAAAD2/wMAAgALABQAAAD2/wQAAgAKABQAAAD1/wUAAgAKABQAAAD2/wUAAgALABMAAAD3/wUAAgAKABQAAAD4/wUAAgAKABMAAAD5/wUAAgALABQAAAD6/wUAAgAKABQAAAD7/wUAAgAKABMAAAD8/wUAAgALABQAAAD9/wUAAgAKABQAAAD+/wUAAgALABQAAAD//wUAAgALABQAAAAAAAUAAgALABQAAAABAAUAAgALABQAAAACAAUAAgAKABQAAAADAAUAAgALABQAAAAEAAUAAgAKABQAAAAFAAUAAgALABMAAAAGAAUAAgALABMAAAAHAAUAAgAKABMAAAAIAAUAAgAKABMAAAD2//z/AgALABIAAAD1//z/AgALABIAAAD2//v/AgALABEAAAD1//v/AgAKABEAAAD2//r/AgALABEAAAD1//r/AgALABEAAAA=")
@@ -51,6 +39,7 @@ tile_map_data = PackedByteArray("AAACAP//AgATAAcAAAA=")
 tile_set = ExtResource("2_baglu")
 
 [node name="Controllers" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
 
 [node name="GridController" type="Node" parent="Controllers"]
 script = ExtResource("3_t45w4")
@@ -60,171 +49,12 @@ script = ExtResource("4_vqfsp")
 
 [node name="Troops" type="Node2D" parent="."]
 
-[node name="Goblin" type="Area2D" parent="Troops"]
-position = Vector2(144, -16)
-script = ExtResource("8_i6jx3")
+[node name="Hobglobin" parent="Troops" instance=ExtResource("11_33mrd")]
+position = Vector2(-272, -16)
+
+[node name="Hobglobin2" parent="Troops" instance=ExtResource("11_33mrd")]
+position = Vector2(-208, 16)
 faction = 1
-
-[node name="Sprite2D" type="Sprite2D" parent="Troops/Goblin"]
-material = ExtResource("9_jn13j")
-position = Vector2(-0.999995, -8)
-texture = ExtResource("7_hh5oj")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Troops/Goblin"]
-shape = SubResource("RectangleShape2D_vqfsp")
-
-[node name="LifeSprite" type="Sprite2D" parent="Troops/Goblin"]
-position = Vector2(12, 9)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("11_vciil")
-
-[node name="AttackSprite" type="Sprite2D" parent="Troops/Goblin"]
-position = Vector2(-11, 8)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("12_vciil")
-
-[node name="LifePoints" type="Label" parent="Troops/Goblin"]
-offset_left = 6.0
-offset_top = 2.0
-offset_right = 18.0
-offset_bottom = 16.0
-text = "99"
-label_settings = ExtResource("13_isyof")
-horizontal_alignment = 1
-
-[node name="AtkPoints" type="Label" parent="Troops/Goblin"]
-offset_left = -15.0
-offset_top = 2.0
-offset_right = -7.0
-offset_bottom = 16.0
-text = "99"
-label_settings = ExtResource("13_isyof")
-horizontal_alignment = 1
-
-[node name="Goblin2" type="Area2D" parent="Troops"]
-position = Vector2(175, 16)
-script = ExtResource("8_i6jx3")
-faction = 1
-
-[node name="Sprite2D" type="Sprite2D" parent="Troops/Goblin2"]
-material = ExtResource("9_jn13j")
-position = Vector2(-0.999995, -8)
-texture = ExtResource("7_hh5oj")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Troops/Goblin2"]
-shape = SubResource("RectangleShape2D_vqfsp")
-
-[node name="LifeSprite" type="Sprite2D" parent="Troops/Goblin2"]
-position = Vector2(12, 9)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("11_vciil")
-
-[node name="AttackSprite" type="Sprite2D" parent="Troops/Goblin2"]
-position = Vector2(-11, 8)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("12_vciil")
-
-[node name="LifePoints" type="Label" parent="Troops/Goblin2"]
-offset_left = 6.0
-offset_top = 2.0
-offset_right = 18.0
-offset_bottom = 16.0
-text = "99"
-label_settings = ExtResource("13_isyof")
-horizontal_alignment = 1
-
-[node name="AtkPoints" type="Label" parent="Troops/Goblin2"]
-offset_left = -15.0
-offset_top = 2.0
-offset_right = -7.0
-offset_bottom = 16.0
-text = "99"
-label_settings = ExtResource("13_isyof")
-horizontal_alignment = 1
-
-[node name="Hobglobin" type="Area2D" parent="Troops"]
-position = Vector2(-271, -15)
-script = ExtResource("8_i6jx3")
-walk_distance = 7
-total_life_points = 3
-
-[node name="Sprite2D" type="Sprite2D" parent="Troops/Hobglobin"]
-material = ExtResource("9_jn13j")
-position = Vector2(-3.09944e-06, -8)
-texture = ExtResource("11_6irmp")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Troops/Hobglobin"]
-shape = SubResource("RectangleShape2D_vqfsp")
-
-[node name="LifeSprite" type="Sprite2D" parent="Troops/Hobglobin"]
-position = Vector2(12, 9)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("11_vciil")
-
-[node name="AttackSprite" type="Sprite2D" parent="Troops/Hobglobin"]
-position = Vector2(-11, 8)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("12_vciil")
-
-[node name="LifePoints" type="Label" parent="Troops/Hobglobin"]
-offset_left = 6.0
-offset_top = 2.0
-offset_right = 18.0
-offset_bottom = 16.0
-text = "99"
-label_settings = ExtResource("13_isyof")
-horizontal_alignment = 1
-
-[node name="AtkPoints" type="Label" parent="Troops/Hobglobin"]
-offset_left = -15.0
-offset_top = 2.0
-offset_right = -7.0
-offset_bottom = 16.0
-text = "99"
-label_settings = ExtResource("13_isyof")
-horizontal_alignment = 1
-
-[node name="Hobglobin2" type="Area2D" parent="Troops"]
-position = Vector2(-271, 17)
-script = ExtResource("8_i6jx3")
-walk_distance = 7
-total_life_points = 3
-
-[node name="Sprite2D" type="Sprite2D" parent="Troops/Hobglobin2"]
-material = ExtResource("9_jn13j")
-position = Vector2(-3.09944e-06, -8)
-texture = ExtResource("11_6irmp")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Troops/Hobglobin2"]
-shape = SubResource("RectangleShape2D_vqfsp")
-
-[node name="LifeSprite" type="Sprite2D" parent="Troops/Hobglobin2"]
-position = Vector2(12, 9)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("11_vciil")
-
-[node name="AttackSprite" type="Sprite2D" parent="Troops/Hobglobin2"]
-position = Vector2(-11, 8)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("12_vciil")
-
-[node name="LifePoints" type="Label" parent="Troops/Hobglobin2"]
-offset_left = 6.0
-offset_top = 2.0
-offset_right = 18.0
-offset_bottom = 16.0
-text = "99"
-label_settings = ExtResource("13_isyof")
-horizontal_alignment = 1
-
-[node name="AtkPoints" type="Label" parent="Troops/Hobglobin2"]
-offset_left = -15.0
-offset_top = 2.0
-offset_right = -7.0
-offset_bottom = 16.0
-text = "99"
-label_settings = ExtResource("13_isyof")
-horizontal_alignment = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-48, -1)
@@ -241,23 +71,12 @@ total_life_points = 10
 scale = Vector2(2, 2)
 texture = ExtResource("17_ycryd")
 
-[node name="LifeSprite" type="Sprite2D" parent="Statues/PlayerStatue"]
-position = Vector2(0, 50)
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("11_vciil")
-
-[node name="LifePoints" type="Label" parent="Statues/PlayerStatue"]
-offset_left = -15.0
-offset_top = 30.0
-offset_right = 15.0
-offset_bottom = 60.0
-text = "99"
-label_settings = SubResource("LabelSettings_uo6h6")
-horizontal_alignment = 1
-
 [node name="TurnSprite" type="Sprite2D" parent="Statues/PlayerStatue"]
 position = Vector2(-1, -51)
 texture = ExtResource("21_aomoi")
+
+[node name="Status" parent="Statues/PlayerStatue" instance=ExtResource("9_ycryd")]
+position = Vector2(0, 50)
 
 [node name="EnemyStatue" type="Area2D" parent="Statues"]
 position = Vector2(223, 15)
@@ -272,20 +91,6 @@ scale = Vector2(2, 2)
 texture = ExtResource("17_ycryd")
 flip_h = true
 
-[node name="LifeSprite" type="Sprite2D" parent="Statues/EnemyStatue"]
-position = Vector2(0, 50)
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("11_vciil")
-
-[node name="LifePoints" type="Label" parent="Statues/EnemyStatue"]
-offset_left = -15.0
-offset_top = 30.0
-offset_right = 15.0
-offset_bottom = 60.0
-text = "99"
-label_settings = SubResource("LabelSettings_uo6h6")
-horizontal_alignment = 1
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Statues/EnemyStatue"]
 position = Vector2(1.5, 17.5)
 shape = SubResource("RectangleShape2D_uo6h6")
@@ -293,6 +98,9 @@ shape = SubResource("RectangleShape2D_uo6h6")
 [node name="TurnSprite" type="Sprite2D" parent="Statues/EnemyStatue"]
 position = Vector2(-1, -51)
 texture = ExtResource("21_aomoi")
+
+[node name="Status" parent="Statues/EnemyStatue" instance=ExtResource("9_ycryd")]
+position = Vector2(0, 50)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3

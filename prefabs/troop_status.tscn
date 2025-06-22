@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddnsdqnpbw23m"]
+
+[ext_resource type="Texture2D" uid="uid://clfln8e51ruhi" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/armour/shield_of_reflection.png" id="1_torjk"]
+[ext_resource type="Texture2D" uid="uid://g1xfsjbyyifb" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/unseen_weapon.png" id="2_kx7m5"]
+[ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="3_xhx6o"]
+[ext_resource type="Texture2D" uid="uid://snd47pf1fcpy" path="res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png" id="4_kx7m5"]
+
+[node name="Status" type="Node2D"]
+
+[node name="LifeSprite" type="Sprite2D" parent="."]
+position = Vector2(11, 11)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_torjk")
+
+[node name="LifePoints" type="Label" parent="."]
+offset_left = 5.0
+offset_top = 4.0
+offset_right = 17.0
+offset_bottom = 18.0
+text = "99"
+label_settings = ExtResource("3_xhx6o")
+horizontal_alignment = 1
+
+[node name="AtkSprite" type="Sprite2D" parent="."]
+position = Vector2(-12, 10)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_kx7m5")
+
+[node name="AtkPoints" type="Label" parent="."]
+offset_left = -16.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 18.0
+text = "99"
+label_settings = ExtResource("3_xhx6o")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="MoveSprite" type="Sprite2D" parent="."]
+position = Vector2(-12, -12)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_kx7m5")
+
+[node name="WalkPoints" type="Label" parent="."]
+offset_left = -17.0
+offset_top = -18.0
+offset_right = -5.0
+offset_bottom = -4.0
+text = "9"
+label_settings = ExtResource("3_xhx6o")
+horizontal_alignment = 1

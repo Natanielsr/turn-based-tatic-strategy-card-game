@@ -4,7 +4,8 @@ class_name MobileTroop
 
 @onready var tile_grid: TileMapLayer = get_node("/root/Base/Tiles/TileGrid")
 @onready var sprite_2d: Sprite2D = $Sprite2D
-@onready var atk_points_label: Label = $"./AtkPoints"
+@onready var atk_points_label: Label = $"./Status/AtkPoints"
+@onready var walk_points_label: Label = $"./Status/WalkPoints"
 
 @export var attack_damage : int = 2
 @export var total_attack_count : int = 1
@@ -30,7 +31,7 @@ enum TroopState{
 
 func _on_changed_turn(turn):
 	if is_my_turn():
-		_current_walk_points = walk_distance
+		set_walk_points(walk_distance)
 		_current_attack_count = total_attack_count
 		_current_state = TroopState.NONE
 
@@ -45,8 +46,12 @@ func _ready() -> void:
 	toggle_outline(false)
 	update_atk_label()
 	
-	_current_walk_points = walk_distance
+	set_walk_points(walk_distance) 
 	_current_attack_count = total_attack_count
+	
+	if faction == EntityFaction.ENEMY:
+		$"./Status/AtkSprite".modulate = Color(1, 0, 0) 
+		
 	
 			
 func _physics_process(_delta: float) -> void:
@@ -59,12 +64,16 @@ func _physics_process(_delta: float) -> void:
 	#arrived in position
 	if global_position == target_position:
 		_current_id_path.pop_front() #remove the position
-		_current_walk_points -= 1 #remove point
+		set_walk_points(_current_walk_points - 1) #remove walk point
 		
 		if not _current_id_path.is_empty(): #verify if have next position
 			target_position = tile_grid.map_to_local(_current_id_path.front()) #pass to next position
 		else: #arrived
 			arrived()
+
+func set_walk_points(walk_points : int):
+	_current_walk_points = walk_points
+	walk_points_label.text = str(_current_walk_points)
 
 func arrived():
 	is_moving = false
