@@ -23,10 +23,10 @@ void fragment() {
             }
         }
     }
-    
+
     // Cor original do pixel
     vec4 original_color = texture(TEXTURE, UV);
-    
+
     // Se o pixel atual é transparente mas tem pixels opacos ao redor, aplica o outline
     if (original_color.a == 0.0 && alpha > 0.0) {
 		 // Escolhe a cor baseado em is_ally
