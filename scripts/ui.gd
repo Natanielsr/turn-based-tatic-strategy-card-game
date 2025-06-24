@@ -56,21 +56,18 @@ func cursor_attack_mode():
 		cursor_cancel()
 		return
 	
-	var distance = grid_controller.get_distance_to_attack_in_diagonal(
-		game_controller.selected_troop.global_position,
-		get_global_mouse_position())
-	
-	if distance > game_controller.selected_troop.attack_distance:
+	var enemy = enemy_on_mouse()
+	if not enemy:
 		cursor_cancel()
 		return
-		
-	if not enemy_on_mouse():
+	
+	if enemy.get_distance(game_controller.selected_troop.global_position) > 1:
 		cursor_cancel()
 		return
 		
 	cursor_attack()
 	
-func enemy_on_mouse():
+func enemy_on_mouse() -> Entity:
 	var mouse_pos = get_global_mouse_position()
 	var space_state = get_world_2d().direct_space_state
 	
@@ -87,9 +84,9 @@ func enemy_on_mouse():
 			var enemy = obj as Entity
 			
 			if enemy.faction == Entity.EntityFaction.ENEMY:
-				return true
+				return enemy
 				
-	return false
+	return null
 
 
 func _on_changed_turn(turn: GameController.Turn):
@@ -119,10 +116,10 @@ func cursor_normal():
 	Input.set_custom_mouse_cursor(null)
 	
 func cursor_cancel():
-	Input.set_custom_mouse_cursor(TRAVEL_EXCLUSION_CENTRE)
+	Input.set_custom_mouse_cursor(TRAVEL_EXCLUSION_CENTRE, Input.CURSOR_ARROW, Vector2(16, 16))
 	
 func cursor_attack():
-	Input.set_custom_mouse_cursor(cursor_attack_texture)
+	Input.set_custom_mouse_cursor(cursor_attack_texture, Input.CURSOR_ARROW, Vector2(16, 16))
 	
 func cursor_boots():
-	Input.set_custom_mouse_cursor(BOOTS_1_BROWN)
+	Input.set_custom_mouse_cursor(BOOTS_1_BROWN, Input.CURSOR_ARROW, Vector2(16, 16))
