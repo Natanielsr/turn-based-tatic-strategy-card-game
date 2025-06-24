@@ -53,24 +53,16 @@ func draw_path():
 	draw_polyline(point_path, color, 4)
 	
 func draw_mouse_position_rect():
-	if game_controller.selected_troop == null:
+	
+	if game_controller.action_buttons.visible:
 		return
+	
+	target_position = get_tile_grid_mouse_position()
 		
-	if game_controller.current_troop_state() == MobileTroop.TroopState.NONE:
-		return
-		
-	if not game_controller.selected_troop.is_moving: #moving
-		target_position = get_tile_grid_mouse_position()
-		
-	if target_position == null: #no target
+	if not target_position: #no target
 		return	
-	
 	# Converte a posição do tile de volta para coordenadas globais
-	var tile_pixel_position = tile_grid.map_to_local(target_position)	
-	
-	if game_controller.current_troop_state() == MobileTroop.TroopState.WALK:
-		if not grid_controller.is_walkable_position(tile_pixel_position):
-			return
+	var tile_pixel_position = tile_grid.map_to_local(target_position)		
 			
 	var retangulo = Rect2(tile_pixel_position - Vector2(16, 16), Vector2(32, 32))
 	var cor_preenchimento = Color(1, 1, 1, 0.5)  # Azul semi-transparente
