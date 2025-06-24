@@ -37,11 +37,13 @@ horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="MoveSprite" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(-12, -12)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("4_kx7m5")
 
 [node name="WalkPoints" type="Label" parent="."]
+visible = false
 offset_left = -17.0
 offset_top = -18.0
 offset_right = -5.0

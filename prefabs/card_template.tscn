@@ -1,0 +1,67 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8cb4un1rxlhb"]
+
+[ext_resource type="Texture2D" uid="uid://c45s2vk0vkver" path="res://textures/fantasy-card-assets/pixelCardAssest_V01.png" id="1_n5gaa"]
+[ext_resource type="Texture2D" uid="uid://cn7bmne2eh6kx" path="res://textures/crawl-tiles Oct-5-2010/item/staff/i-staff_energy.png" id="2_83b6c"]
+
+[node name="CardTemplate" type="Node2D"]
+metadata/_edit_lock_ = true
+
+[node name="Base" type="Sprite2D" parent="."]
+texture = ExtResource("1_n5gaa")
+region_enabled = true
+region_rect = Rect2(250, 4, 100, 128)
+metadata/_edit_lock_ = true
+
+[node name="Border" type="Sprite2D" parent="."]
+position = Vector2(0, -22)
+texture = ExtResource("1_n5gaa")
+region_enabled = true
+region_rect = Rect2(140, 136, 86, 72)
+metadata/_edit_lock_ = true
+
+[node name="Desc" type="Sprite2D" parent="."]
+position = Vector2(0, 36)
+texture = ExtResource("1_n5gaa")
+region_enabled = true
+region_rect = Rect2(135, 224, 96, 29)
+
+[node name="Name" type="Sprite2D" parent="."]
+position = Vector2(0, 6)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("1_n5gaa")
+region_enabled = true
+region_rect = Rect2(135, 273, 96, 18)
+metadata/_edit_lock_ = true
+
+[node name="Atk" type="Sprite2D" parent="."]
+position = Vector2(-40, 48)
+scale = Vector2(2, 2)
+texture = ExtResource("1_n5gaa")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(544, 272, 16, 16)
+metadata/_edit_lock_ = true
+
+[node name="Life" type="Sprite2D" parent="."]
+position = Vector2(40, 48)
+scale = Vector2(2, 2)
+texture = ExtResource("1_n5gaa")
+region_enabled = true
+region_rect = Rect2(429, 148, 13, 12)
+metadata/_edit_lock_ = true
+
+[node name="BackgroundImage" type="Sprite2D" parent="."]
+modulate = Color(0.2484, 0.2484, 0.2484, 1)
+position = Vector2(-3.09944e-06, -28)
+scale = Vector2(0.914894, 0.459016)
+texture = ExtResource("1_n5gaa")
+region_enabled = true
+region_rect = Rect2(14, 476, 94, 122)
+
+[node name="Energy" type="Sprite2D" parent="."]
+position = Vector2(-40, -56)
+scale = Vector2(2, 2)
+texture = ExtResource("2_83b6c")
+region_enabled = true
+region_rect = Rect2(17, 18, 13, 12)
+metadata/_edit_lock_ = true

@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://dap8nd0jlggox"]
+
+[ext_resource type="Script" uid="uid://bu3ljyc5fy6tp" path="res://scripts/card_slot.gd" id="1_nyxi1"]
+[ext_resource type="Texture2D" uid="uid://c45s2vk0vkver" path="res://textures/fantasy-card-assets/pixelCardAssest_V01.png" id="1_vni0l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y4tyl"]
+size = Vector2(128, 160)
+
+[node name="CardSlot" type="Node2D"]
+script = ExtResource("1_nyxi1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(4.76837e-07, 1.43051e-06)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("1_vni0l")
+region_enabled = true
+region_rect = Rect2(120, 337, 100, 128)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_y4tyl")

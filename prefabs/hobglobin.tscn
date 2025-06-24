@@ -9,6 +9,7 @@
 size = Vector2(32, 32)
 
 [node name="Hobglobin" type="Area2D"]
+z_index = 2
 script = ExtResource("1_t7qpj")
 walk_distance = 7
 total_life_points = 3
