@@ -69,7 +69,7 @@ func set_faction():
 	elif faction == EntityFaction.ALLY:
 		$Sprite2D.material = ALLY_OUTLINE
 		
-func get_distance(pos : Vector2):
+func get_distance(pos : Vector2) -> int:
 	var distance = grid_controller.get_distance(
 		global_position,
 		pos
