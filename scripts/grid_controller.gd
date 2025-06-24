@@ -67,10 +67,11 @@ func calculate_path(start : Vector2, end : Vector2) -> Array[Vector2i]:
 func get_distance(point_a: Vector2, point_b : Vector2):
 	
 	if not in_bounds( point_a):
-		return 0
-		
+		push_error("Cant get distance of point a out of bounds")
+
 	if not in_bounds(point_b):
-		return 0
+		push_error("Cant get distance of point b out of bounds")
+
 	
 	var walkable_aux = is_walkable_position(point_b)
 	
