@@ -1,53 +1,23 @@
-[gd_scene load_steps=8 format=3 uid="uid://dwjdqt8me48ba"]
+[gd_scene load_steps=6 format=3 uid="uid://dwjdqt8me48ba"]
 
-[ext_resource type="Script" uid="uid://c5vook15h8y67" path="res://scripts/card_manager.gd" id="1_3k6o3"]
+[ext_resource type="PackedScene" uid="uid://wk0f6s72b1fo" path="res://components/card_manager.tscn" id="1_3jbsy"]
+[ext_resource type="PackedScene" uid="uid://bfcwvkko5hp87" path="res://components/player_hand.tscn" id="3_3jbsy"]
 [ext_resource type="PackedScene" uid="uid://dap8nd0jlggox" path="res://prefabs/card_slot.tscn" id="3_21g1n"]
-[ext_resource type="Script" uid="uid://cqpxegqqsicb0" path="res://scripts/deck.gd" id="4_3jbsy"]
-[ext_resource type="Script" uid="uid://dus72it6kmj1x" path="res://scripts/player_hand.gd" id="4_ugmwl"]
-[ext_resource type="Texture2D" uid="uid://ceuuyp5w5xxg3" path="res://textures/fantasy-card-assets/cardBacks.png" id="5_3jbsy"]
-[ext_resource type="Script" uid="uid://vsb8lbqyskwj" path="res://scripts/input_manager.gd" id="6_3jbsy"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3jbsy"]
-size = Vector2(96, 128)
+[ext_resource type="PackedScene" uid="uid://c6wsw6st1knk5" path="res://components/deck.tscn" id="4_21g1n"]
+[ext_resource type="PackedScene" uid="uid://yuwb7ux7gw5e" path="res://components/input_manager.tscn" id="6_ftsx4"]
 
 [node name="CardPlayground" type="Node2D"]
 
-[node name="CardManager" type="Node2D" parent="."]
-script = ExtResource("1_3k6o3")
+[node name="CardManager" parent="." instance=ExtResource("1_3jbsy")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="CardSlot" parent="." instance=ExtResource("3_21g1n")]
 position = Vector2(-136, 0)
 
-[node name="PlayerHand" type="Node2D" parent="."]
-script = ExtResource("4_ugmwl")
+[node name="PlayerHand" parent="." instance=ExtResource("3_3jbsy")]
 
-[node name="Deck" type="Node2D" parent="."]
-z_index = -2
+[node name="Deck" parent="." instance=ExtResource("4_21g1n")]
 position = Vector2(544, 248)
-script = ExtResource("4_3jbsy")
 
-[node name="Sprite2D" type="Sprite2D" parent="Deck"]
-texture = ExtResource("5_3jbsy")
-region_enabled = true
-region_rect = Rect2(226, 12, 96, 128)
-
-[node name="Area2D" type="Area2D" parent="Deck"]
-collision_layer = 4
-collision_mask = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Deck/Area2D"]
-shape = SubResource("RectangleShape2D_3jbsy")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Deck"]
-modulate = Color(0, 0, 0, 1)
-offset_left = -8.0
-offset_top = -24.0
-offset_right = 32.0
-offset_bottom = 16.0
-scale = Vector2(2, 2)
-text = "0"
-
-[node name="InputManager" type="Node2D" parent="."]
-script = ExtResource("6_3jbsy")
+[node name="InputManager" parent="." instance=ExtResource("6_ftsx4")]
