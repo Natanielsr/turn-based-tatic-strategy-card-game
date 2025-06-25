@@ -1,7 +1,14 @@
 extends Node2D
 
+class_name Card
+
 signal hovered
 signal hovered_off
+
+var card_id
+var type
+var attack_points : int
+var life_points: int
 
 var start_position
 
