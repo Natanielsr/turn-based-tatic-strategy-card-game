@@ -14,6 +14,7 @@ var current_life_points : int
 
 
 enum EntityFaction{
+	NONE,
 	ALLY,
 	ENEMY
 }
@@ -32,6 +33,9 @@ func is_my_turn():
 		return true
 	else:
 		return false
+		
+func set_total_life(life : int):
+	total_life_points = life
 
 func take_damage(damage: int):
 	_set_current_life(current_life_points - damage)
@@ -42,7 +46,11 @@ func die():
 	push_error("Method 'die' must be overridden in a subclass to ",name)
 	
 func _set_current_life(life_points : int):
-	current_life_points = life_points
+	if life_points > total_life_points:
+		current_life_points = total_life_points
+	else:
+		current_life_points = life_points
+		
 	update_life_label()
 	
 func update_life_label():
@@ -50,11 +58,6 @@ func update_life_label():
 		push_error("Create a life label in the object to ",name)
 	else:
 		life_points_label.text = str(current_life_points)
-
-func _input_event(_viewport, event, _shape_idx):
-	if event.is_action_pressed("left_click"):
-		game_controller.click_on_entity(self)
-		print('click')
 		
 func toggle_outline(show_outline: bool):
 	$Sprite2D.use_parent_material = not show_outline	
@@ -63,9 +66,6 @@ func set_faction():
 	if faction == EntityFaction.ENEMY:
 		$Sprite2D.material = ENEMY_OUTLINE
 		life_background_sprite.modulate = Color(1, 0, 0)
-		
-			
-			
 	elif faction == EntityFaction.ALLY:
 		$Sprite2D.material = ALLY_OUTLINE
 		
