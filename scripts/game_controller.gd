@@ -46,41 +46,12 @@ func _ready() -> void:
 func click_on_entity(entity : Entity):
 	if turn == Turn.ENEMY:
 		return
-	
+
 	match entity.faction:
 		Entity.EntityFaction.ALLY:
 			select_a_troop(entity)
 		Entity.EntityFaction.ENEMY:
 			mark_target(entity)
-
-func _input(event):
-	
-	if turn == Turn.ENEMY:
-		return
-	
-	if event.is_action_pressed("left_click"):
-		left_click()
-			
-	if event.is_action_pressed("right_click"):
-		if selected_troop and not selected_troop.is_moving:
-			deselect_troop()
-		if target:
-			deselect_target()
-	
-func left_click():
-	if not selected_troop:
-		return
-	
-	match current_troop_state():
-		MobileTroop.TroopState.WALK:
-			move_troop()
-		MobileTroop.TroopState.ATTACK:
-			pass
-			
-func move_troop():
-	var is_moving = selected_troop.move_troop()
-	if is_moving:
-		show_action_buttons(false)
 		
 func mark_target(enemy : Entity):
 	if target:
@@ -90,23 +61,19 @@ func mark_target(enemy : Entity):
 	print("target marked: ",target.name)
 	target.toggle_outline(true)
 	
-	if current_troop_state() == MobileTroop.TroopState.ATTACK:
-		attack()
-
-func attack():
-	selected_troop.attack(target)
+	if selected_troop:
+		selected_troop.attack(target)
 
 func select_a_troop(troop : Entity):
 	if not troop is MobileTroop:
 		return
-	if troop.faction != Entity.EntityFaction.ALLY:
-		return
+		
 	if selected_troop and selected_troop.is_moving:
 		return
 		
 	deselect_troop()
 	selected_troop = troop
-	show_action_buttons(true)
+	#show_action_buttons(true)
 	selected_troop.toggle_outline(true)
 	print("troop selected: ",selected_troop.name)
 			
