@@ -4,7 +4,10 @@ class_name Deck
 
 var player_deck = ["hobgoblin", "goblin", "healing_spell"]
 const CARD_SCENE_PATH = "res://prefabs/card.tscn"
+@onready var card_scene = preload(CARD_SCENE_PATH)
 const card_database = preload("res://scripts/card_database.gd")
+@onready var card_manager: CardManager = $"../CardManager"
+
 
 func _ready() -> void:
 	player_deck.shuffle()
@@ -21,16 +24,30 @@ func draw_card():
 		$RichTextLabel.visible = false
 	
 	$RichTextLabel.text = str(player_deck.size())
-	var card_scene = preload(CARD_SCENE_PATH)
-	var new_card = card_scene.instantiate()
-	var card_data = card_database.CARDS[card_drawn_name]
-	var card_image_path = str("res://textures/cards/"+card_drawn_name+".png")
+	
+	var new_card = create_card(card_drawn_name)
+	card_manager.add_child(new_card)
+	
+	$"../PlayerHand".add_card_to_hand(new_card)
+	new_card.get_node("AnimationPlayer").play("card_flip")
+
+func create_card(card_name):
+	
+	var new_card : Card = card_scene.instantiate()
+	
+	var card_data = card_database.CARDS[card_name]
+	
+	new_card.card_id = card_name
+	var card_image_path = str("res://textures/cards/"+card_name+".png")
 	new_card.get_node("CardImage").texture = load(card_image_path)
 	new_card.get_node("Name").text = str(card_data.name)
 	new_card.get_node("Energy").text = str(card_data.energy_cost)
+	new_card.type = card_data.type
 	if card_data.type == "monster":
 		new_card.get_node("Attack").text = str(card_data.attack)
+		new_card.attack_points = int(card_data.attack)
 		new_card.get_node("Health").text = str(card_data.health)
+		new_card.life_points = int(card_data.health)
 	else:
 		new_card.get_node("Attack").visible = false 
 		new_card.get_node("Health").visible = false
@@ -38,7 +55,8 @@ func draw_card():
 		new_card.get_node("CardTemplate/Life").visible = false
 		
 	new_card.position = position
-	$"../CardManager".add_child(new_card)
-	new_card.name = "Card"
-	$"../PlayerHand".add_card_to_hand(new_card)
-	new_card.get_node("AnimationPlayer").play("card_flip")
+	new_card.z_index = card_manager.Z_INDEX_CARD
+	new_card.name = str(card_data.name)
+	
+	return new_card
+	
