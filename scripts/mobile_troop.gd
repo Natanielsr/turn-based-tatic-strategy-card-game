@@ -7,7 +7,7 @@ class_name MobileTroop
 @onready var atk_points_label: Label = $"./Status/AtkPoints"
 @onready var walk_points_label: Label = $"./Status/WalkPoints"
 
-@export var attack_damage : int = 2
+var attack_points : int = 1
 @export var total_attack_count : int = 1
 var _current_attack_count = total_attack_count
 @export var attack_distance : int = 1
@@ -52,7 +52,6 @@ func _ready() -> void:
 	if faction == EntityFaction.ENEMY:
 		$"./Status/AtkSprite".modulate = Color(1, 0, 0) 
 		
-	
 			
 func _physics_process(_delta: float) -> void:
 	if not is_moving:
@@ -115,9 +114,11 @@ func move_troop():
 	
 	return is_moving
 	
-	
+func set_attack_points(atk : int):
+	attack_points = atk
+
 func attack(entity : Entity):
-	
+	print('attack')
 	if _current_attack_count <= 0:
 		print( name, " dont have attack points ")
 		return
@@ -127,14 +128,14 @@ func attack(entity : Entity):
 		print("too far to ", name, " attack ",entity.name," distance: ",distance)
 		return
 	
-	print(name, " attacks ", entity.name, " with ", attack_damage, " damage")
-	entity.take_damage(attack_damage)
+	print(name, " attacks ", entity.name, " with ", attack_points, " damage")
+	entity.take_damage(attack_points)
 	_current_attack_count -= 1
 	
 	change_state(TroopState.NONE)
 	
 	if entity is MobileTroop:
-		take_damage(entity.attack_damage)
+		take_damage(entity.attack_points)
 		
 func get_distance(pos : Vector2):
 	var distance = grid_controller.get_distance_to_attack_in_diagonal(
@@ -150,7 +151,7 @@ func die():
 	queue_free()
 	
 func update_atk_label():
-	atk_points_label.text = str(attack_damage)
+	atk_points_label.text = str(attack_points)
 		
 func change_state(new_state : TroopState):
 	_current_state = new_state
