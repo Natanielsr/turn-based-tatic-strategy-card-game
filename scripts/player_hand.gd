@@ -2,10 +2,8 @@ extends Node2D
 
 class_name PlayerHand
 
-const HAND_COUNT = 5
-
-const CARD_WIDTH = 120
-const HAND_Y_POSITION = 250
+const CARD_WIDTH = 80
+const HAND_Y_POSITION = 200
 
 var player_hand = []
 var center_screen_x
@@ -39,7 +37,7 @@ func animate_card_to_position(card, new_position):
 
 func get_world_center():
 	# Método mais confiável para pegar a câmera atual
-	var camera : Camera2D = $"../Camera2D"
+	var camera : Camera2D = get_viewport().get_camera_2d()
 	if camera:
 		return camera.get_screen_center_position()
 	else:
