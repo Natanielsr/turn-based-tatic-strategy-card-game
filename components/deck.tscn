@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6wsw6st1knk5"]
+
+[ext_resource type="Script" uid="uid://cqpxegqqsicb0" path="res://scripts/deck.gd" id="1_mmqtd"]
+[ext_resource type="Texture2D" uid="uid://ceuuyp5w5xxg3" path="res://textures/fantasy-card-assets/cardBacks.png" id="2_dcrgl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3jbsy"]
+size = Vector2(96, 128)
+
+[node name="Deck" type="Node2D"]
+z_index = -2
+script = ExtResource("1_mmqtd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_dcrgl")
+region_enabled = true
+region_rect = Rect2(226, 12, 96, 128)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_3jbsy")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+modulate = Color(0, 0, 0, 1)
+offset_left = -8.0
+offset_top = -24.0
+offset_right = 32.0
+offset_bottom = 16.0
+scale = Vector2(2, 2)
+text = "0"
