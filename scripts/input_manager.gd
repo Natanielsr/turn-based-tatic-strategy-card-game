@@ -3,14 +3,19 @@ extends Node2D
 signal left_mouse_button_clicked
 signal left_mouse_button_released
 
-const COLLISION_MASK_CARD = 1
+const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_DECK = 4
 
 @onready var card_manager: CardManager = $"../CardManager"
 @onready var deck: Deck = $"../Deck"
+@onready var game_controller: GameController = $"../../Controllers/GameController"
 
 
 func _input(event):
+	
+	if game_controller.turn != GameController.Turn.PLAYER:
+		return
+	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			emit_signal("left_mouse_button_clicked")
