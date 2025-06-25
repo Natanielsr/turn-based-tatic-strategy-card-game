@@ -18,10 +18,7 @@ func draw_possible_path():
 	if game_controller.selected_troop == null:
 		return
 		
-	if game_controller.current_troop_state() != MobileTroop.TroopState.WALK:
-		return
-		
-	if game_controller.has_troop_moving():
+	if game_controller.selected_troop.is_moving:
 		return
 		
 	var current_mouse_path = grid_controller.calculate_point_path(
@@ -59,8 +56,10 @@ func draw_mouse_position_rect():
 	
 	target_position = get_tile_grid_mouse_position()
 		
-	if not target_position: #no target
+	if target_position == null: #no target
 		return	
+		
+	
 	# Converte a posição do tile de volta para coordenadas globais
 	var tile_pixel_position = tile_grid.map_to_local(target_position)		
 			
