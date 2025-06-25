@@ -134,19 +134,25 @@ func is_base_area(pos : Vector2) -> bool:
 	else:
 		return false
 		
-
+func get_tile_world_position(pos: Vector2):
+	if not in_bounds(pos):
+		return null
+	var tile_pos = tile_grid.local_to_map(pos)
+	var world_tile_pos = tile_grid.map_to_local(tile_pos)
+	
+	return world_tile_pos
 		
-func faction_area(pos : Vector2) -> int:
+func get_faction_area(pos : Vector2) -> Entity.EntityFaction:
 	var tile_data = get_data_pos(pos)
 	
 	if not tile_data:
-		return 0
+		return Entity.EntityFaction.NONE
 	elif tile_data.get_custom_data("faction_area") == 1:
-		return 1 #ALLY
+		return Entity.EntityFaction.ALLY #ALLY
 	elif tile_data.get_custom_data("faction_area") == 2:
-		return 2 #ENEMY
+		return Entity.EntityFaction.ENEMY #ENEMY
 	else:
-		return 0
+		return Entity.EntityFaction.NONE
 	
 func get_data_pos(pos : Vector2):
 	var tile_pos = tile_grid.local_to_map(pos)
