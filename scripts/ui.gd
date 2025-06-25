@@ -19,53 +19,10 @@ func _process(delta: float) -> void:
 		cursor_normal()
 		return
 		
-	if game_controller.current_troop_state() == MobileTroop.TroopState.WALK:
-		cursor_walk_mode()	
-	elif game_controller.current_troop_state() == MobileTroop.TroopState.ATTACK:
-		cursor_attack_mode()
+	if enemy_on_mouse():
+		cursor_attack()
 	else:
-		cursor_normal()
-		
-func cursor_walk_mode():
-	if game_controller.selected_troop.is_moving:
-		cursor_cancel()
-		return
-		
-	if game_controller.possible_path  == null or game_controller.possible_path .is_empty():
-		cursor_cancel()
-		return
-	
-	var is_walkable : bool = grid_controller.is_walkable_position(get_global_mouse_position())
-	if not is_walkable:
-		cursor_cancel()
-		return
-	
-	if game_controller.selected_troop.get_current_walk_points() <= 0:
-		cursor_cancel()
-		return
-	
-	#not include de actual path
-	if game_controller.possible_path.size() - 1 > game_controller.selected_troop.get_current_walk_points():
-		cursor_cancel()
-		return
-		
-	cursor_boots()
-		
-func cursor_attack_mode():
-	if game_controller.selected_troop.get_attack_count() <= 0:
-		cursor_cancel()
-		return
-	
-	var enemy = enemy_on_mouse()
-	if not enemy:
-		cursor_cancel()
-		return
-	
-	if enemy.get_distance(game_controller.selected_troop.global_position) > 1:
-		cursor_cancel()
-		return
-		
-	cursor_attack()
+		cursor_boots()
 	
 func enemy_on_mouse() -> Entity:
 	var mouse_pos = get_global_mouse_position()
@@ -107,10 +64,6 @@ func _on_finish_turn_pressed() -> void:
 
 func _on_enemy_finish_turn_pressed() -> void:
 	game_controller.shift_turn()
-	
-func _input(event):
-	if event.is_action_pressed("right_click"):
-		cursor_normal()
 		
 func cursor_normal():
 	Input.set_custom_mouse_cursor(null)
