@@ -20,6 +20,7 @@ func draw_possible_path():
 		
 	if game_controller.selected_troop.is_moving:
 		return
+	
 		
 	var current_mouse_path = grid_controller.calculate_point_path(
 		game_controller.selected_troop.global_position,
@@ -44,7 +45,7 @@ func draw_path():
 	#calculate points to draw	
 	var point_path = grid_controller.calculate_point_path(
 		game_controller.selected_troop.started_walk_position,
-		game_controller.selected_troop.clicked_target_position)
+		game_controller.selected_troop.final_walk_position)
 	
 	var color = Color(1, 1, 1, 0.5)
 	draw_polyline(point_path, color, 4)
