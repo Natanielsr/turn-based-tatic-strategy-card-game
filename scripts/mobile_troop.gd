@@ -2,57 +2,57 @@ extends Entity
 
 class_name MobileTroop 
 
+signal arrived_signal()
+
 @onready var tile_grid: TileMapLayer = get_node("/root/Base/Tiles/TileGrid")
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var atk_points_label: Label = $"./Status/AtkPoints"
 @onready var walk_points_label: Label = $"./Status/WalkPoints"
+@onready var troop_manager: TroopManager = get_node("/root/Base/TroopManager")
+
 
 var attack_points : int = 1
 @export var total_attack_count : int = 1
 var _current_attack_count = total_attack_count
 @export var attack_distance : int = 1
 
-var moviment_speed : float = 1
+var moviment_speed : float = 2
 @export var walk_distance = 5
 var _current_walk_points = walk_distance
 
 var target_position: Vector2
-var clicked_target_position : Vector2
 var started_walk_position : Vector2
+var final_walk_position : Vector2
 var is_moving: bool
 var _current_id_path: Array[Vector2i]
+var is_exausted = false
 
-var _current_state : TroopState
-enum TroopState{
-	NONE,
-	WALK,
-	ATTACK
-}
-
-func _on_changed_turn(turn):
+func _on_changed_turn(_turn):
 	if is_my_turn():
 		set_walk_points(walk_distance)
 		_current_attack_count = total_attack_count
-		_current_state = TroopState.NONE
+		is_exausted = false
+		sprite_2d.modulate = Color(1, 1, 1)
 
 func _ready() -> void:
+	
 	base_ready()
 	#define the actual poistion not walkable
 	grid_controller.set_walkable_position(
 		global_position,
 		false
 	)
-	_current_state = TroopState.NONE
 	toggle_outline(false)
 	update_atk_label()
 	
 	set_walk_points(walk_distance) 
-	_current_attack_count = total_attack_count
+	_current_attack_count = 0 #start with no atack 
 	
 	if faction == EntityFaction.ENEMY:
 		$"./Status/AtkSprite".modulate = Color(1, 0, 0) 
-		
-			
+	
+	is_exausted = false
+	
 func _physics_process(_delta: float) -> void:
 	if not is_moving:
 		return
@@ -76,16 +76,21 @@ func set_walk_points(walk_points : int):
 
 func arrived():
 	is_moving = false
-	change_state(TroopState.NONE)
 	game_controller.deselect_troop()
 	grid_controller.set_walkable_position(global_position, false)
+	set_exausted()
 	print(name, " arrived")
+	emit_signal("arrived_signal")
+	
 	
 
 func get_current_walk_points():
 	return _current_walk_points
 			
-func move_troop():
+func move_troop(pos_to_go):
+	if is_exausted:
+		return
+		
 	if is_moving:
 		return false
 		
@@ -93,10 +98,9 @@ func move_troop():
 		print("Troop ",name," Dont Have Walk Points")
 		return
 	
-	clicked_target_position = get_global_mouse_position()
 	var id_path = grid_controller.calculate_path(
 		global_position,
-		clicked_target_position)
+		pos_to_go)
 	
 	if id_path.is_empty(): #verify have path
 		return false
@@ -108,7 +112,10 @@ func move_troop():
 	_current_id_path = id_path
 	target_position = tile_grid.map_to_local(_current_id_path.front())
 	grid_controller.set_walkable_position(global_position, true)
+	
 	started_walk_position = global_position
+	final_walk_position = tile_grid.map_to_local(id_path.back()) 
+	
 	print(name," is moving")
 	is_moving = true
 	
@@ -132,11 +139,21 @@ func attack(entity : Entity):
 	entity.take_damage(attack_points)
 	_current_attack_count -= 1
 	
-	change_state(TroopState.NONE)
-	
 	if entity is MobileTroop:
 		take_damage(entity.attack_points)
 		
+	set_exausted()
+	game_controller.deselect_troop()
+		
+func set_exausted():
+	if _current_attack_count <= 0:
+		is_exausted = true
+	
+	if is_exausted:
+		sprite_2d.modulate = Color(0.5, 0.5, 0.5)  
+	else:
+		sprite_2d.modulate = Color(1, 1, 1)
+ 
 func get_distance(pos : Vector2):
 	var distance = grid_controller.get_distance_to_attack_in_diagonal(
 		global_position,
@@ -148,16 +165,12 @@ func get_distance(pos : Vector2):
 func die():
 	print(name," Die")
 	grid_controller.set_walkable_position(global_position, true)
+	troop_manager.remove_troop(self)
 	queue_free()
 	
 func update_atk_label():
 	atk_points_label.text = str(attack_points)
-		
-func change_state(new_state : TroopState):
-	_current_state = new_state
-
-func get_current_state():
-	return _current_state
 	
 func get_attack_count():
 	return _current_attack_count
+	
