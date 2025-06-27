@@ -11,6 +11,8 @@ var target: Entity
 @onready var action_buttons: Control = $"../../UI/ActionButtons"
 @onready var player_statue: PlayerStatue = $"../../Statues/PlayerStatue"
 
+const card_database = preload("res://scripts/card_database.gd")
+
 var current_id_path: Array[Vector2i]
 var current_point_path: PackedVector2Array
 
@@ -79,14 +81,9 @@ func select_a_troop(troop : Entity):
 			
 func deselect_troop():
 	if selected_troop != null:
-		change_troop_state(MobileTroop.TroopState.NONE)
 		show_action_buttons(false)
 		selected_troop.toggle_outline(false)
 		selected_troop = null
-		
-func change_troop_state(state : MobileTroop.TroopState):
-	if selected_troop != null:
-		selected_troop.change_state(state)
 		
 	
 func current_troop_state():
