@@ -22,7 +22,7 @@ enum EntityFaction{
 
 func base_ready() -> void:
 	_set_current_life(total_life_points)
-	set_faction()
+	define_faction_color()
 	game_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
 	
 func is_my_turn():
@@ -62,7 +62,7 @@ func update_life_label():
 func toggle_outline(show_outline: bool):
 	$Sprite2D.use_parent_material = not show_outline	
 	
-func set_faction():
+func define_faction_color():
 	if faction == EntityFaction.ENEMY:
 		$Sprite2D.material = ENEMY_OUTLINE
 		life_background_sprite.modulate = Color(1, 0, 0)
@@ -77,3 +77,5 @@ func get_distance(pos : Vector2) -> int:
 	
 	return distance
 		
+func set_faction(fct):
+	faction = fct
