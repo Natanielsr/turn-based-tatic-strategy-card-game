@@ -5,8 +5,9 @@ signal left_mouse_button_released
 
 @onready var game_controller: GameController = $"../GameController"
 @onready var card_manager: CardManager = $"../../CardSystem/CardManager"
-@onready var deck: Deck = $"../../CardSystem/Deck"
+@onready var deck_player: DeckPlayer = $"../../CardSystem/DeckPlayer"
 
+var clicked_target_position
 
 const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_DECK = 4
@@ -24,7 +25,8 @@ func _input(event):
 		if event.pressed:
 			emit_signal("left_mouse_button_clicked")
 			if game_controller.selected_troop:
-				game_controller.selected_troop.move_troop()
+				clicked_target_position = get_global_mouse_position()
+				game_controller.selected_troop.move_troop(clicked_target_position)
 			raycast_at_cursor()
 		else:
 			emit_signal("left_mouse_button_released")
@@ -48,7 +50,7 @@ func raycast_at_cursor():
 			click_on_entity(obj)
 		elif obj.get_parent() is Card:
 			click_on_card(obj)
-		elif obj.get_parent() is Deck:
+		elif obj.get_parent() is DeckPlayer:
 			click_on_deck(obj)
 		else:
 			print("other")
@@ -62,5 +64,5 @@ func click_on_card(obj):
 	if card_found:
 		card_manager.start_drag(card_found)
 		
-func click_on_deck(obj):
-	deck.draw_card()
+func click_on_deck(_obj):
+	deck_player.draw_card()
