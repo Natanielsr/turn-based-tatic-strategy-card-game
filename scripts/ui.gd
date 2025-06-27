@@ -14,15 +14,34 @@ func _ready() -> void:
 	game_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
 	set_turn(game_controller.turn)
 	
-func _process(delta: float) -> void:
+func _on_changed_turn(turn: GameController.Turn):
+	set_turn(turn)
+
+func set_turn(turn):
+	cursor_normal()
+	
+	if turn == GameController.Turn.PLAYER:
+		finish_turn_btn.disabled = false
+		enemy_finish_turn_btn.disabled = true
+	else:
+		finish_turn_btn.disabled = true
+		enemy_finish_turn_btn.disabled = false
+	
+func _process(_delta: float) -> void:
 	if not game_controller.selected_troop:
 		cursor_normal()
 		return
 		
 	if enemy_on_mouse():
-		cursor_attack()
+		if game_controller.selected_troop.get_attack_count() > 0:
+			cursor_attack()
+		else:
+			cursor_cancel()
 	else:
-		cursor_boots()
+		if not game_controller.selected_troop.is_exausted:
+			cursor_boots()
+		else:
+			cursor_cancel()
 	
 func enemy_on_mouse() -> Entity:
 	var mouse_pos = get_global_mouse_position()
@@ -46,18 +65,7 @@ func enemy_on_mouse() -> Entity:
 	return null
 
 
-func _on_changed_turn(turn: GameController.Turn):
-	set_turn(turn)
 
-func set_turn(turn):
-	cursor_normal()
-	
-	if turn == GameController.Turn.PLAYER:
-		finish_turn_btn.disabled = false
-		enemy_finish_turn_btn.disabled = true
-	else:
-		finish_turn_btn.disabled = true
-		enemy_finish_turn_btn.disabled = false
 
 func _on_finish_turn_pressed() -> void:
 	game_controller.shift_turn()
