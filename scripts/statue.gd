@@ -9,7 +9,7 @@ func _statue_ready() -> void:
 	turn_set(game_controller.turn)
 	
 	
-func turn_set(turn):
+func turn_set(_turn):
 	if is_my_turn():
 		show_turn_sprite(true)
 	else:
