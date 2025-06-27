@@ -64,6 +64,20 @@ func calculate_path(start : Vector2, end : Vector2) -> Array[Vector2i]:
 	
 	return id_path
 	
+func calculate_path_to_target(point_a : Vector2, point_b : Vector2):
+	
+	var walkable_aux = is_walkable_position(point_b)
+	
+	set_walkable_position(point_b, true)
+	var path = astar_grid.get_id_path(
+		tile_grid.local_to_map(point_a),
+		tile_grid.local_to_map(point_b)
+	).slice(1)
+	set_walkable_position(point_b, walkable_aux)
+	
+	return path
+	
+	
 func get_distance(point_a: Vector2, point_b : Vector2):
 	
 	if not in_bounds( point_a):
@@ -167,7 +181,7 @@ func get_tile_data(tile_position : Vector2i):
 func _on_move_btn_pressed() -> void:
 	pass # Replace with function body.
 	
-func is_achievable_path(start : Vector2, end : Vector2, walk_points : int):
+func is_achievable_path_with_walk_points(start : Vector2, end : Vector2, walk_points : int):
 	var temp_path = calculate_point_path(
 		start,
 		end
@@ -182,3 +196,59 @@ func is_achievable_path(start : Vector2, end : Vector2, walk_points : int):
 		
 	return true
 	
+func is_achievable_path(start : Vector2, end : Vector2):
+	var temp_path = calculate_point_path(
+		start,
+		end
+	)
+	
+	#not include de actual path
+	if temp_path.size() > 0:
+		return true
+	else:	
+		return false
+	
+func find_best_reachable_target(point_a: Vector2, point_b: Vector2, walk_points) -> Vector2:
+	
+	var start_pos: Vector2i = tile_grid.local_to_map(point_a)
+	var target_pos: Vector2i = tile_grid.local_to_map(point_b)
+	
+	var max_radius := 5
+	var path := astar_grid.get_id_path(start_pos, target_pos)
+	if path.size() > 0:
+		if path.size() > walk_points:
+			path.resize(walk_points)
+		return tile_grid.map_to_local(path.back())   # Caminho direto disponível
+
+	var best_pos := start_pos
+	var min_dist := INF
+	var best_path = []
+	for x_offset in range(-max_radius, max_radius + 1):
+		for y_offset in range(-max_radius, max_radius + 1):
+			var test_pos = target_pos + Vector2i(x_offset, y_offset)
+
+			# Ignora se não for ponto válido no grid
+			if not astar_grid.is_in_bounds(test_pos.x, test_pos.y):
+				continue
+
+			# Ignora se ponto estiver desabilitado
+			if astar_grid.is_point_solid(test_pos):
+				continue
+
+			var test_path = astar_grid.get_id_path(start_pos, test_pos)
+			if test_path.size() == 0:
+				continue  # Sem caminho até aqui
+
+			var dist_to_player = test_pos.distance_to(target_pos)
+			if dist_to_player < min_dist:
+				min_dist = dist_to_player
+				best_pos = test_pos
+				best_path = test_path
+	
+	if best_path.size() > walk_points:
+		best_path.resize(walk_points)
+	
+	if best_path.size() > 0:
+		best_pos = best_path.back()
+				
+	return tile_grid.map_to_local(best_pos) 
