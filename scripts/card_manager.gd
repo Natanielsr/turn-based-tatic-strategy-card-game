@@ -24,6 +24,8 @@ var is_hovering_on_card
 @onready var player_hand: PlayerHand = $"../PlayerHand"
 @onready var grid_controller: GridController = $"../../Controllers/GridController"
 @onready var input_controller: Node2D = $"../../Controllers/InputController"
+@onready var game_controller: GameController = $"../../Controllers/GameController"
+@onready var troop_manager: TroopManager = $"../../TroopManager"
 
 const MONSTER = preload("res://prefabs/monster.tscn")
 
@@ -33,7 +35,7 @@ func _ready() -> void:
 	screen_max = screen_size / 2
 	input_controller.connect("left_mouse_button_released", on_left_click_released)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if card_being_dragged:
 		var mouse_pos = get_global_mouse_position()
 		
@@ -58,32 +60,45 @@ func finish_drag():
 	card_being_dragged.scale = Vector2(CARD_SCALE, CARD_SCALE)
 	
 	if card_being_dragged.type == "monster":
-		spawn_monster()
+		var card_slot_pos = check_for_card_slot()
+		if card_slot_pos and grid_controller.is_walkable_position(card_slot_pos):
+			player_hand.remove_card_from_hand(card_being_dragged)
+			var card_to_spawn = game_controller.card_database.CARDS[card_being_dragged.card_id]
+			spawn_monster(card_to_spawn, card_slot_pos, MobileTroop.EntityFaction.ALLY)
+			card_being_dragged.queue_free()
+		else:
+			player_hand.add_card_to_hand(card_being_dragged)
 	else:
 		player_hand.add_card_to_hand(card_being_dragged)
 		highlight_card(card_being_dragged, false)
 		
 	card_being_dragged = null
 
-func spawn_monster():
-	var card_slot_pos = check_for_card_slot()
-	if card_slot_pos and grid_controller.is_walkable_position(card_slot_pos):
-		player_hand.remove_card_from_hand(card_being_dragged)	
-		var monster : MobileTroop = create_monster()
-		monster.position = card_slot_pos
-		$"../../Troops".add_child(monster)	
-		card_being_dragged.queue_free()
-		print(monster.name," spawned")
+func spawn_monster(card_to_spawn, card_slot_pos, faction):
+	var monster : MobileTroop = create_monster(card_to_spawn, faction)
+	monster.position = card_slot_pos
+	troop_manager.add_troop(monster)	
+	print(monster.name," spawned")
+	
+	return monster
+		
+func check_for_card_slot():
+	var mouse_position = get_global_mouse_position()
+	var faction = grid_controller.get_faction_area(mouse_position)
+	
+	if faction == Entity.EntityFaction.ALLY:
+		return grid_controller.get_tile_world_position(mouse_position)
 	else:
-		player_hand.add_card_to_hand(card_being_dragged)
+		return null
 
-func create_monster() -> MobileTroop:
+func create_monster(card_to_spawn, faction) -> MobileTroop:
 	var monster : MobileTroop = MONSTER.instantiate()
-	monster.name = card_being_dragged.card_id
-	var img_path = str("res://textures/cards/"+card_being_dragged.card_id+".png")
+	monster.name = card_to_spawn.card_id
+	var img_path = str("res://textures/cards/"+card_to_spawn.card_id+".png")
 	monster.get_node("Sprite2D").texture = load(img_path)
-	monster.set_attack_points(card_being_dragged.attack_points)
-	monster.set_total_life(card_being_dragged.life_points)
+	monster.set_attack_points(card_to_spawn.attack)
+	monster.set_total_life(card_to_spawn.health)
+	monster.set_faction(faction)
 	
 	return monster
 	
@@ -120,14 +135,7 @@ func highlight_card(card, hovered):
 		#if not card.get_node("Area2D/CollisionShape2D").disabled:
 		#	card.position = card.start_position
 
-func check_for_card_slot():
-	var mouse_position = get_global_mouse_position()
-	var faction = grid_controller.get_faction_area(mouse_position)
-	
-	if faction == Entity.EntityFaction.ALLY:
-		return grid_controller.get_tile_world_position(mouse_position)
-	else:
-		return null
+
 
 func raycast_check_for_card():
 	var space_state = get_world_2d().direct_space_state
