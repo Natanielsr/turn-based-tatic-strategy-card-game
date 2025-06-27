@@ -10,8 +10,6 @@ func _on_move_btn_pressed() -> void:
 	if not game_controller.selected_troop:
 		return
 	
-	game_controller.change_troop_state(MobileTroop.TroopState.WALK)
-	
 	print(game_controller.selected_troop.name," Changed to WALK State")
 
 func _on_atk_btn_pressed() -> void:
@@ -20,7 +18,6 @@ func _on_atk_btn_pressed() -> void:
 	if not game_controller.selected_troop:
 		return
 	
-	game_controller.change_troop_state(MobileTroop.TroopState.ATTACK)
 	
 	print(game_controller.selected_troop.name, "Changed to ATTACK State")
 
