@@ -2,6 +2,7 @@ class_name CardDatabase
 
 const CARDS = {
 	"goblin": {
+		"card_id": "goblin",
 		"type": "monster",
 		"name": "Goblin",
 		"energy_cost": 1,
@@ -11,6 +12,7 @@ const CARDS = {
 		"ability": "nothing"
  	},
 	"hobgoblin": {
+		"card_id": "hobgoblin",
 		"type": "monster",
 		"name": "Hobgoblin",
 		"energy_cost": 2,
@@ -20,6 +22,7 @@ const CARDS = {
 		"ability": "berserk"
   	},
 	"healing_spell": {
+		"card_id": "healing_spell",
 		"type": "spell",
 		"name": "Cura Divina",
 		"energy_cost": 3,
