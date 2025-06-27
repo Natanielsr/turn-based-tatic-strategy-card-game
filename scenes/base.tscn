@@ -1,13 +1,13 @@
-[gd_scene load_steps=23 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=24 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
 [ext_resource type="Script" uid="uid://dc448mrb0lb5" path="res://scripts/grid_controller.gd" id="3_t45w4"]
 [ext_resource type="Script" uid="uid://cty7218jvpjqi" path="res://scripts/game_controller.gd" id="4_vqfsp"]
 [ext_resource type="Script" uid="uid://iwbrv2ostrml" path="res://scripts/input_controller.gd" id="5_uo6h6"]
+[ext_resource type="Script" uid="uid://cn40spabder73" path="res://scripts/troops_manager.gd" id="6_33mrd"]
 [ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/draw_grid.gd" id="6_xvvcp"]
 [ext_resource type="PackedScene" uid="uid://b1ed0nfs8p63k" path="res://prefabs/statue_status.tscn" id="9_ycryd"]
-[ext_resource type="PackedScene" uid="uid://bpom7g3kfsc52" path="res://prefabs/hobglobin.tscn" id="11_33mrd"]
 [ext_resource type="Script" uid="uid://bl63w6mprwffw" path="res://scripts/action_buttons.gd" id="12_dmaw2"]
 [ext_resource type="Texture2D" uid="uid://snd47pf1fcpy" path="res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png" id="13_517kj"]
 [ext_resource type="Texture2D" uid="uid://bmh63053cptng" path="res://textures/crawl-tiles Oct-5-2010/item/weapon/long_sword1.png" id="14_ot4hf"]
@@ -15,12 +15,13 @@
 [ext_resource type="Texture2D" uid="uid://dxi6a7vjipgwr" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/statues/wucad_mu_statue.png" id="17_ycryd"]
 [ext_resource type="Script" uid="uid://d33yuisyg4cjx" path="res://scripts/player_statue.gd" id="17_ystrd"]
 [ext_resource type="Script" uid="uid://xekf8f5bi1lf" path="res://scripts/ui.gd" id="18_aomoi"]
-[ext_resource type="PackedScene" uid="uid://yuwb7ux7gw5e" path="res://components/input_manager.tscn" id="18_uo6h6"]
 [ext_resource type="PackedScene" uid="uid://bfcwvkko5hp87" path="res://components/player_hand.tscn" id="19_isyof"]
 [ext_resource type="PackedScene" uid="uid://c6wsw6st1knk5" path="res://components/deck.tscn" id="20_b085t"]
 [ext_resource type="Script" uid="uid://codrdv67s42us" path="res://scripts/enemy_statue.gd" id="20_uo6h6"]
 [ext_resource type="Texture2D" uid="uid://c6l757nlejvwj" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/spells/symbol_of_torment.png" id="21_aomoi"]
 [ext_resource type="Material" uid="uid://btrnbvbwi8d1m" path="res://materials/enemy_outline.tres" id="21_b085t"]
+[ext_resource type="Script" uid="uid://capo5enodg4gk" path="res://scripts/enemy_ai.gd" id="22_33mrd"]
+[ext_resource type="Script" uid="uid://vls463oqcx6e" path="res://scripts/deck_enemy.gd" id="22_aomoi"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uo6h6"]
 size = Vector2(61, 127)
@@ -55,12 +56,8 @@ script = ExtResource("4_vqfsp")
 [node name="InputController" type="Node2D" parent="Controllers"]
 script = ExtResource("5_uo6h6")
 
-[node name="Troops" type="Node2D" parent="."]
-
-[node name="Hobglobin" parent="Troops" instance=ExtResource("11_33mrd")]
-position = Vector2(-16, 16)
-total_life_points = 1
-faction = 2
+[node name="TroopManager" type="Node2D" parent="."]
+script = ExtResource("6_33mrd")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, 78)
@@ -152,6 +149,7 @@ text = "Finish
 Turn"
 
 [node name="EnemyFinishTurnBtn" type="Button" parent="UI"]
+visible = false
 layout_mode = 0
 offset_left = 240.0
 offset_top = 96.0
@@ -169,17 +167,56 @@ script = ExtResource("6_xvvcp")
 
 [node name="CardManager" parent="CardSystem" instance=ExtResource("17_isyof")]
 
-[node name="InputManager" parent="CardSystem" instance=ExtResource("18_uo6h6")]
-process_mode = 4
-
 [node name="PlayerHand" parent="CardSystem" instance=ExtResource("19_isyof")]
 
-[node name="Deck" parent="CardSystem" instance=ExtResource("20_b085t")]
+[node name="DeckPlayer" parent="CardSystem" instance=ExtResource("20_b085t")]
 z_index = 0
 position = Vector2(264, 208)
 scale = Vector2(0.75, 0.75)
+
+[node name="EnemyAI" type="Node2D" parent="."]
+script = ExtResource("22_33mrd")
+
+[node name="DeckEnemy" type="Node2D" parent="EnemyAI"]
+script = ExtResource("22_aomoi")
+
+[node name="spawn_points" type="Node2D" parent="EnemyAI"]
+position = Vector2(208, 32)
+
+[node name="pos_1" type="Marker2D" parent="EnemyAI/spawn_points"]
+position = Vector2(0, -48)
+
+[node name="pos_2" type="Marker2D" parent="EnemyAI/spawn_points"]
+position = Vector2(0, -17)
+
+[node name="pos_3" type="Marker2D" parent="EnemyAI/spawn_points"]
+position = Vector2(0, 15)
+
+[node name="pos_4" type="Marker2D" parent="EnemyAI/spawn_points"]
+position = Vector2(0, 48)
+
+[node name="attack_area" type="Node2D" parent="EnemyAI"]
+position = Vector2(-208, 32)
+
+[node name="pos_1" type="Marker2D" parent="EnemyAI/attack_area"]
+position = Vector2(0, -48)
+
+[node name="pos_2" type="Marker2D" parent="EnemyAI/attack_area"]
+position = Vector2(0, -17)
+
+[node name="pos_3" type="Marker2D" parent="EnemyAI/attack_area"]
+position = Vector2(0, 15)
+
+[node name="pos_4" type="Marker2D" parent="EnemyAI/attack_area"]
+position = Vector2(0, 48)
+
+[node name="Timer" type="Timer" parent="EnemyAI"]
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(-16, 48)
 
 [connection signal="pressed" from="UI/ActionButtons/MoveBtn" to="UI/ActionButtons" method="_on_move_btn_pressed"]
 [connection signal="pressed" from="UI/ActionButtons/AtkBtn" to="UI/ActionButtons" method="_on_atk_btn_pressed"]
 [connection signal="pressed" from="UI/FinishTurnBtn" to="UI" method="_on_finish_turn_pressed"]
 [connection signal="pressed" from="UI/EnemyFinishTurnBtn" to="UI" method="_on_enemy_finish_turn_pressed"]
+[connection signal="timeout" from="EnemyAI/Timer" to="EnemyAI" method="_on_timer_timeout"]
