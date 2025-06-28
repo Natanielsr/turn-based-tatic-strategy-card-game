@@ -3,6 +3,9 @@ extends Control
 class_name UI
 
 @onready var game_controller: GameController = get_node("/root/Base/Controllers/GameController")
+@onready var turn_controller: TurnController = $"../Controllers/TurnController"
+const Turn = TurnController.Turn
+
 @onready var grid_controller: GridController = get_node("/root/Base/Controllers/GridController")
 @onready var finish_turn_btn: Button = $FinishTurnBtn
 @onready var enemy_finish_turn_btn: Button = $EnemyFinishTurnBtn
@@ -11,8 +14,8 @@ const TRAVEL_EXCLUSION_CENTRE = preload("res://textures/crawl-tiles Oct-5-2010/d
 const BOOTS_1_BROWN = preload("res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png")
 
 func _ready() -> void:
-	game_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
-	set_turn(game_controller.turn)
+	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
+	set_turn(turn_controller.turn)
 	
 func _on_changed_turn(turn: GameController.Turn):
 	set_turn(turn)
@@ -68,7 +71,7 @@ func enemy_on_mouse() -> Entity:
 
 
 func _on_finish_turn_pressed() -> void:
-	game_controller.shift_turn()
+	turn_controller.shift_turn()
 
 func _on_enemy_finish_turn_pressed() -> void:
 	game_controller.shift_turn()

@@ -2,51 +2,31 @@ extends Node2D
 
 class_name GameController
 
-signal changed_turn(turn : Turn)
+
 
 var selected_troop : MobileTroop
 var target: Entity
 
 @onready var grid_controller: GridController = $"../GridController"
-@onready var action_buttons: Control = $"../../UI/ActionButtons"
 @onready var player_statue: PlayerStatue = $"../../Statues/PlayerStatue"
+@onready var turn_controller: TurnController = $"../TurnController"
+const Turn = TurnController.Turn
 
-const card_database = preload("res://scripts/card_database.gd")
+const card_database = preload("res://scripts/card_system/card_database.gd")
 
 var current_id_path: Array[Vector2i]
 var current_point_path: PackedVector2Array
 
 var possible_path
 
-enum Turn{
-	PLAYER,
-	ENEMY
-}
-var turn : Turn = Turn.PLAYER
-	
-func shift_turn():
-	
-	if selected_troop and selected_troop.is_moving:
-		return
-	
-	deselect_troop()
-	deselect_target()
-	
-	if turn == Turn.PLAYER:
-		turn = Turn.ENEMY
-		print("Enemy Turn")
-	else:
-		turn = Turn.PLAYER
-		print("Player Turn")
-		
-	emit_signal("changed_turn", turn)
-	
 
+ 
 func _ready() -> void:
-	show_action_buttons(false)
+	
+	pass
 	
 func click_on_entity(entity : Entity):
-	if turn == Turn.ENEMY:
+	if turn_controller.turn == Turn.ENEMY:
 		return
 
 	match entity.faction:
@@ -81,7 +61,6 @@ func select_a_troop(troop : Entity):
 			
 func deselect_troop():
 	if selected_troop != null:
-		show_action_buttons(false)
 		selected_troop.toggle_outline(false)
 		selected_troop = null
 		
@@ -89,12 +68,6 @@ func deselect_troop():
 func current_troop_state():
 	if selected_troop != null:
 		return selected_troop.get_current_state()
-	
-func show_action_buttons(show_btns : bool):
-	action_buttons.visible = show_btns
-	if show_btns == true:
-		var btn_pos = selected_troop.global_position - Vector2(20, 40)
-		action_buttons.global_position = btn_pos
 		
 func has_troop_moving():
 	if selected_troop == null:

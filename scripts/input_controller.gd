@@ -4,6 +4,9 @@ signal left_mouse_button_clicked
 signal left_mouse_button_released
 
 @onready var game_controller: GameController = $"../GameController"
+@onready var turn_controller: TurnController = $"../TurnController"
+const Turn = TurnController.Turn
+
 @onready var card_manager: CardManager = $"../../CardSystem/CardManager"
 @onready var deck_player: DeckPlayer = $"../../CardSystem/DeckPlayer"
 
@@ -14,7 +17,7 @@ const COLLISION_MASK_DECK = 4
 
 func _input(event):
 	
-	if game_controller.turn != GameController.Turn.PLAYER:
+	if turn_controller.turn != Turn.PLAYER:
 		return
 		
 	if game_controller.selected_troop:

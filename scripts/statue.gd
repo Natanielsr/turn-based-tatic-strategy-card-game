@@ -6,7 +6,7 @@ class_name Statue
 
 func _statue_ready() -> void:
 	base_ready()
-	turn_set(game_controller.turn)
+	turn_set(turn_controller.turn)
 	
 	
 func turn_set(_turn):

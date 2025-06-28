@@ -5,7 +5,10 @@ class_name Entity
 const ALLY_OUTLINE = preload("res://materials/ally_outline.tres")
 const ENEMY_OUTLINE = preload("res://materials/enemy_outline.tres")
 
-@onready var game_controller: GameController = $"../../Controllers/GameController"
+@onready var game_controller: GameController = get_node("/root/Base/Controllers/GameController")
+@onready var turn_controller: TurnController = get_node("/root/Base/Controllers/TurnController")
+const Turn = TurnController.Turn
+
 @onready var grid_controller: GridController = $"../../Controllers/GridController"
 @onready var life_points_label: Label = $"./Status/LifePoints"
 @onready var life_background_sprite: Sprite2D = $"./Status/LifeSprite"
@@ -23,13 +26,13 @@ enum EntityFaction{
 func base_ready() -> void:
 	_set_current_life(total_life_points)
 	define_faction_color()
-	game_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
+	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
 	
 func is_my_turn():
-	var current_turn = game_controller.turn
-	if faction == EntityFaction.ALLY and current_turn == GameController.Turn.PLAYER:
+	var current_turn = turn_controller.turn
+	if faction == EntityFaction.ALLY and current_turn == Turn.PLAYER:
 		return true
-	elif faction == EntityFaction.ENEMY and current_turn == GameController.Turn.ENEMY:
+	elif faction == EntityFaction.ENEMY and current_turn == Turn.ENEMY:
 		return true
 	else:
 		return false
