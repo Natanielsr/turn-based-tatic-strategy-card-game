@@ -86,9 +86,7 @@ func get_distance(point_a: Vector2, point_b : Vector2):
 	if not in_bounds(point_b):
 		push_error("Cant get distance of point b out of bounds")
 
-	
 	var walkable_aux = is_walkable_position(point_b)
-	
 	set_walkable_position(point_b, true)
 	var path = astar_grid.get_id_path(
 		tile_grid.local_to_map(point_a),
@@ -96,7 +94,10 @@ func get_distance(point_a: Vector2, point_b : Vector2):
 	).slice(1)
 	set_walkable_position(point_b, walkable_aux)
 	
-	return path.size()
+	if path.size() > 0:
+		return path.size()
+	else:
+		return INF
 	
 func get_distance_to_attack_in_diagonal(point_a: Vector2, point_b : Vector2):
 	var aux_mode = astar_grid.diagonal_mode
@@ -207,13 +208,36 @@ func is_achievable_path(start : Vector2, end : Vector2):
 		return true
 	else:	
 		return false
+		
+func is_achievable_troop(start : Vector2, end : Vector2):
+	
+	if not in_bounds( start):
+		push_error("Cant get start out of bounds")
+
+	if not in_bounds(end):
+		push_error("Cant get end out of bounds")
+
+	var walkable_aux = is_walkable_position(end)
+	
+	set_walkable_position(end, true)
+	var path = astar_grid.get_id_path(
+		tile_grid.local_to_map(start),
+		tile_grid.local_to_map(end)
+	).slice(1)
+	set_walkable_position(end, walkable_aux)
+	
+	#not include de actual path
+	if path.size() > 0:
+		return true
+	else:	
+		return false
 	
 func find_best_reachable_target(point_a: Vector2, point_b: Vector2, walk_points) -> Vector2:
 	
 	var start_pos: Vector2i = tile_grid.local_to_map(point_a)
 	var target_pos: Vector2i = tile_grid.local_to_map(point_b)
 	
-	var max_radius := 5
+	var max_radius := 1
 	var path := astar_grid.get_id_path(start_pos, target_pos)
 	if path.size() > 0:
 		if path.size() > walk_points:
