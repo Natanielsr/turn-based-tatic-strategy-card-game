@@ -57,7 +57,7 @@ func create_card(card_name):
 	return new_card
 
 func is_my_turn():
-	if game_controller.turn == GameController.Turn.PLAYER:
+	if turn_controller.turn == Turn.PLAYER:
 		return true
 	else:
 		return false

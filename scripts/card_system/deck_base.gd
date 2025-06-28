@@ -6,11 +6,13 @@ var deck = []
 
 @onready var card_manager: CardManager = get_node("/root/Base/CardSystem/CardManager")
 @onready var game_controller: GameController = get_node("/root/Base/Controllers/GameController")
+@onready var turn_controller: TurnController = get_node("/root/Base/Controllers/TurnController")
+const Turn = TurnController.Turn
 
 var cards_to_drawn = 3
 
 func _base_ready() -> void:
-	game_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
+	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
 	load_deck()
 	deck.shuffle()
 	
