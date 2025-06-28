@@ -52,9 +52,6 @@ func draw_path():
 	
 func draw_mouse_position_rect():
 	
-	if game_controller.action_buttons.visible:
-		return
-	
 	target_position = get_tile_grid_mouse_position()
 		
 	if target_position == null: #no target
