@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://c6wsw6st1knk5"]
 
-[ext_resource type="Script" uid="uid://cqpxegqqsicb0" path="res://scripts/deck_player.gd" id="1_mmqtd"]
+[ext_resource type="Script" uid="uid://cqpxegqqsicb0" path="res://scripts/card_system/deck_player.gd" id="1_mmqtd"]
 [ext_resource type="Texture2D" uid="uid://ceuuyp5w5xxg3" path="res://textures/fantasy-card-assets/cardBacks.png" id="2_dcrgl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3jbsy"]

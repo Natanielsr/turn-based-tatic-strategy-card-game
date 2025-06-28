@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://4p6kih3g128x"]
 
-[ext_resource type="Script" uid="uid://binlqglhinyhq" path="res://scripts/card.gd" id="1_5tooj"]
+[ext_resource type="Script" uid="uid://binlqglhinyhq" path="res://scripts/card_system/card.gd" id="1_5tooj"]
 [ext_resource type="PackedScene" uid="uid://b8cb4un1rxlhb" path="res://prefabs/card_template.tscn" id="1_8g2q7"]
 [ext_resource type="Texture2D" uid="uid://dq1f4p3bcts8h" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/slot_eq_cursed.png" id="4_8m1pn"]
 [ext_resource type="LabelSettings" uid="uid://bumcjygy7d4en" path="res://font_settings/card_label.tres" id="5_fsik0"]
