@@ -22,7 +22,6 @@ enum AIType{
 
 var strategy : AIStrategy
 
-
 var move_count = 0
 
 func _ready() -> void:
@@ -38,14 +37,15 @@ func _ready() -> void:
 		AIType.RANDOM:
 			pass
 			
-	strategy.init(
-				$AISpawner,
-				$TroopMover,
-				game_controller,
-				$AIFinder,
-				grid_controller,
-				troop_manager
-				)
+	var config = AIStrategyConfig.new(
+		$AISpawner,
+		$TroopMover,
+		game_controller,
+		$AIFinder,
+		grid_controller,
+		troop_manager
+	)
+	strategy.init(config)
 
 func _on_changed_turn(turn: GameController.Turn):
 	if turn == GameController.Turn.ENEMY:
@@ -57,10 +57,8 @@ func _on_enemy_turn():
 func finish_turn():
 	turn_controller.shift_turn()
 
-
 func wait(seconds):
 	await get_tree().create_timer(seconds).timeout 
-
 
 func _on_timer_timeout() -> void:
 	pass # Replace with function body.

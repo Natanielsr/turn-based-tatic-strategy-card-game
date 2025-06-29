@@ -2,20 +2,20 @@
 class_name AIStrategy
 extends Node
 
-var spawner
-var mover
-var game_controller
-var ai_finder : AIFinder
-var grid_controller : GridController
+var spawner: AISpawner
+var mover: TroopMover
+var game_controller: GameController
+var ai_finder: AIFinder
+var grid_controller: GridController
 var troop_manager: TroopManager
 
-func init(_spawner, _mover, _game_controller, _ai_finder, _grid_controller, _troop_manager):
-	spawner = _spawner
-	mover = _mover
-	game_controller = _game_controller
-	ai_finder = _ai_finder
-	grid_controller = _grid_controller
-	troop_manager = _troop_manager
+func init(config: AIStrategyConfig):
+	spawner = config.spawner
+	mover = config.mover
+	game_controller = config.game_controller
+	ai_finder = config.ai_finder
+	grid_controller = config.grid_controller
+	troop_manager = config.troop_manager
 
 func play_turn():
 	var subclass_name = get_subclass_name()
