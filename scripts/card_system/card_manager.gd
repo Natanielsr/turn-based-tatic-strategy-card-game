@@ -2,6 +2,8 @@ extends Node2D
 
 class_name CardManager
 
+signal card_spawned()
+
 const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_CARD_SLOT = 4
 
@@ -26,6 +28,11 @@ var is_hovering_on_card
 @onready var input_controller: Node2D = $"../../Controllers/InputController"
 @onready var game_controller: GameController = $"../../Controllers/GameController"
 @onready var troop_manager: TroopManager = $"../../TroopManager"
+
+@onready var player_statue: PlayerStatue = $"../../Statues/PlayerStatue"
+@onready var enemy_statue: EnemyStatue = $"../../Statues/EnemyStatue"
+@onready var enemy_hand: EnemyHand = $"../../EnemyAI/EnemyHand"
+
 
 const MONSTER = preload("res://prefabs/monster.tscn")
 
@@ -62,10 +69,15 @@ func finish_drag():
 	if card_being_dragged.type == "monster":
 		var card_slot_pos = check_for_card_slot()
 		if card_slot_pos and grid_controller.is_walkable_position(card_slot_pos):
-			player_hand.remove_card_from_hand(card_being_dragged)
-			var card_to_spawn = game_controller.card_database.CARDS[card_being_dragged.card_id]
-			spawn_monster(card_to_spawn, card_slot_pos, MobileTroop.EntityFaction.ALLY)
-			card_being_dragged.queue_free()
+			var monster = await spawn_monster(
+				card_being_dragged.card_id,
+				card_slot_pos,
+				MobileTroop.EntityFaction.ALLY)
+			if monster:
+				player_hand.remove_card_from_hand(card_being_dragged)
+				card_being_dragged.queue_free()
+			else:
+				player_hand.add_card_to_hand(card_being_dragged)
 		else:
 			player_hand.add_card_to_hand(card_being_dragged)
 	else:
@@ -74,11 +86,28 @@ func finish_drag():
 		
 	card_being_dragged = null
 
-func spawn_monster(card_to_spawn, card_slot_pos, faction):
+func spawn_monster(card_name, card_slot_pos, faction):
+	
+	var card_to_spawn = game_controller.card_database.CARDS[card_name]
+	
+	if faction == Entity.EntityFaction.ALLY:
+		if card_to_spawn.energy_cost > player_statue._current_energy:
+			print("player without enough energy")
+			return
+		player_statue.consume_energy(card_to_spawn.energy_cost)
+	elif faction == Entity.EntityFaction.ENEMY:
+		if card_to_spawn.energy_cost > enemy_statue._current_energy:
+			print("enemy without enough energy")
+			return
+		enemy_statue.consume_energy(card_to_spawn.energy_cost)
+		enemy_hand.remove_card_from_hand(card_to_spawn.card_id)
+	
 	var monster : MobileTroop = create_monster(card_to_spawn, faction)
 	monster.position = card_slot_pos
-	troop_manager.add_troop(monster)	
-	print(monster.name," spawned")
+	troop_manager.add_troop(monster)
+	
+	await game_controller.wait(1)
+	emit_signal("card_spawned")
 	
 	return monster
 		
@@ -160,3 +189,15 @@ func get_card_with_highest_z_index(cards):
 			hightest_z_index = current_card.z_index
 			
 	return highest_z_card
+	
+func can_play_the_card(card, faction):
+	var card_data = game_controller.card_database.CARDS[card]
+	
+	if faction == Entity.EntityFaction.ENEMY:
+		if enemy_statue._current_energy >= card_data.energy_cost:
+			return true
+	elif faction == Entity.EntityFaction.ALLY:
+		if player_statue._current_energy >= card_data.energy_cost:
+			return true
+	
+	return false
