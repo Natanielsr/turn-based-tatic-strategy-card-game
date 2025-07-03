@@ -4,8 +4,8 @@ class_name TroopManager
 
 @onready var grid_controller: GridController = $"../Controllers/GridController"
 
-var player_troops = []
-var enemy_troops = []
+var player_troops : Array[MobileTroop] = []
+var enemy_troops : Array[MobileTroop] = []
 
 
 
@@ -38,4 +38,9 @@ func sorted_opponents_by_distance(troop: MobileTroop) -> Array:
 	for entry in distances:
 		sorted_troops.append(entry["troop"])
 	
+	return sorted_troops
+	
+func sorted_opponents_by_attack() -> Array:
+	var sorted_troops = player_troops.duplicate()
+	sorted_troops.sort_custom(func(a, b): return a.attack_points < b.attack_points)
 	return sorted_troops
