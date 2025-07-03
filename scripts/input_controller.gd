@@ -16,6 +16,8 @@ const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_DECK = 4
 
 func _input(event):
+	if game_controller.current_game_state != GameController.GameState.RUNNING:
+		return
 	
 	if turn_controller.turn != Turn.PLAYER:
 		return
