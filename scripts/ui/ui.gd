@@ -31,6 +31,10 @@ func set_turn(turn):
 		enemy_finish_turn_btn.disabled = false
 	
 func _process(_delta: float) -> void:
+	if game_controller.current_game_state != GameController.GameState.RUNNING:
+		cursor_normal()
+		return
+	
 	if not game_controller.selected_troop:
 		cursor_normal()
 		return

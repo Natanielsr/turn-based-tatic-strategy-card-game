@@ -2,7 +2,8 @@ extends Entity
 
 class_name MobileTroop 
 
-signal arrived_signal()
+signal walk_finish()
+signal attack_finished()
 
 @onready var tile_grid: TileMapLayer = get_node("/root/Base/Tiles/TileGrid")
 @onready var sprite_2d: Sprite2D = $Sprite2D
@@ -15,6 +16,8 @@ var attack_points : int = 1
 @export var total_attack_count : int = 1
 var _current_attack_count = total_attack_count
 @export var attack_distance : int = 1
+var oponent_to_attack : Entity
+var is_attacking = false
 
 var moviment_speed : float = 2
 @export var walk_distance = 5
@@ -28,7 +31,9 @@ var _current_id_path: Array[Vector2i]
 var is_exausted = false
 
 func _on_changed_turn(_turn):
-	if is_my_turn():
+	var troop_turn = is_troop_turn()
+		
+	if troop_turn:
 		set_walk_points(walk_distance)
 		_current_attack_count = total_attack_count
 		is_exausted = false
@@ -78,24 +83,25 @@ func arrived():
 	is_moving = false
 	game_controller.deselect_troop()
 	grid_controller.set_walkable_position(global_position, false)
+	set_walk_points(0)
 	set_exausted()
-	print(name, " arrived")
-	emit_signal("arrived_signal")
-	
-	
+	emit_signal("walk_finish")
 
 func get_current_walk_points():
 	return _current_walk_points
 			
 func move_troop(pos_to_go):
 	if is_exausted:
+		emit_signal("walk_finish")
 		return
 		
 	if is_moving:
+		emit_signal("walk_finish")
 		return false
 		
 	if _current_walk_points <= 0:
 		print("Troop ",name," Dont Have Walk Points")
+		emit_signal("walk_finish")
 		return
 	
 	var id_path = grid_controller.calculate_path(
@@ -103,10 +109,14 @@ func move_troop(pos_to_go):
 		pos_to_go)
 	
 	if id_path.is_empty(): #verify have path
+		
+		print("path return 0")
+		emit_signal("walk_finish")
 		return false
 		
 	if id_path.size() > _current_walk_points:
 		print("walk distance is to far to ", name)
+		emit_signal("walk_finish")
 		return false
 	
 	_current_id_path = id_path
@@ -116,7 +126,6 @@ func move_troop(pos_to_go):
 	started_walk_position = global_position
 	final_walk_position = tile_grid.map_to_local(id_path.back()) 
 	
-	print(name," is moving")
 	is_moving = true
 	
 	return is_moving
@@ -125,28 +134,56 @@ func set_attack_points(atk : int):
 	attack_points = atk
 
 func attack(entity : Entity):
-	print('attack')
+	if is_attacking:
+		print("is already attacking")
+		return
+	
+	
 	if _current_attack_count <= 0:
 		print( name, " dont have attack points ")
+		emit_signal("attack_finished")
 		return
 	
 	var distance = entity.get_distance(global_position)
 	if distance > attack_distance:
 		print("too far to ", name, " attack ",entity.name," distance: ",distance)
+		emit_signal("attack_finished")
 		return
 	
-	print(name, " attacks ", entity.name, " with ", attack_points, " damage")
-	entity.take_damage(attack_points)
+	is_attacking = true
+	oponent_to_attack = entity
+	_perform_attack_animation()
+
+func _perform_attack_animation():
+	var start_pos = global_position
+	var dir = (oponent_to_attack.global_position - start_pos).normalized()
+	var charge_pos = start_pos - dir * 20      # recua um pouco
+	var attack_pos = oponent_to_attack.global_position + dir * 1  # avança até o alvo, passa um pouco
+
+	var tween = create_tween()
+	tween.tween_property(self, "global_position", charge_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "global_position", attack_pos, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_property(self, "global_position", start_pos, 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.connect("finished", Callable(self, "_on_attack_animation_finished"))
+
+func _on_attack_animation_finished():
+	trigger_attack()
+
+func trigger_attack() -> void:
+	oponent_to_attack.take_damage(attack_points)
 	_current_attack_count -= 1
 	
-	if entity is MobileTroop:
-		take_damage(entity.attack_points)
+	if oponent_to_attack is MobileTroop:
+		take_damage(oponent_to_attack.attack_points)
 		
 	set_exausted()
 	game_controller.deselect_troop()
+	oponent_to_attack = null
+	is_attacking = false
+	emit_signal("attack_finished")
 		
 func set_exausted():
-	if _current_attack_count <= 0:
+	if _current_walk_points <= 0 and _current_attack_count <= 0:
 		is_exausted = true
 	
 	if is_exausted:
@@ -163,7 +200,6 @@ func get_distance(pos : Vector2):
 	return distance
 	
 func die():
-	print(name," Die")
 	grid_controller.set_walkable_position(global_position, true)
 	troop_manager.remove_troop(self)
 	queue_free()
@@ -174,3 +210,17 @@ func update_atk_label():
 func get_attack_count():
 	return _current_attack_count
 	
+func get_tile_pos():
+	return tile_grid.local_to_map(global_position)
+	
+func can_move():
+	if _current_walk_points > 0:
+		return true
+	else:
+		return false
+	
+func can_attack():
+	if _current_attack_count > 0:
+		return true
+	else:
+		return false

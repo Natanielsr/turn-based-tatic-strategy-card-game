@@ -28,7 +28,7 @@ func base_ready() -> void:
 	define_faction_color()
 	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
 	
-func is_my_turn():
+func is_troop_turn():
 	var current_turn = turn_controller.turn
 	if faction == EntityFaction.ALLY and current_turn == Turn.PLAYER:
 		return true
