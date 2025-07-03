@@ -8,6 +8,9 @@ class_name EnemyAI
 @onready var card_manager: CardManager = $"../CardSystem/CardManager"
 @onready var grid_controller: GridController = $"../Controllers/GridController"
 @onready var troop_manager: TroopManager = $"../TroopManager"
+@onready var look_ahead: LookAhead = $LookAhead
+@onready var enemy_hand: EnemyHand = $EnemyHand
+
 
 var selected_card
 var selected_monster : MobileTroop
@@ -24,6 +27,8 @@ var strategy : AIStrategy
 
 var move_count = 0
 
+var current_troop : MobileTroop
+
 func _ready() -> void:
 	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
 	
@@ -38,12 +43,13 @@ func _ready() -> void:
 			pass
 			
 	var config = AIStrategyConfig.new(
+		$".",
 		$AISpawner,
-		$TroopMover,
 		game_controller,
 		$AIFinder,
 		grid_controller,
-		troop_manager
+		troop_manager,
+		$"../Statues/PlayerStatue"
 	)
 	strategy.init(config)
 
@@ -52,10 +58,64 @@ func _on_changed_turn(turn: GameController.Turn):
 		_on_enemy_turn()
 
 func _on_enemy_turn():
-	await strategy.play_turn()
+	
+	find_and_apply_move()
+	
+	#await wait(1)
+	#finish_turn()
+	#await strategy.play_turn()
+
+func find_and_apply_move():
+	var best_move = look_ahead.simulate_moves()
+	print("BEST MOVE")
+	print(best_move)
+	if best_move:
+		apply_move(best_move)
+	else:
+		await wait(1)
+		finish_turn()
+		
+	return best_move
 		
 func finish_turn():
 	turn_controller.shift_turn()
+	
+func apply_move(move):
+	match move["type"]:
+		"play_card":
+			var selected_card = move["card"]
+			var pos_to_spawn = grid_controller.get_tile_to_world_pos(move["tile"]) 
+			card_manager.card_spawned.connect(_on_card_spawned)
+			card_manager.spawn_monster(
+				selected_card,
+				pos_to_spawn,
+				Entity.EntityFaction.ENEMY)
+				
+		"move_troop":
+			current_troop = move["troop"]
+			var pos_to_go = grid_controller.get_tile_to_world_pos(move["tile"]) 
+			current_troop.walk_finish.connect(_on_troop_move_finished)
+			current_troop.move_troop(pos_to_go)
+		"attack":
+			pass
+			
+func _on_card_spawned():
+	card_manager.disconnect("card_spawned", Callable(self, "_on_troop_move_finished"))
+	var move = look_ahead.simulate_moves()
+	if move != null:
+		apply_move(move)
+	else:
+		finish_turn()
+		
+func _on_troop_move_finished():
+	current_troop.disconnect("walk_finish", Callable(self, "_on_troop_move_finished"))
+	current_troop = null
+	var move = look_ahead.simulate_moves()
+	if move != null:
+		apply_move(move)
+	else:
+		finish_turn()
+	
 
 func wait(seconds):
 	await get_tree().create_timer(seconds).timeout 
