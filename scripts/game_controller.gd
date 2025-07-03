@@ -2,13 +2,12 @@ extends Node2D
 
 class_name GameController
 
-
-
 var selected_troop : MobileTroop
 var target: Entity
 
 @onready var grid_controller: GridController = $"../GridController"
 @onready var player_statue: PlayerStatue = $"../../Statues/PlayerStatue"
+@onready var enemy_statue: EnemyStatue = $"../../Statues/EnemyStatue"
 @onready var turn_controller: TurnController = $"../TurnController"
 const Turn = TurnController.Turn
 
@@ -19,11 +18,23 @@ var current_point_path: PackedVector2Array
 
 var possible_path
 
-
+enum GameState{
+	RUNNING,
+	GAME_OVER,
+	PLAYER_WIN
+	
+}
+var current_game_state = GameState.RUNNING
  
 func _ready() -> void:
+	player_statue.player_lost_the_game.connect(_game_over)
+	enemy_statue.enemy_die.connect(_win_game)
+
+func _game_over():
+	current_game_state = GameState.GAME_OVER
 	
-	pass
+func _win_game():
+	current_game_state = GameState.PLAYER_WIN
 	
 func click_on_entity(entity : Entity):
 	if turn_controller.turn == Turn.ENEMY:
@@ -40,7 +51,6 @@ func mark_target(enemy : Entity):
 		deselect_target()
 
 	target = enemy
-	print("target marked: ",target.name)
 	target.toggle_outline(true)
 	
 	if selected_troop:
@@ -57,7 +67,6 @@ func select_a_troop(troop : Entity):
 	selected_troop = troop
 	#show_action_buttons(true)
 	selected_troop.toggle_outline(true)
-	print("troop selected: ",selected_troop.name)
 			
 func deselect_troop():
 	if selected_troop != null:
@@ -82,3 +91,5 @@ func deselect_target():
 	target.toggle_outline(false)
 	target = null
 	
+func wait(seconds):
+	await get_tree().create_timer(seconds).timeout 
