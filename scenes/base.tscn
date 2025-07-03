@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=34 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
@@ -7,29 +7,36 @@
 [ext_resource type="Script" uid="uid://iwbrv2ostrml" path="res://scripts/input_controller.gd" id="5_uo6h6"]
 [ext_resource type="Script" uid="uid://cn40spabder73" path="res://scripts/troops_manager.gd" id="6_33mrd"]
 [ext_resource type="Script" uid="uid://px8ipe6qsq1j" path="res://scripts/turn_controller.gd" id="6_aomoi"]
-[ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/draw_grid.gd" id="6_xvvcp"]
+[ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/ui/draw_grid.gd" id="6_xvvcp"]
 [ext_resource type="PackedScene" uid="uid://b1ed0nfs8p63k" path="res://prefabs/statue_status.tscn" id="9_ycryd"]
+[ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="12_c8kgi"]
 [ext_resource type="Script" uid="uid://bl63w6mprwffw" path="res://scripts/action_buttons.gd" id="12_dmaw2"]
 [ext_resource type="Texture2D" uid="uid://snd47pf1fcpy" path="res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png" id="13_517kj"]
 [ext_resource type="Texture2D" uid="uid://bmh63053cptng" path="res://textures/crawl-tiles Oct-5-2010/item/weapon/long_sword1.png" id="14_ot4hf"]
 [ext_resource type="PackedScene" uid="uid://wk0f6s72b1fo" path="res://components/card_manager.tscn" id="17_isyof"]
 [ext_resource type="Texture2D" uid="uid://dxi6a7vjipgwr" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/statues/wucad_mu_statue.png" id="17_ycryd"]
-[ext_resource type="Script" uid="uid://d33yuisyg4cjx" path="res://scripts/player_statue.gd" id="17_ystrd"]
-[ext_resource type="Script" uid="uid://xekf8f5bi1lf" path="res://scripts/ui.gd" id="18_aomoi"]
+[ext_resource type="Script" uid="uid://d33yuisyg4cjx" path="res://scripts/entities/player_statue.gd" id="17_ystrd"]
+[ext_resource type="Script" uid="uid://xekf8f5bi1lf" path="res://scripts/ui/ui.gd" id="18_aomoi"]
 [ext_resource type="PackedScene" uid="uid://bfcwvkko5hp87" path="res://components/player_hand.tscn" id="19_isyof"]
+[ext_resource type="Script" uid="uid://cqq0s4ucecu8n" path="res://scripts/ui/game_over_panel.gd" id="19_ntevj"]
 [ext_resource type="PackedScene" uid="uid://c6wsw6st1knk5" path="res://components/deck.tscn" id="20_b085t"]
-[ext_resource type="Script" uid="uid://codrdv67s42us" path="res://scripts/enemy_statue.gd" id="20_uo6h6"]
+[ext_resource type="Script" uid="uid://codrdv67s42us" path="res://scripts/entities/enemy_statue.gd" id="20_uo6h6"]
 [ext_resource type="Texture2D" uid="uid://c6l757nlejvwj" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/spells/symbol_of_torment.png" id="21_aomoi"]
 [ext_resource type="Material" uid="uid://btrnbvbwi8d1m" path="res://materials/enemy_outline.tres" id="21_b085t"]
+[ext_resource type="Script" uid="uid://drhabpwiqrodj" path="res://scripts/ui/win_panel.gd" id="21_pmwj3"]
 [ext_resource type="Script" uid="uid://capo5enodg4gk" path="res://scripts/AI/enemy_ai.gd" id="22_33mrd"]
 [ext_resource type="Script" uid="uid://vls463oqcx6e" path="res://scripts/card_system/deck_enemy.gd" id="22_aomoi"]
 [ext_resource type="Script" uid="uid://dsoqkfpsx0r3k" path="res://scripts/AI/ai_spawner.gd" id="24_ktrk3"]
 [ext_resource type="Script" uid="uid://5ripxr2iqptj" path="res://scripts/troop_mover.gd" id="25_s5nuq"]
 [ext_resource type="Script" uid="uid://3ap13enu1da8" path="res://scripts/card_system/enemy_hand.gd" id="26_lefm6"]
 [ext_resource type="Script" uid="uid://c6r08ftecn3fy" path="res://scripts/AI/ai_finder.gd" id="27_03t26"]
+[ext_resource type="Script" uid="uid://b7jm31u8uqk1e" path="res://scripts/AI/lookahead.gd" id="31_82vju"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uo6h6"]
 size = Vector2(61, 127)
+
+[sub_resource type="LabelSettings" id="LabelSettings_03t26"]
+font_size = 120
 
 [node name="Base" type="Node2D"]
 
@@ -52,7 +59,7 @@ tile_set = ExtResource("2_baglu")
 [node name="Controllers" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
 
-[node name="GridController" type="Node" parent="Controllers"]
+[node name="GridController" type="Node2D" parent="Controllers"]
 script = ExtResource("3_t45w4")
 
 [node name="GameController" type="Node2D" parent="Controllers"]
@@ -89,6 +96,14 @@ texture = ExtResource("21_aomoi")
 [node name="Status" parent="Statues/PlayerStatue" instance=ExtResource("9_ycryd")]
 position = Vector2(0, 50)
 
+[node name="Energy" type="Label" parent="Statues/PlayerStatue"]
+offset_left = -12.0
+offset_top = -87.0
+offset_right = 15.0
+offset_bottom = -73.0
+text = "10/10"
+label_settings = ExtResource("12_c8kgi")
+
 [node name="EnemyStatue" type="Area2D" parent="Statues"]
 position = Vector2(270, 15)
 script = ExtResource("20_uo6h6")
@@ -112,6 +127,14 @@ texture = ExtResource("21_aomoi")
 
 [node name="Status" parent="Statues/EnemyStatue" instance=ExtResource("9_ycryd")]
 position = Vector2(0, 50)
+
+[node name="Energy" type="Label" parent="Statues/EnemyStatue"]
+offset_left = -12.0
+offset_top = -87.0
+offset_right = 15.0
+offset_bottom = -73.0
+text = "10/10"
+label_settings = ExtResource("12_c8kgi")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -172,6 +195,58 @@ z_index = 1
 anchors_preset = 0
 script = ExtResource("6_xvvcp")
 
+[node name="GameOverPanel" type="CanvasLayer" parent="UI"]
+visible = false
+script = ExtResource("19_ntevj")
+
+[node name="Overlay" type="ColorRect" parent="UI/GameOverPanel"]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0)
+
+[node name="Label" type="Label" parent="UI/GameOverPanel"]
+visible = false
+offset_left = 392.0
+offset_top = 240.0
+offset_right = 887.0
+offset_bottom = 405.0
+text = "You Lost"
+label_settings = SubResource("LabelSettings_03t26")
+
+[node name="Restart" type="Button" parent="UI/GameOverPanel"]
+visible = false
+offset_left = 568.0
+offset_top = 440.0
+offset_right = 712.0
+offset_bottom = 496.0
+text = "Restart"
+
+[node name="WinPanel" type="CanvasLayer" parent="UI"]
+visible = false
+script = ExtResource("21_pmwj3")
+
+[node name="Overlay" type="ColorRect" parent="UI/WinPanel"]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0)
+
+[node name="Label" type="Label" parent="UI/WinPanel"]
+visible = false
+offset_left = 392.0
+offset_top = 240.0
+offset_right = 887.0
+offset_bottom = 405.0
+text = "You Win!"
+label_settings = SubResource("LabelSettings_03t26")
+
+[node name="Restart" type="Button" parent="UI/WinPanel"]
+visible = false
+offset_left = 568.0
+offset_top = 440.0
+offset_right = 712.0
+offset_bottom = 496.0
+text = "Restart"
+
 [node name="CardSystem" type="Node2D" parent="."]
 
 [node name="CardManager" parent="CardSystem" instance=ExtResource("17_isyof")]
@@ -185,7 +260,6 @@ scale = Vector2(0.75, 0.75)
 
 [node name="EnemyAI" type="Node2D" parent="."]
 script = ExtResource("22_33mrd")
-type = 2
 
 [node name="DeckEnemy" type="Node2D" parent="EnemyAI"]
 script = ExtResource("22_aomoi")
@@ -195,16 +269,16 @@ position = Vector2(208, 32)
 script = ExtResource("24_ktrk3")
 
 [node name="pos_1" type="Marker2D" parent="EnemyAI/AISpawner"]
-position = Vector2(0, -48)
+position = Vector2(0, 15)
 
 [node name="pos_2" type="Marker2D" parent="EnemyAI/AISpawner"]
 position = Vector2(0, -17)
 
 [node name="pos_3" type="Marker2D" parent="EnemyAI/AISpawner"]
-position = Vector2(0, 15)
+position = Vector2(0, 48)
 
 [node name="pos_4" type="Marker2D" parent="EnemyAI/AISpawner"]
-position = Vector2(0, 48)
+position = Vector2(0, -48)
 
 [node name="TroopMover" type="Node" parent="EnemyAI"]
 script = ExtResource("25_s5nuq")
@@ -229,7 +303,12 @@ position = Vector2(-208, 47)
 [node name="pos_4" type="Marker2D" parent="EnemyAI/AttackArea"]
 position = Vector2(-208, 80)
 
+[node name="LookAhead" type="Node2D" parent="EnemyAI"]
+script = ExtResource("31_82vju")
+
 [connection signal="pressed" from="UI/ActionButtons/MoveBtn" to="UI/ActionButtons" method="_on_move_btn_pressed"]
 [connection signal="pressed" from="UI/ActionButtons/AtkBtn" to="UI/ActionButtons" method="_on_atk_btn_pressed"]
 [connection signal="pressed" from="UI/FinishTurnBtn" to="UI" method="_on_finish_turn_pressed"]
 [connection signal="pressed" from="UI/EnemyFinishTurnBtn" to="UI" method="_on_enemy_finish_turn_pressed"]
+[connection signal="pressed" from="UI/GameOverPanel/Restart" to="UI/GameOverPanel" method="_on_restart_pressed"]
+[connection signal="pressed" from="UI/WinPanel/Restart" to="UI/WinPanel" method="_on_restart_pressed"]

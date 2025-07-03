@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://sffymvjqa27r"]
+[gd_scene load_steps=13 format=3 uid="uid://sffymvjqa27r"]
 
-[ext_resource type="Script" uid="uid://bh3bxpswhs048" path="res://scripts/mobile_troop.gd" id="1_i00s2"]
+[ext_resource type="Script" uid="uid://bh3bxpswhs048" path="res://scripts/entities/mobile_troop.gd" id="1_i00s2"]
 [ext_resource type="Material" uid="uid://b7w588gjmshvi" path="res://materials/ally_outline.tres" id="2_4bdhk"]
 [ext_resource type="Texture2D" uid="uid://dq1f4p3bcts8h" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/slot_eq_cursed.png" id="3_yxdfv"]
 [ext_resource type="Texture2D" uid="uid://clfln8e51ruhi" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/armour/shield_of_reflection.png" id="4_yxdfv"]
@@ -11,10 +11,63 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vqfsp"]
 size = Vector2(32, 32)
 
+[sub_resource type="Animation" id="Animation_56jq0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_yxdfv"]
+resource_name = "attack"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.0333333, 0.4, 0.566667, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, -0.785398, 0.785398, 0.0]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.566667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"trigger_attack"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_tqbw1"]
+resource_name = "idle"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mluuh"]
+_data = {
+&"RESET": SubResource("Animation_56jq0"),
+&"attack": SubResource("Animation_yxdfv"),
+&"idle": SubResource("Animation_tqbw1")
+}
+
 [node name="Monster" type="Area2D"]
 z_index = 2
 script = ExtResource("1_i00s2")
-walk_distance = 7
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_4bdhk")
@@ -70,3 +123,8 @@ offset_bottom = -4.0
 text = "9"
 label_settings = ExtResource("5_tqbw1")
 horizontal_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_mluuh")
+}
