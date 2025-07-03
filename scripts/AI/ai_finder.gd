@@ -87,11 +87,73 @@ func find_nearest_reachable_position(troop, target_pos):
 		walk_points
 	)
 	
-func in_area_pos(troop):
+func in_attack_area_pos(troop):
 	for marker in attack_area:
 		var tile_grid = grid_controller.tile_grid
 		var mon_pos = tile_grid.local_to_map(troop.global_position) 
 		var mark_pos = tile_grid.local_to_map(marker.global_position)
 		if mon_pos == mark_pos:
 			return true
+			
+				
+func get_weakest_target_in_range(selected_troop : MobileTroop):
 	
+	var tile_pos: Vector2i = grid_controller.tile_grid.local_to_map(selected_troop.global_position)
+	
+	var max_radius := 1
+
+	var best_target : MobileTroop = null
+	
+	for x_offset in range(-max_radius, max_radius + 1):
+		for y_offset in range(-max_radius, max_radius + 1):
+			var test_pos = tile_pos + Vector2i(x_offset, y_offset)
+
+			# Ignora se não for ponto válido no grid
+			if not grid_controller.in_bounds(test_pos):
+				continue
+			
+			var test_target : MobileTroop = grid_controller.get_entity_in_pos(test_pos)
+			
+			if test_target:
+				if test_target.faction == selected_troop.faction:
+					continue
+					
+				if not best_target:
+					best_target = test_target
+				
+				if test_target.attack_points < best_target.attack_points:
+					best_target = test_target
+	
+	return best_target
+	
+func get_attackable_targets(troop: MobileTroop) -> Array[MobileTroop]:
+	var tile_pos: Vector2i = grid_controller.tile_grid.local_to_map(troop.global_position)
+	
+	var max_radius := 1
+	var attackable_targets : Array[MobileTroop] = []
+	
+	for x_offset in range(-max_radius, max_radius + 1):
+		for y_offset in range(-max_radius, max_radius + 1):
+			var test_pos = tile_pos + Vector2i(x_offset, y_offset)
+
+			# Ignora se não for ponto válido no grid
+			if not grid_controller.in_bounds(test_pos):
+				continue
+			
+			var test_target : MobileTroop = grid_controller.get_entity_in_pos(test_pos)
+			
+			if test_target:
+				if test_target.faction == troop.faction:
+					continue
+				
+				attackable_targets.append(test_target)
+	
+	return attackable_targets
+
+func get_attack_player_tiles():
+	var valid_tiles = []
+	for marker in attack_area:
+		var tile_pos = grid_controller.get_world_to_tile_pos(marker.global_position)
+		valid_tiles.append(tile_pos)
+		
+	return valid_tiles
