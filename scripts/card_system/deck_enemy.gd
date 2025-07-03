@@ -9,7 +9,18 @@ func _ready() -> void:
 	_base_ready()
 	
 func load_deck():
-	deck = ["hobgoblin", "hobgoblin", "goblin", "healing_spell", "goblin"]
+	deck = [
+		"rat",
+		"rat",
+		"spider",
+		"spider",
+		"wolf",
+		"wolf",
+		"goblin",
+		"goblin",
+		"hobgoblin",
+		"hobgoblin",
+		]
 
 func draw_card_after(card_drawn_name):
 	enemy_hand.add_card_to_hand(card_drawn_name)
