@@ -126,11 +126,11 @@ func get_weakest_target_in_range(selected_troop : MobileTroop):
 	
 	return best_target
 	
-func get_attackable_targets(troop: MobileTroop) -> Array[MobileTroop]:
+func get_attackable_targets(troop: MobileTroop) -> Array[Entity]:
 	var tile_pos: Vector2i = grid_controller.tile_grid.local_to_map(troop.global_position)
 	
 	var max_radius := 1
-	var attackable_targets : Array[MobileTroop] = []
+	var attackable_targets : Array[Entity] = []
 	
 	for x_offset in range(-max_radius, max_radius + 1):
 		for y_offset in range(-max_radius, max_radius + 1):
@@ -140,7 +140,7 @@ func get_attackable_targets(troop: MobileTroop) -> Array[MobileTroop]:
 			if not grid_controller.in_bounds(test_pos):
 				continue
 			
-			var test_target : MobileTroop = grid_controller.get_entity_in_pos(test_pos)
+			var test_target : Entity = grid_controller.get_entity_in_pos(test_pos)
 			
 			if test_target:
 				if test_target.faction == troop.faction:
