@@ -25,6 +25,7 @@ func simulate_moves():
 			best_score = score
 			best_move = move
 	print("BEST SCORE: ",best_score)
+	
 	return best_move
 
 func get_all_possible_moves():
@@ -79,6 +80,7 @@ func apply_move(cloned_state, move):
 						"name":  move["card"],
 						"pos": move["tile"],
 						"hp": card_selected.life,
+						"attack_points" : card_selected.attack
 						# ... other attributes
 					})
 					
@@ -101,12 +103,20 @@ func apply_move(cloned_state, move):
 					attacker = troop
 					break
 			
-			for target in cloned_state["player_troops"]:
-				if target["pos"] == move["target"].get_tile_pos():
-					target["hp"] -= attacker["attack_points"]
-					if target["hp"] <= 0:
-						cloned_state["player_troops"].erase(target)  # Remove dead troop
-					break
+			if move["target"] is Statue:
+				var current_player_statue = cloned_state["player_statue"]
+				current_player_statue["hp"] -= attacker["attack_points"]
+			else:
+				for target in cloned_state["player_troops"]:
+					if target["pos"] == move["target"].get_tile_pos():
+						target["hp"] -= attacker["attack_points"]
+						attacker["hp"] -= target["attack_points"]
+						#if target["hp"] <= 0:
+							#cloned_state["player_troops"].erase(target)  # Remove dead troop
+							
+						#if attacker["hp"] <= 0:
+							#cloned_state["enemy_troops"].erase(attacker)
+						break
 
 	
 func clone_game_state():
@@ -137,72 +147,152 @@ func clone_game_state():
 		})
 	
 	for troop : MobileTroop in troop_manager.enemy_troops:
-		state["enemy_troops"].append({
-			"pos": troop.get_tile_pos(),
-			"hp": troop.current_life_points,
-			# ... outros atributos
-		})
+		state["enemy_troops"].append(create_mobile_obj(troop))
 		
 	for troop : MobileTroop in troop_manager.player_troops:
-		state["player_troops"].append({
-			"pos": troop.get_tile_pos(),
-			"hp": troop.current_life_points,
-			# ... outros atributos
-		})
+		state["player_troops"].append(create_mobile_obj(troop))
+		
 	# Repita para player_troops, cartas, etc.
 	return state
 	
-func evaluate_move(game_state, move) -> int:
+func create_mobile_obj(troop : MobileTroop):
+	return {
+			"card_id" : troop.card_id,
+			"pos": troop.get_tile_pos(),
+			"hp": troop.current_life_points,
+			"attack_points" : troop.attack_points
+			
+			# ... outros atributos
+		}
 	
+func evaluate_move(game_state, move) -> int:
 	var score = 0
+	score += score_alive_troops(game_state)
+	score += score_total_life(game_state)
+	score += score_attack_result(game_state, move)
+	score += score_area_control(game_state)
+	score += score_statue_damage(game_state)
+	score += score_victory_defeat(game_state)
+	score += score_hunt_weaker_targets(game_state)
+	score += score_approach_invader(game_state)
+	score += score_attack_invader(game_state, move) 
 
-	#1. value of the alive troops
-	score += game_state["enemy_troops"].size() * 10
-	score -= game_state["player_troops"].size() * 10
 
-	#2. total life points of the troops
+	return score
+
+func score_alive_troops(game_state) -> int:
+	var score = 0
+	score += game_state["enemy_troops"].filter(func(t): return t["hp"] > 0).size() * 10
+	score -= game_state["player_troops"].filter(func(t): return t["hp"] > 0).size() * 10
+	return score
+
+func score_total_life(game_state) -> int:
+	var score = 0
 	for troop in game_state["enemy_troops"]:
 		score += troop["hp"]
 	for troop in game_state["player_troops"]:
 		score -= troop["hp"]
+	return score
 
-	#3. bonus for eliminating enemy troops
+func score_attack_result(game_state, move) -> int:
+	var score = 0
 	if move["type"] == "attack":
+		if move["target"] is Statue:
+			return 0
+			
 		for target in game_state["player_troops"]:
-			if target["hp"] <= 0:
-				score += 20  # Bonus for eliminating an enemy troop
+			if target["pos"] == move["target"].get_tile_pos(): #se for statue nao faz esse calculo
+				var attacker = null
+				for t in game_state["enemy_troops"]:
+					if t["pos"] == move["troop"].get_tile_pos():
+						attacker = t
+						break
+				if target["hp"] <= 0 and attacker and attacker["hp"] > 0:
+					score += 40
+				elif attacker and attacker["hp"] and target["hp"] > 0:
+					score -= 40
+	return score
 
-	#4. area control (example: next of statue of player)
-
+func score_area_control(game_state) -> int:
+	var score = 0
 	for troop in game_state["enemy_troops"]:
 		var min_dist = INF
 		for attack_pos in game_state["player_statue"]["attack_positions"]:
 			var dist = troop["pos"].distance_to(attack_pos)
 			if dist < min_dist:
 				min_dist = dist
-		score += int(10 - min_dist)  # more close better
+		score += int(10 - min_dist)
+	return score
 
-		
-
-	#5. damage to opponent's statue (player)
+func score_statue_damage(game_state) -> int:
+	var score = 0
 	var player_statue_hp = game_state["player_statue"]["hp"]
-	var initial_player_statue_hp = player_statue.total_life_points
+	var initial_player_statue_hp = player_statue.current_life_points
 	var damage_to_player_statue = initial_player_statue_hp - player_statue_hp
 	score += damage_to_player_statue * 50
+	if damage_to_player_statue > 0:
+		print(score)
 
-	#6. damage to own statue (enemy)
 	var enemy_statue_hp = game_state["enemy_statue"]["hp"]
-	var initial_enemy_statue_hp = enemy_statue.total_life_points
+	var initial_enemy_statue_hp = enemy_statue.current_life_points
 	var damage_to_enemy_statue = initial_enemy_statue_hp - enemy_statue_hp
 	score -= damage_to_enemy_statue * 50
-
-	#7. victory/defeat
-	if player_statue_hp <= 0:
-		score += 10000 #Victory for the enemy
-	elif enemy_statue_hp <= 0:
-		score -= 10000 #Defeat for the enemy
-
 	return score
+
+func score_victory_defeat(game_state) -> int:
+	var score = 0
+	var player_statue_hp = game_state["player_statue"]["hp"]
+	var enemy_statue_hp = game_state["enemy_statue"]["hp"]
+	if player_statue_hp <= 0:
+		score += 10000
+	elif enemy_statue_hp <= 0:
+		score -= 10000
+	return score
+
+func score_hunt_weaker_targets(game_state) -> int:
+	var score = 0
+	for enemy_troops in game_state["enemy_troops"]:
+		if enemy_troops["hp"] <= 0:
+			continue
+		for player_troops in game_state["player_troops"]:
+			if player_troops["hp"] <= 0:
+				continue
+			# Se o inimigo é mais forte que o player (ataque maior que a vida do player)
+			if enemy_troops["attack_points"] >= player_troops["hp"]:
+				var dist = enemy_troops["pos"].distance_to(player_troops["pos"])
+				# Quanto mais perto, maior o score (ajuste o peso conforme desejar)
+				score += int(10 - dist)
+	return score
+
+func score_approach_invader(game_state) -> int:
+	var score = 0
+	# Supondo que o campo do inimigo é a metade superior do grid (ajuste conforme necessário)
+	var grid_mid_x = 0#float(grid_controller.tile_grid.get_used_rect().size.x) / 2.0
+	for player in game_state["player_troops"]:
+		if player["hp"] <= 0:
+			continue
+		if player["pos"].x >= grid_mid_x:
+			# Esta tropa está invadindo o campo do inimigo
+			for enemy in game_state["enemy_troops"]:
+				if enemy["hp"] <= 0:
+					continue
+				var dist = enemy["pos"].distance_to(player["pos"])
+				score += int(8 - dist) # Quanto mais perto, maior o score
+	return score
+
+func score_attack_invader(game_state, move) -> int:
+	var score = 0
+	if move["type"] == "attack":
+		if move["target"] is Statue:
+			return 0
+			
+		var grid_mid_x = 0 #float(grid_controller.tile_grid.get_used_rect().size.x) / 2
+		for target in game_state["player_troops"]:
+			if target["pos"] == move["target"].get_tile_pos() and target["pos"].x >= grid_mid_x:
+				score += 30  # Incentivo para atacar tropas invasoras
+				break
+	return score
+
 
 func get_valid_spawn_tiles():
 	return ai_spawner.get_valid_spawn_tiles()
@@ -210,8 +300,16 @@ func get_valid_spawn_tiles():
 func get_valid_move_tiles(troop: MobileTroop):
 	return grid_controller.get_valid_move_tiles(troop)
 
-func get_attackable_targets(troop: MobileTroop) -> Array[MobileTroop]:
-	return ai_finder.get_attackable_targets(troop)
+func get_attackable_targets(troop: MobileTroop) -> Array[Entity]:
+	var targets = ai_finder.get_attackable_targets(troop)
+	var attack_player_positions = ai_finder.get_attack_player_tiles()
+	for pos in attack_player_positions:
+		if troop.get_tile_pos() == pos:
+			targets.append(player_statue)
+			
+	
+	
+	return targets
 	
 func can_play_the_card(card):
 	return card_manager.can_play_the_card(card, Entity.EntityFaction.ENEMY)
