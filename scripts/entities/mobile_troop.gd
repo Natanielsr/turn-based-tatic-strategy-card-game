@@ -11,7 +11,7 @@ signal attack_finished()
 @onready var walk_points_label: Label = $"./Status/WalkPoints"
 @onready var troop_manager: TroopManager = get_node("/root/Base/TroopManager")
 
-
+var card_id : String
 var attack_points : int = 1
 @export var total_attack_count : int = 1
 var _current_attack_count = total_attack_count
@@ -34,10 +34,7 @@ func _on_changed_turn(_turn):
 	var troop_turn = is_troop_turn()
 		
 	if troop_turn:
-		set_walk_points(walk_distance)
-		_current_attack_count = total_attack_count
-		is_exausted = false
-		sprite_2d.modulate = Color(1, 1, 1)
+		invigorate()
 
 func _ready() -> void:
 	
@@ -83,8 +80,9 @@ func arrived():
 	is_moving = false
 	game_controller.deselect_troop()
 	grid_controller.set_walkable_position(global_position, false)
-	set_walk_points(0)
-	set_exausted()
+	_current_walk_points = 0
+	if _current_attack_count <= 0:
+		set_exausted()
 	emit_signal("walk_finish")
 
 func get_current_walk_points():
@@ -181,15 +179,21 @@ func trigger_attack() -> void:
 	oponent_to_attack = null
 	is_attacking = false
 	emit_signal("attack_finished")
-		
-func set_exausted():
-	if _current_walk_points <= 0 and _current_attack_count <= 0:
-		is_exausted = true
 	
-	if is_exausted:
-		sprite_2d.modulate = Color(0.5, 0.5, 0.5)  
-	else:
-		sprite_2d.modulate = Color(1, 1, 1)
+func invigorate():	
+	_current_attack_count = total_attack_count
+	_current_walk_points = walk_distance
+	sprite_2d.modulate = Color(1, 1, 1)  
+	
+	is_exausted = false
+	
+func set_exausted():
+	_current_attack_count = 0
+	_current_walk_points = 0
+	
+	is_exausted = true
+	sprite_2d.modulate = Color(0.5, 0.5, 0.5)  
+
  
 func get_distance(pos : Vector2):
 	var distance = grid_controller.get_distance_to_attack_in_diagonal(
