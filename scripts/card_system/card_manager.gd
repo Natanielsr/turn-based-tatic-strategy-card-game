@@ -2,7 +2,7 @@ extends Node2D
 
 class_name CardManager
 
-signal card_spawned()
+signal card_spawned(monster : MobileTroop)
 
 const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_CARD_SLOT = 4
@@ -69,13 +69,13 @@ func finish_drag():
 	if card_being_dragged.type == "monster":
 		var card_slot_pos = check_for_card_slot()
 		if card_slot_pos and grid_controller.is_walkable_position(card_slot_pos):
-			var monster = await spawn_monster(
-				card_being_dragged.card_id,
-				card_slot_pos,
-				MobileTroop.EntityFaction.ALLY)
-			if monster:
+			if player_statue._current_energy >= card_being_dragged.energy_cost:
 				player_hand.remove_card_from_hand(card_being_dragged)
 				card_being_dragged.queue_free()
+				var monster = await spawn_monster(
+					card_being_dragged.card_id,
+					card_slot_pos,
+					MobileTroop.EntityFaction.ALLY)
 			else:
 				player_hand.add_card_to_hand(card_being_dragged)
 		else:
@@ -107,7 +107,7 @@ func spawn_monster(card_name, card_slot_pos, faction):
 	troop_manager.add_troop(monster)
 	
 	await game_controller.wait(1)
-	emit_signal("card_spawned")
+	emit_signal("card_spawned", monster)
 	
 	return monster
 		
@@ -122,7 +122,8 @@ func check_for_card_slot():
 
 func create_monster(card_to_spawn, faction) -> MobileTroop:
 	var monster : MobileTroop = MONSTER.instantiate()
-	monster.name = card_to_spawn.card_id
+	monster.name = str(card_to_spawn.card_id + "_"+Entity.EntityFaction.keys()[faction] +"_"+str(randi()))
+	monster.card_id = card_to_spawn.card_id
 	var img_path = str("res://textures/cards/"+card_to_spawn.card_id+".png")
 	monster.get_node("Sprite2D").texture = load(img_path)
 	monster.set_attack_points(card_to_spawn.attack)
