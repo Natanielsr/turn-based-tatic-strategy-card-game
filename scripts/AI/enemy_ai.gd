@@ -27,7 +27,8 @@ var strategy : AIStrategy
 
 var move_count = 0
 
-var current_troop : MobileTroop
+var mover_troop : MobileTroop
+var attacker_troop : MobileTroop
 
 func _ready() -> void:
 	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
@@ -83,38 +84,61 @@ func finish_turn():
 func apply_move(move):
 	match move["type"]:
 		"play_card":
-			var selected_card = move["card"]
+			selected_card = move["card"]
 			var pos_to_spawn = grid_controller.get_tile_to_world_pos(move["tile"]) 
-			card_manager.card_spawned.connect(_on_card_spawned)
+			if not card_manager.is_connected("card_spawned", Callable(self, "_on_card_spawned")):
+				card_manager.card_spawned.connect(_on_card_spawned)
 			card_manager.spawn_monster(
 				selected_card,
 				pos_to_spawn,
 				Entity.EntityFaction.ENEMY)
 				
 		"move_troop":
-			current_troop = move["troop"]
+			mover_troop = move["troop"]
 			var pos_to_go = grid_controller.get_tile_to_world_pos(move["tile"]) 
-			current_troop.walk_finish.connect(_on_troop_move_finished)
-			current_troop.move_troop(pos_to_go)
-		"attack":
-			pass
+			if not mover_troop.is_connected("walk_finish", Callable(self, "_on_troop_move_finished")):
+				mover_troop.walk_finish.connect(_on_troop_move_finished)
 			
-func _on_card_spawned():
-	card_manager.disconnect("card_spawned", Callable(self, "_on_troop_move_finished"))
-	var move = look_ahead.simulate_moves()
-	if move != null:
-		apply_move(move)
-	else:
-		finish_turn()
+			mover_troop.toggle_outline(true)
+			mover_troop.move_troop(pos_to_go)
+		"attack":
+			attacker_troop = move["troop"]
+			var target : Entity = move["target"]
+			
+			if not attacker_troop.is_connected("attack_finished", Callable(self, "_on_attack_finish")):
+				attacker_troop.attack_finished.connect(_on_attack_finish)
+			
+			attacker_troop.toggle_outline(true)
+			await wait(1)
+			attacker_troop.attack(target)
+		
+			
+func _on_card_spawned(monster : MobileTroop):
+	if (monster.faction != Entity.EntityFaction.ENEMY):
+		return
+		
+	if card_manager.is_connected("card_spawned", Callable(self, "_on_card_spawned")):
+		card_manager.disconnect("card_spawned", Callable(self, "_on_card_spawned"))
+	
+	find_and_apply_move()
 		
 func _on_troop_move_finished():
-	current_troop.disconnect("walk_finish", Callable(self, "_on_troop_move_finished"))
-	current_troop = null
-	var move = look_ahead.simulate_moves()
-	if move != null:
-		apply_move(move)
-	else:
-		finish_turn()
+	if mover_troop.is_connected("walk_finish", Callable(self, "_on_troop_move_finished")):
+		mover_troop.disconnect("walk_finish", Callable(self, "_on_troop_move_finished"))
+	mover_troop.toggle_outline(false)
+	mover_troop = null
+	
+	find_and_apply_move()
+		
+
+func _on_attack_finish():
+	if attacker_troop.is_connected("attack_finished", Callable(self, "_on_attack_finish")):
+		attacker_troop.disconnect("attack_finished", Callable(self, "_on_attack_finish"))
+		
+	attacker_troop.toggle_outline(false)
+	attacker_troop = null
+	
+	find_and_apply_move()
 	
 
 func wait(seconds):
