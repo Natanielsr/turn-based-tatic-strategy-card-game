@@ -9,6 +9,7 @@ var card_id
 var type
 var attack_points : int
 var life_points: int
+var energy_cost : int
 
 var start_position
 
