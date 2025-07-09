@@ -40,7 +40,9 @@ func draw_card():
 		return
 	
 	var card_drawn_name = deck[0]
-	deck.erase(card_drawn_name)
+	#deck.erase(card_drawn_name)
+	deck.shuffle()
+	
 	cards_to_drawn -= 1
 	
 	#card_manager.add_card_to_hand(card_drawn_name)
