@@ -43,26 +43,26 @@ func _ready() -> void:
 		AIType.RANDOM:
 			pass
 			
-	var config = AIStrategyConfig.new(
-		$".",
-		$AISpawner,
-		game_controller,
-		$AIFinder,
-		grid_controller,
-		troop_manager,
-		$"../Statues/PlayerStatue"
-	)
-	strategy.init(config)
+#	var config = AIStrategyConfig.new(
+#		$".",
+#		$AISpawner,
+#		game_controller,
+#		$AIFinder,
+#		grid_controller,
+#		troop_manager,
+#		$"../Statues/PlayerStatue"
+#	)
+#	strategy.init(config)
 
 func _on_changed_turn(turn: GameController.Turn):
 	if turn == GameController.Turn.ENEMY:
 		_on_enemy_turn()
 
 func _on_enemy_turn():
-	
+	await wait(1)
 	find_and_apply_move()
 	
-	#await wait(1)
+	#
 	#finish_turn()
 	#await strategy.play_turn()
 
@@ -110,7 +110,10 @@ func apply_move(move):
 			
 			attacker_troop.toggle_outline(true)
 			await wait(1)
-			attacker_troop.attack(target)
+			if target != null:
+				attacker_troop.attack(target)
+			else:
+				find_and_apply_move()
 		
 			
 func _on_card_spawned(monster : MobileTroop):
