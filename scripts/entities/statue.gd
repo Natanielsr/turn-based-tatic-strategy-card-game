@@ -18,7 +18,8 @@ func turn_set(_turn):
 		show_turn_sprite(true)
 		if max_energy < 10:
 			max_energy += 1
-			_current_energy = max_energy
+		
+		_current_energy = max_energy
 		update_energy_label()
 	else:
 		show_turn_sprite(false)
