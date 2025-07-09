@@ -2,7 +2,7 @@ extends Node2D
 
 class_name GridController
 
-@onready var tile_grid: TileMapLayer = $"../../Tiles/TileGrid"
+@onready var tile_grid: Node = $"../../Tiles/TileGrid"
 
 var astar_grid: AStarGrid2D
 
