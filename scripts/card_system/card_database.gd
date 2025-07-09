@@ -16,7 +16,7 @@ const CARDS = {
 		"type": "monster",
 		"name": "Spider",
 		"energy_cost": 2,
-		"attack": 2,
+		"attack": 1,
 		"health": 2,
 		"description": "...",
 		"ability": "..."
@@ -26,7 +26,7 @@ const CARDS = {
 		"type": "monster",
 		"name": "Wolf",
 		"energy_cost": 3,
-		"attack": 3,
+		"attack": 2,
 		"health": 3,
 		"description": "...",
 		"ability": "..."
@@ -36,7 +36,7 @@ const CARDS = {
 		"type": "monster",
 		"name": "Goblin",
 		"energy_cost": 4,
-		"attack": 4,
+		"attack": 3,
 		"health": 4,
 		"description": "Tropa goblin simples.",
 		"ability": "nothing"
@@ -46,7 +46,7 @@ const CARDS = {
 		"type": "monster",
 		"name": "Hobgoblin",
 		"energy_cost": 5,
-		"attack": 5,
+		"attack": 4,
 		"health": 5,
 		"description": "Entra em modo berserk.",
 		"ability": "berserk"
