@@ -49,3 +49,4 @@ bin/
 # Generic backup or temporary files
 *.bak
 
+/addons
