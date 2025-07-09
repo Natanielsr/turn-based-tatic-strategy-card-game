@@ -46,6 +46,8 @@ func get_all_possible_moves():
 	for troop in troop_manager.enemy_troops:
 		if troop.can_move():
 			var move_tiles = get_valid_move_tiles(troop)
+			if move_tiles.size() == 0:
+				print(move_tiles)
 			for tile in move_tiles:
 				moves.append({
 					"type": "move_troop",
@@ -176,6 +178,9 @@ func evaluate_move(game_state, move) -> int:
 	score += score_hunt_weaker_targets(game_state)
 	score += score_approach_invader(game_state)
 	score += score_attack_invader(game_state, move) 
+	#score += score_escape_weak_from_strong(game_state, move)
+	score += score_approach_enemy_defense_statue(game_state)
+	score += score_kill_enemy_defense_statue(game_state, move)
 
 
 	return score
@@ -209,7 +214,7 @@ func score_attack_result(game_state, move) -> int:
 						break
 				if target["hp"] <= 0 and attacker and attacker["hp"] > 0:
 					score += 40
-				elif attacker and attacker["hp"] and target["hp"] > 0:
+				elif attacker["hp"] <= 0 and target["hp"] > 0:
 					score -= 40
 	return score
 
@@ -277,7 +282,7 @@ func score_approach_invader(game_state) -> int:
 				if enemy["hp"] <= 0:
 					continue
 				var dist = enemy["pos"].distance_to(player["pos"])
-				score += int(8 - dist) # Quanto mais perto, maior o score
+				score += 20 - 4 * dist
 	return score
 
 func score_attack_invader(game_state, move) -> int:
@@ -291,6 +296,65 @@ func score_attack_invader(game_state, move) -> int:
 			if target["pos"] == move["target"].get_tile_pos() and target["pos"].x >= grid_mid_x:
 				score += 30  # Incentivo para atacar tropas invasoras
 				break
+	return score
+
+func score_escape_weak_from_strong(game_state, move) -> int:
+	var score = 0
+
+	if move["type"] == "move_troop":
+		var old_pos = move["troop"].get_tile_pos()
+		var new_pos = move["tile"]
+		var troop_hp = move["troop"].current_life_points
+		# Considere "fraca" se hp <= 5 (ajuste conforme seu jogo)
+		if troop_hp <= 2:
+			var min_dist_before = INF
+			var min_dist_after = INF
+			for enemy in game_state["enemy_troops"]:
+				if enemy["hp"] <= 0:
+					continue
+				if enemy["attack_points"] >= 3:
+					var dist_before = old_pos.distance_to(enemy["pos"])
+					var dist_after = new_pos.distance_to(enemy["pos"])
+					if dist_before < min_dist_before:
+						min_dist_before = dist_before
+					if dist_after < min_dist_after:
+						min_dist_after = dist_after
+			# Se aumentou a distância, valorize
+			if min_dist_after > min_dist_before:
+				score += int((min_dist_after - min_dist_before) * 10)
+			# Se diminuiu, puna
+			elif min_dist_after < min_dist_before:
+				score -= int((min_dist_before - min_dist_after) * 10)
+	return score
+
+func score_approach_enemy_defense_statue(game_state) -> int:
+	var score = 0
+	var defense_positions = game_state["enemy_statue"]["attack_positions"]
+	for player_troop in game_state["player_troops"]:
+		if player_troop["hp"] <= 0:
+			continue
+		# Se o inimigo está em uma posição de ataque à estátua
+		if player_troop["pos"] in defense_positions:
+			for enemy_troop in game_state["enemy_troops"]:
+				if enemy_troop["hp"] <= 0:
+					continue
+				var dist = enemy_troop["pos"].distance_to(player_troop["pos"])
+				score += int(12 - dist) # Quanto mais perto, maior o score
+	return score
+
+func score_kill_enemy_defense_statue(game_state, move) -> int:
+	var score = 0
+	
+	if move["type"] == "attack":
+		if move["target"] is Statue:
+			return 0
+		
+		var defense_positions = game_state["enemy_statue"]["attack_positions"]
+		for target in game_state["player_troops"]:
+			
+			if target["pos"] == move["target"].get_tile_pos() and target["pos"] in defense_positions:
+				if target["hp"] <= 0:
+					score += 50 # Valorize matar inimigo que ameaçava a estátua
 	return score
 
 
