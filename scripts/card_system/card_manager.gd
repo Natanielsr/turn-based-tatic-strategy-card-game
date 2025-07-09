@@ -68,16 +68,14 @@ func finish_drag():
 	
 	if card_being_dragged.type == "monster":
 		var card_slot_pos = check_for_card_slot()
-		if card_slot_pos and grid_controller.is_walkable_position(card_slot_pos):
-			if player_statue._current_energy >= card_being_dragged.energy_cost:
-				player_hand.remove_card_from_hand(card_being_dragged)
-				card_being_dragged.queue_free()
-				var monster = await spawn_monster(
-					card_being_dragged.card_id,
-					card_slot_pos,
-					MobileTroop.EntityFaction.ALLY)
-			else:
-				player_hand.add_card_to_hand(card_being_dragged)
+		if can_spawn_card(card_slot_pos):
+			player_hand.remove_card_from_hand(card_being_dragged)
+			card_being_dragged.queue_free()
+			
+			spawn_monster(
+				card_being_dragged.card_id,
+				card_slot_pos,
+				MobileTroop.EntityFaction.ALLY)
 		else:
 			player_hand.add_card_to_hand(card_being_dragged)
 	else:
@@ -85,6 +83,18 @@ func finish_drag():
 		highlight_card(card_being_dragged, false)
 		
 	card_being_dragged = null
+	
+func can_spawn_card(card_slot_pos):
+	if not card_slot_pos:
+		return false
+	
+	if not grid_controller.is_walkable_position(card_slot_pos):
+		return false
+	
+	if player_statue._current_energy < card_being_dragged.energy_cost:
+		return false
+		
+	return true
 
 func spawn_monster(card_name, card_slot_pos, faction):
 	
