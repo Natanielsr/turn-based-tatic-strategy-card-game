@@ -2,8 +2,6 @@ extends Node2D
 
 class_name CardManager
 
-signal card_spawned(monster : MobileTroop)
-
 const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_CARD_SLOT = 4
 
@@ -32,9 +30,6 @@ var is_hovering_on_card
 @onready var player_statue: PlayerStatue = $"../../Statues/PlayerStatue"
 @onready var enemy_statue: EnemyStatue = $"../../Statues/EnemyStatue"
 @onready var enemy_hand: EnemyHand = $"../../EnemyAI/EnemyHand"
-
-
-const MONSTER = preload("res://prefabs/monster.tscn")
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
@@ -72,10 +67,14 @@ func finish_drag():
 			player_hand.remove_card_from_hand(card_being_dragged)
 			card_being_dragged.queue_free()
 			
-			spawn_monster(
+			var monster_id = troop_manager.generate_id(
+				card_being_dragged.card_id, MobileTroop.EntityFaction.ALLY)
+			troop_manager.spawn_monster(
 				card_being_dragged.card_id,
 				card_slot_pos,
-				MobileTroop.EntityFaction.ALLY)
+				MobileTroop.EntityFaction.ALLY,
+				monster_id
+				)
 		else:
 			player_hand.add_card_to_hand(card_being_dragged)
 	else:
@@ -83,6 +82,8 @@ func finish_drag():
 		highlight_card(card_being_dragged, false)
 		
 	card_being_dragged = null
+	
+
 	
 func can_spawn_card(card_slot_pos):
 	if not card_slot_pos:
@@ -96,30 +97,7 @@ func can_spawn_card(card_slot_pos):
 		
 	return true
 
-func spawn_monster(card_name, card_slot_pos, faction):
-	
-	var card_to_spawn = game_controller.card_database.CARDS[card_name]
-	
-	if faction == Entity.EntityFaction.ALLY:
-		if card_to_spawn.energy_cost > player_statue._current_energy:
-			print("player without enough energy")
-			return
-		player_statue.consume_energy(card_to_spawn.energy_cost)
-	elif faction == Entity.EntityFaction.ENEMY:
-		if card_to_spawn.energy_cost > enemy_statue._current_energy:
-			print("enemy without enough energy")
-			return
-		enemy_statue.consume_energy(card_to_spawn.energy_cost)
-		enemy_hand.remove_card_from_hand(card_to_spawn.card_id)
-	
-	var monster : MobileTroop = create_monster(card_to_spawn, faction)
-	monster.position = card_slot_pos
-	troop_manager.add_troop(monster)
-	
-	await game_controller.wait(1)
-	emit_signal("card_spawned", monster)
-	
-	return monster
+
 		
 func check_for_card_slot():
 	var mouse_position = get_global_mouse_position()
@@ -130,17 +108,7 @@ func check_for_card_slot():
 	else:
 		return null
 
-func create_monster(card_to_spawn, faction) -> MobileTroop:
-	var monster : MobileTroop = MONSTER.instantiate()
-	monster.name = str(card_to_spawn.card_id + "_"+Entity.EntityFaction.keys()[faction] +"_"+str(randi()))
-	monster.card_id = card_to_spawn.card_id
-	var img_path = str("res://textures/cards/"+card_to_spawn.card_id+".png")
-	monster.get_node("Sprite2D").texture = load(img_path)
-	monster.set_attack_points(card_to_spawn.attack)
-	monster.set_total_life(card_to_spawn.health)
-	monster.set_faction(faction)
-	
-	return monster
+
 	
 func connect_card_signals(card):
 	card.connect("hovered", on_hovered_over_card)
