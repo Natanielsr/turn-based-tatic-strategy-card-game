@@ -28,7 +28,7 @@ func update_hand_position():
 		
 func calculate_card_position(index):
 	var total_width = (player_hand.size() -1) * CARD_WIDTH
-	var x_offset = center_screen_x - total_width / 2 + index * CARD_WIDTH
+	var x_offset = center_screen_x - total_width / 2.0 + index * CARD_WIDTH
 	return x_offset
 
 func animate_card_to_position(card, new_position):
