@@ -25,58 +25,30 @@ enum AIType{
 
 var strategy : AIStrategy
 
-var move_count = 0
-
 var mover_troop : MobileTroop
 var attacker_troop : MobileTroop
+var best_move
 
 func _ready() -> void:
 	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
-	
-	match type:
-		AIType.AGRESSIVE:
-			strategy = preload("res://scripts/AI/Strategies/AgressiveStrategy.gd").new()
-		AIType.DEFENSIVE:
-			pass
-		AIType.OPPORTUNIST:
-			strategy = preload("res://scripts/AI/Strategies/OpportunistStrategy.gd").new()
-		AIType.RANDOM:
-			pass
-			
-#	var config = AIStrategyConfig.new(
-#		$".",
-#		$AISpawner,
-#		game_controller,
-#		$AIFinder,
-#		grid_controller,
-#		troop_manager,
-#		$"../Statues/PlayerStatue"
-#	)
-#	strategy.init(config)
 
 func _on_changed_turn(turn: GameController.Turn):
 	if turn == GameController.Turn.ENEMY:
 		_on_enemy_turn()
 
 func _on_enemy_turn():
-	await wait(1)
-	find_and_apply_move()
 	
-	#
-	#finish_turn()
-	#await strategy.play_turn()
+	find_move()
+	
 
-func find_and_apply_move():
-	var best_move = look_ahead.simulate_moves()
-	print("BEST MOVE")
-	print(best_move)
+func find_move():
+	await wait(1)
+	best_move = look_ahead.simulate_moves()
 	if best_move:
 		apply_move(best_move)
 	else:
-		await wait(1)
-		finish_turn()
-		
-	return best_move
+		print("No valid moves found")
+		finish_turn() # No valid moves, end turn
 		
 func finish_turn():
 	turn_controller.shift_turn()
@@ -86,12 +58,14 @@ func apply_move(move):
 		"play_card":
 			selected_card = move["card"]
 			var pos_to_spawn = grid_controller.get_tile_to_world_pos(move["tile"]) 
-			if not card_manager.is_connected("card_spawned", Callable(self, "_on_card_spawned")):
-				card_manager.card_spawned.connect(_on_card_spawned)
-			card_manager.spawn_monster(
+			if not troop_manager.is_connected("monster_spawned", Callable(self, "_on_monster_spawned")):
+				troop_manager.monster_spawned.connect(_on_monster_spawned)
+			troop_manager.spawn_monster(
 				selected_card,
 				pos_to_spawn,
-				Entity.EntityFaction.ENEMY)
+				Entity.EntityFaction.ENEMY,
+				move["monster_id"]
+				)
 				
 		"move_troop":
 			mover_troop = move["troop"]
@@ -113,17 +87,17 @@ func apply_move(move):
 			if target != null:
 				attacker_troop.attack(target)
 			else:
-				find_and_apply_move()
-		
+				find_move()
+
 			
-func _on_card_spawned(monster : MobileTroop):
+func _on_monster_spawned(monster : MobileTroop):
 	if (monster.faction != Entity.EntityFaction.ENEMY):
 		return
 		
-	if card_manager.is_connected("card_spawned", Callable(self, "_on_card_spawned")):
-		card_manager.disconnect("card_spawned", Callable(self, "_on_card_spawned"))
+	if troop_manager.is_connected("monster_spawned", Callable(self, "_on_monster_spawned")):
+		troop_manager.disconnect("monster_spawned", Callable(self, "_on_monster_spawned"))
 	
-	find_and_apply_move()
+	find_move()
 		
 func _on_troop_move_finished():
 	if mover_troop.is_connected("walk_finish", Callable(self, "_on_troop_move_finished")):
@@ -131,7 +105,7 @@ func _on_troop_move_finished():
 	mover_troop.toggle_outline(false)
 	mover_troop = null
 	
-	find_and_apply_move()
+	find_move()
 		
 
 func _on_attack_finish():
@@ -141,7 +115,7 @@ func _on_attack_finish():
 	attacker_troop.toggle_outline(false)
 	attacker_troop = null
 	
-	find_and_apply_move()
+	find_move()
 	
 
 func wait(seconds):
