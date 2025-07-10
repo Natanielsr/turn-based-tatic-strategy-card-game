@@ -11,14 +11,9 @@ func _ready() -> void:
 func load_deck():
 	deck = [
 		"rat",
-		"rat",
-		"spider",
 		"spider",
 		"wolf",
-		"wolf",
 		"goblin",
-		"goblin",
-		"hobgoblin",
 		"hobgoblin",
 		]
 
