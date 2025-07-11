@@ -9,6 +9,7 @@ const Turn = TurnController.Turn
 
 @onready var card_manager: CardManager = $"../../CardSystem/CardManager"
 @onready var deck_player: DeckPlayer = $"../../CardSystem/DeckPlayer"
+@onready var debugger: Debugger = $"../Debugger"
 
 var clicked_target_position
 
@@ -40,7 +41,14 @@ func _input(event):
 		if event.pressed:
 			game_controller.deselect_target()
 			game_controller.deselect_troop()
-		
+	
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_E:
+			debugger.spawn_rat_enemy()
+	
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_A:
+			debugger.spawn_rat_ally()
 
 func raycast_at_cursor():
 	var space_state = get_world_2d().direct_space_state
