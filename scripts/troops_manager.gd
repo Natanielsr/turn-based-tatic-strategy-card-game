@@ -25,6 +25,8 @@ func add_troop(troop : MobileTroop):
 		player_troops.append(troop)
 	elif troop.faction == Entity.EntityFaction.ENEMY:
 		enemy_troops.append(troop)
+	else:
+		push_error("No troop faction")
 		
 func remove_troop(troop):
 	if troop.faction == Entity.EntityFaction.ALLY:
@@ -57,28 +59,45 @@ func sorted_opponents_by_attack() -> Array:
 	
 func spawn_monster(card_name, card_slot_pos, faction, monster_id):
 	
+	var monster = null
 	var card_to_spawn = game_controller.card_database.CARDS[card_name]
 	
-	if faction == Entity.EntityFaction.ALLY:
-		if card_to_spawn.energy_cost > player_statue._current_energy:
-			print("player without enough energy")
-			return
-		player_statue.consume_energy(card_to_spawn.energy_cost)
-	elif faction == Entity.EntityFaction.ENEMY:
-		if card_to_spawn.energy_cost > enemy_statue._current_energy:
-			print("enemy without enough energy")
-			return
-		enemy_statue.consume_energy(card_to_spawn.energy_cost)
-		enemy_hand.remove_card_from_hand(card_to_spawn.card_id)
+	if not can_spawn(faction, card_to_spawn):
+		return
+		
+	consume_energy_and_remove_from_hand(faction, card_to_spawn)
 	
+	monster = await add_monster(card_to_spawn, card_slot_pos, faction, monster_id)
+	
+	return monster
+	
+func add_monster(card_to_spawn, pos, faction, monster_id):
 	var monster : MobileTroop = create_monster(card_to_spawn, faction, monster_id)
-	monster.position = card_slot_pos
+	monster.position = pos
 	add_troop(monster)
 	
 	await game_controller.wait(1)
 	emit_signal("monster_spawned", monster)
+
+func can_spawn(faction, card_to_spawn):
+	if faction == Entity.EntityFaction.ALLY:
+		if card_to_spawn.energy_cost > player_statue._current_energy:
+			print("player without enough energy")
+			return false
+	elif faction == Entity.EntityFaction.ENEMY:
+		if card_to_spawn.energy_cost > enemy_statue._current_energy:
+			print("enemy without enough energy")
+			return false
+			
+	return true
 	
-	return monster
+func consume_energy_and_remove_from_hand(faction, card_to_spawn):
+	if faction == Entity.EntityFaction.ALLY:
+		player_statue.consume_energy(card_to_spawn.energy_cost)
+		player_hand.remove_card_from_hand(card_to_spawn)
+	elif faction == Entity.EntityFaction.ENEMY:
+		enemy_statue.consume_energy(card_to_spawn.energy_cost)
+		enemy_hand.remove_card_from_hand(card_to_spawn)
 
 func create_monster(card_to_spawn, faction, monster_id) -> MobileTroop:
 	var monster : MobileTroop = MONSTER.instantiate()
