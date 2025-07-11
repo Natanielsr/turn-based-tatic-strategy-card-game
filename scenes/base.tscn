@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=35 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://cn40spabder73" path="res://scripts/troops_manager.gd" id="6_33mrd"]
 [ext_resource type="Script" uid="uid://px8ipe6qsq1j" path="res://scripts/turn_controller.gd" id="6_aomoi"]
 [ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/ui/draw_grid.gd" id="6_xvvcp"]
+[ext_resource type="Script" uid="uid://d4ke200blmpu3" path="res://scripts/debugger.gd" id="7_vs80n"]
 [ext_resource type="PackedScene" uid="uid://b1ed0nfs8p63k" path="res://prefabs/statue_status.tscn" id="9_ycryd"]
 [ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="12_c8kgi"]
 [ext_resource type="Script" uid="uid://bl63w6mprwffw" path="res://scripts/action_buttons.gd" id="12_dmaw2"]
@@ -70,6 +71,9 @@ script = ExtResource("5_uo6h6")
 
 [node name="TurnController" type="Node2D" parent="Controllers"]
 script = ExtResource("6_aomoi")
+
+[node name="Debugger" type="Node2D" parent="Controllers"]
+script = ExtResource("7_vs80n")
 
 [node name="TroopManager" type="Node2D" parent="."]
 script = ExtResource("6_33mrd")
@@ -196,6 +200,7 @@ anchors_preset = 0
 script = ExtResource("6_xvvcp")
 
 [node name="GameOverPanel" type="CanvasLayer" parent="UI"]
+visible = false
 script = ExtResource("19_ntevj")
 
 [node name="Overlay" type="ColorRect" parent="UI/GameOverPanel"]
@@ -242,6 +247,7 @@ size_flags_vertical = 4
 text = "Restart"
 
 [node name="WinPanel" type="CanvasLayer" parent="UI"]
+visible = false
 script = ExtResource("21_pmwj3")
 
 [node name="Overlay" type="ColorRect" parent="UI/WinPanel"]
@@ -253,6 +259,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0)
 
 [node name="Label" type="Label" parent="UI/WinPanel"]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -268,6 +275,7 @@ text = "You Win!"
 label_settings = SubResource("LabelSettings_03t26")
 
 [node name="Restart" type="Button" parent="UI/WinPanel"]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
