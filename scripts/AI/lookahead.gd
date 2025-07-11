@@ -15,6 +15,28 @@ const scoreCalculator = preload("res://scripts/AI/score_calculator.gd")
 
 var score_calculator = scoreCalculator.new()
 
+func _ready() -> void:
+	score_calculator.init(grid_controller)
+
+func init():
+	game_controller = GameController.new()
+	troop_manager = TroopManager.new()
+	enemy_hand = EnemyHand.new()
+	enemy_hand.init()
+	ai_spawner = AISpawner.new()
+	ai_spawner.init()
+	ai_finder = AIFinder.new()
+	ai_finder.init()
+	grid_controller = GridController.new()
+	grid_controller.init()
+	card_manager = CardManager.new()
+	enemy_statue = EnemyStatue.new()
+	player_statue = PlayerStatue.new()
+	score_calculator.init(grid_controller)
+
+#func simulate_moves():
+#	return simulate_moves_game_state(clone_game_state())
+	
 func simulate_moves():
 	var best_score = -INF
 	var best_move = null
@@ -192,7 +214,17 @@ func apply_move(state: Dictionary, move: Dictionary) -> void:
 		
 		"attack":
 			# Process attack
-			var attacker = state["enemy_troops"].filter(func(t): return t["pos"] == move["troop"].get_tile_pos())[0]
+			
+			var troop_pos = move["troop"].get_tile_pos()
+			
+			var result_troop = state["enemy_troops"].filter(
+				func(t): return t["pos"] == troop_pos)
+				
+			var attacker = null
+			if result_troop.size() > 0:
+				attacker = result_troop[0]
+			else:
+				push_error("TROOP NOT FOUND")
 			
 			if move["target"] is Statue:
 				state["player_statue"]["hp"] -= attacker["attack_points"]
@@ -242,10 +274,11 @@ func clone_game_state() -> Dictionary:
 	return state
 
 func create_mobile_obj(troop: MobileTroop) -> Dictionary:
+	var pos = troop.get_tile_pos()
 	return {
 		"name": troop.name,
 		"card_id": troop.card_id,
-		"pos": troop.get_tile_pos(),
+		"pos": pos,
 		"hp": troop.current_life_points,
 		"attack_points": troop.attack_points,
 		"monster_id": troop_manager.generate_id(troop.card_id, Entity.EntityFaction.ENEMY)
