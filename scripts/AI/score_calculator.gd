@@ -1,16 +1,21 @@
 class_name ScoreCalculator
 
+var grid_controller: GridController
+
+func init(grid: GridController):
+	grid_controller = grid
+
 var weights = {
 	"alive_troops": 10,
 	"total_life": 1,
 	"attack_result": 40,
-	"area_control": 10,
+	"area_control": 40,
 	"statue_damage": 50,
 	"victory": 10000,
 	"hunt_weak": 10,
-	"approach_invader": 20,
+	"approach_invader": 40,
 	"attack_invader": 30,
-	"defense_approach": 12,
+	"defense_approach": 30,
 	"defense_kill": 50
 }
 
@@ -27,7 +32,7 @@ func calculate_total_score(game_state, move):
 	
 	# Pontuações táticas
 	total_score += score_hunt_weaker_targets(game_state) * weights.hunt_weak
-	total_score += score_approach_invader(game_state) * weights.approach_invader
+	total_score += score_approach_invader(game_state, move) * weights.approach_invader
 	total_score += score_attack_invader(move) * weights.attack_invader
 	total_score += score_approach_enemy_defense_statue(game_state) * weights.defense_approach
 	total_score += score_kill_enemy_defense_statue(game_state, move) * weights.defense_kill
@@ -47,7 +52,6 @@ func score_attack_result(game_state, move):
 	if not move or move["type"] != "attack" or move["target"] is Statue:
 		return 0
 		
-	
 	var result = game_state["player_troops"].filter(func(t): 
 		return t["pos"] == move["target"].get_tile_pos()
 	)
@@ -70,13 +74,28 @@ func score_attack_result(game_state, move):
 	return 0
 
 func score_area_control(game_state):
-	return game_state["enemy_troops"].reduce(func(acc, troop):
-		var min_dist = INF
-		for attack_pos in game_state["player_statue"]["attack_positions"]:
-			var dist = troop["pos"].distance_to(attack_pos)
-			min_dist = min(min_dist, dist)
-		return acc + (10 - min_dist)
-	, 0)
+
+	var score = 0
+	var attack_positions = game_state["player_statue"]["attack_positions"]
+	
+	for enemy_troop in game_state["enemy_troops"]:
+		if enemy_troop["hp"] <= 0:
+			continue
+
+		for att_pos in attack_positions:
+			if occupied_area(game_state, att_pos):
+				continue
+			var distance = grid_controller.get_distance(enemy_troop["pos"], att_pos)
+			score += -distance
+
+	return score
+	
+func occupied_area(game_state, area):
+	for enemy_troop in game_state["enemy_troops"]:
+		if enemy_troop["pos"] == area:
+			return true
+			
+	return false
 
 func score_statue_damage(game_state):
 	var player_damage = game_state["player_statue"]["initial_hp"] - game_state["player_statue"]["hp"]
@@ -98,18 +117,36 @@ func score_hunt_weaker_targets(game_state):
 		for player in game_state["player_troops"]:
 			if player["hp"] <= 0 or enemy["attack_points"] < player["hp"]:
 				continue
-			score += 10 - enemy["pos"].distance_to(player["pos"])
+			score += 10 - grid_controller.get_distance(enemy["pos"], player["pos"])
 	return score
 
-func score_approach_invader(game_state):
+func score_approach_invader(game_state, move):
+	if not move or move["type"] != "move_troop":
+		return 0
+	
 	var score = 0
-	for player in game_state["player_troops"]:
-		if player["hp"] <= 0 or player["pos"].x < 0:
+	var old_pos = move["troop"].get_tile_pos()
+	var new_pos = move["tile"]
+
+	for player_troop in game_state["player_troops"]:
+		if player_troop["hp"] <= 0:
 			continue
-		for enemy in game_state["enemy_troops"]:
-			if enemy["hp"] <= 0:
-				continue
-			score += 20 - 4 * enemy["pos"].distance_to(player["pos"])
+			
+		var distance = grid_controller.distance_to_tile(player_troop["pos"], old_pos)
+		if distance > 5:
+			continue
+		
+		var new_distance = grid_controller.distance_to_tile(player_troop["pos"], new_pos)
+
+		var distance_change = new_distance - distance
+
+		var x_factor = (player_troop["pos"].x + 1) * 2
+
+		if distance_change < 0:
+			score += (-distance_change * x_factor)
+		else:
+			score -= (distance_change * x_factor)
+	
 	return score
 
 func score_attack_invader(move):
@@ -129,7 +166,12 @@ func score_approach_enemy_defense_statue(game_state):
 		for enemy in game_state["enemy_troops"]:
 			if enemy["hp"] <= 0:
 				continue
-			score += 12 - enemy["pos"].distance_to(player["pos"])
+			
+			var distance = grid_controller.get_distance(enemy["pos"], player["pos"])
+			if distance > 5:
+				continue
+				
+			score += 20 - 4 * distance
 	return score
 
 func score_kill_enemy_defense_statue(game_state, move):
