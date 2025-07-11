@@ -6,6 +6,23 @@ class_name AIFinder
 @onready var grid_controller: GridController = $"../../Controllers/GridController"
 @onready var troop_manager: TroopManager = $"../../TroopManager"
 
+func init():
+	var attack_area_pos = [
+		Vector2(0,0),
+		Vector2(0,0),
+		Vector2(0,0),
+		Vector2(0,0),
+	]
+	attack_area = []
+	
+	for pos in attack_area_pos:	
+		var area = Node2D.new()
+		area.global_position = pos
+		attack_area.append(area)
+		
+	grid_controller = GridController.new()
+	grid_controller.init()
+
 func get_attack_points():
 	return $"../AttackArea".get_children()
 
