@@ -11,6 +11,26 @@ class_name AISpawner
 
 var selected_card
 
+func init():
+	
+	var spawn_points_pos = [
+		Vector2(0,0),
+		Vector2(0,0),
+		Vector2(0,0),
+		Vector2(0,0),
+	]
+	spawn_points = []
+	
+	for pos in spawn_points_pos:	
+		var spawn_point = Node2D.new()
+		spawn_point.global_position = pos
+		spawn_points.append(spawn_point)
+		
+	grid_controller = GridController.new()
+	grid_controller.init()
+	
+	
+
 func select_and_spawn_best_monster():
 	await wait(0.3)
 	print("enemy hand: ",enemy_hand.hand)
