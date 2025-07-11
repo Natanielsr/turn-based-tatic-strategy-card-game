@@ -6,6 +6,10 @@ class_name GridController
 
 var astar_grid: AStarGrid2D
 
+func init():
+	tile_grid = TileMapLayer.new()
+	astar_grid = AStarGrid2D.new()
+
 func _ready() -> void:
 	astar_grid = AStarGrid2D.new()
 	astar_grid.region = tile_grid.get_used_rect()
@@ -77,6 +81,11 @@ func calculate_path_to_target(point_a : Vector2, point_b : Vector2):
 	
 	return path
 	
+func distance_to_tile(point_a: Vector2i, point_b : Vector2i):
+	return get_distance(
+		tile_grid.map_to_local(point_a),
+		tile_grid.map_to_local(point_b),
+	)
 	
 func get_distance(point_a: Vector2, point_b : Vector2):
 	
@@ -91,11 +100,11 @@ func get_distance(point_a: Vector2, point_b : Vector2):
 	var path = astar_grid.get_id_path(
 		tile_grid.local_to_map(point_a),
 		tile_grid.local_to_map(point_b)
-	).slice(1)
+	)
 	set_walkable_position(point_b, walkable_aux)
 	
 	if path.size() > 0:
-		return path.size()
+		return path.slice(1).size()
 	else:
 		return INF
 	
