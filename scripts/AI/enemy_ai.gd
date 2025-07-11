@@ -37,10 +37,8 @@ func _on_changed_turn(turn: GameController.Turn):
 		_on_enemy_turn()
 
 func _on_enemy_turn():
-	
 	find_move()
 	
-
 func find_move():
 	await wait(1)
 	best_move = look_ahead.simulate_moves()
