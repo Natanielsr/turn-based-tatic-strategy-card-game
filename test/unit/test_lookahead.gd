@@ -6,6 +6,7 @@ var lookahead: LookAhead
 # Chamado antes de cada teste
 func before_each():
 	lookahead = lookahead_scene.new()
+	
 	add_child_autofree(lookahead)
 	
 # Chamado depois de cada teste
@@ -14,6 +15,7 @@ func after_each():
 
 # Testes para clone_game_state
 func test_clone_game_state():
+	lookahead.init()
 	var original_state = create_mock_game_state()
 	var cloned_state = lookahead.clone_game_state()
 	
@@ -26,6 +28,8 @@ func test_clone_game_state():
 
 # Testes para get_all_possible_moves
 func test_get_all_possible_moves_empty_state():
+	lookahead.init()
+	
 	var moves = lookahead.get_all_possible_moves()
 	assert_not_null(moves, "Lista de movimentos não deve ser nula")
 	assert_true(moves is Array, "Movimentos devem ser um Array")
@@ -34,9 +38,10 @@ func test_get_all_possible_moves_empty_state():
 func test_apply_move_play_card():
 	var state = create_mock_game_state()
 	var mock_card = create_mock_card()
+	state.enemy_hand.append(mock_card)
 	var move = {
 		"type": "play_card",
-		"card": mock_card,
+		"card": mock_card.name,
 		"tile": Vector2i(1, 1),
 		"monster_id": "test_monster"
 	}
@@ -102,7 +107,16 @@ func create_mock_move() -> Dictionary:
 
 # Testes para simulate_moves
 func test_simulate_moves_returns_best_move():
-	var best_move = lookahead.simulate_moves()
+	lookahead.init()
+	
+	var mock_state = create_mock_game_state()
+	var troop = MobileTroop.new()
+	troop.tile_grid = TileMapLayer.new()
+	troop.faction = Entity.EntityFaction.ENEMY
+	lookahead.troop_manager.add_troop(troop)
+	mock_state["enemy_troops"].append(lookahead.create_mobile_obj(troop))
+	
+	var best_move = lookahead.simulate_moves_game_state(mock_state)
 	# Pode retornar null se não houver movimentos possíveis
 	if best_move != null:
 		assert_has(best_move, "type", "Melhor movimento deve ter um tipo")
@@ -119,6 +133,8 @@ func test_simulate_moves_returns_best_move():
 
 # Testes para simulate_moves_lookahead2
 func test_simulate_moves_lookahead2_returns_moves_array():
+	lookahead.init()
+	
 	var moves = lookahead.simulate_moves_lookahead2()
 	assert_true(moves is Array, "Lookahead2 deve retornar um array de movimentos")
 	# Se houver movimentos, verifica o primeiro
