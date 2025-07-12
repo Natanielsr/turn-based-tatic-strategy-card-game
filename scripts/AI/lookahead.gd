@@ -50,6 +50,7 @@ func simulate_moves():
 			best_score = score
 			best_move = move
 	
+	print("BEST MOVE: ", best_move)
 	print("BEST SCORE: ", best_score)
 	return best_move
 
@@ -245,7 +246,8 @@ func clone_game_state() -> Dictionary:
 		"enemy_statue": {
 			"hp": enemy_statue.current_life_points,
 			"initial_hp": enemy_statue.current_life_points,
-			"attack_positions": get_valid_spawn_tiles()
+			"attack_positions": get_valid_spawn_tiles(),
+			"defense_positions" : get_defense_tiles()
 		},
 		"player_statue": {
 			"hp": player_statue.current_life_points,
@@ -289,6 +291,9 @@ func evaluate_move(game_state: Dictionary, move: Dictionary) -> int:
 
 func get_valid_spawn_tiles() -> Array:
 	return ai_spawner.get_valid_spawn_tiles()
+	
+func get_defense_tiles() -> Array:
+	return ai_spawner.get_defense_tiles()
 
 func get_valid_move_tiles(troop: MobileTroop) -> Array:
 	return grid_controller.get_valid_move_tiles(troop)
