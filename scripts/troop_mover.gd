@@ -6,8 +6,6 @@ class_name TroopMover
 @onready var enemy_ai: EnemyAI = $".."
 @onready var ai_finder: AIFinder = $"../AIFinder"
 
-const AIType = EnemyAI.AIType
-
 var selected_monster : MobileTroop
 var current_index = 0
 
