@@ -10,18 +10,11 @@ class_name EnemyAI
 @onready var troop_manager: TroopManager = $"../TroopManager"
 @onready var look_ahead: LookAhead = $LookAhead
 @onready var enemy_hand: EnemyHand = $EnemyHand
+@onready var enemy_statue: EnemyStatue = $"../Statues/EnemyStatue"
 
 
 var selected_card
 var selected_monster : MobileTroop
-
-enum AIType{
-	AGRESSIVE, #Goes straight to the enemy hero
-	DEFENSIVE, #Prioritize protecting the hero and controlling the center
-	OPPORTUNIST, #Foca em matar unidades fracas e controlar área
-	RANDOM #Play any card and move without logic
-}
-@export var type: AIType = AIType.AGRESSIVE
 
 var strategy : AIStrategy
 
@@ -37,10 +30,11 @@ func _on_changed_turn(turn: GameController.Turn):
 		_on_enemy_turn()
 
 func _on_enemy_turn():
+	print("HAND :", enemy_hand.hand)
 	find_move()
 	
 func find_move():
-	await wait(1)
+	await wait(0.3)
 	best_move = look_ahead.simulate_moves()
 	if best_move:
 		apply_move(best_move)
@@ -54,16 +48,21 @@ func finish_turn():
 func apply_move(move):
 	match move["type"]:
 		"play_card":
-			selected_card = move["card"]
+			var card_name = move["card"]
+			var card_data = game_controller.card_database.CARDS[card_name]
+			
 			var pos_to_spawn = grid_controller.get_tile_to_world_pos(move["tile"]) 
 			if not troop_manager.is_connected("monster_spawned", Callable(self, "_on_monster_spawned")):
 				troop_manager.monster_spawned.connect(_on_monster_spawned)
 			troop_manager.spawn_monster(
-				selected_card,
+				card_data,
 				pos_to_spawn,
 				Entity.EntityFaction.ENEMY,
 				move["monster_id"]
 				)
+				
+			enemy_statue.consume_energy(card_data.energy_cost)
+			enemy_hand.remove_card_from_hand(card_data.card_id)
 				
 		"move_troop":
 			mover_troop = move["troop"]
@@ -81,7 +80,7 @@ func apply_move(move):
 				attacker_troop.attack_finished.connect(_on_attack_finish)
 			
 			attacker_troop.toggle_outline(true)
-			await wait(1)
+			await wait(0.3)
 			if target != null:
 				attacker_troop.attack(target)
 			else:
