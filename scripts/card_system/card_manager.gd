@@ -69,8 +69,10 @@ func finish_drag():
 			
 			var monster_id = troop_manager.generate_id(
 				card_being_dragged.card_id, MobileTroop.EntityFaction.ALLY)
+				
+			var card_data = game_controller.card_database.CARDS[card_being_dragged.card_id]
 			troop_manager.spawn_monster(
-				card_being_dragged.card_id,
+				card_data,
 				card_slot_pos,
 				MobileTroop.EntityFaction.ALLY,
 				monster_id
@@ -83,8 +85,6 @@ func finish_drag():
 		
 	card_being_dragged = null
 	
-
-	
 func can_spawn_card(card_slot_pos):
 	if not card_slot_pos:
 		return false
@@ -96,8 +96,6 @@ func can_spawn_card(card_slot_pos):
 		return false
 		
 	return true
-
-
 		
 func check_for_card_slot():
 	var mouse_position = get_global_mouse_position()
