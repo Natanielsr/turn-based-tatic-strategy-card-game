@@ -57,22 +57,17 @@ func sorted_opponents_by_attack() -> Array:
 	sorted_troops.sort_custom(func(a, b): return a.attack_points < b.attack_points)
 	return sorted_troops
 	
-func spawn_monster(card_name, card_slot_pos, faction, monster_id):
-	
+func spawn_monster(card_data, card_slot_pos, faction, monster_id):
 	var monster = null
-	var card_to_spawn = game_controller.card_database.CARDS[card_name]
-	
-	if not can_spawn(faction, card_to_spawn):
+	if not can_spawn(faction, card_data):
 		return
-		
-	consume_energy_and_remove_from_hand(faction, card_to_spawn)
 	
-	monster = await add_monster(card_to_spawn, card_slot_pos, faction, monster_id)
+	monster = await add_monster(card_data, card_slot_pos, faction, monster_id)
 	
 	return monster
 	
-func add_monster(card_to_spawn, pos, faction, monster_id):
-	var monster : MobileTroop = create_monster(card_to_spawn, faction, monster_id)
+func add_monster(card_data, pos, faction, monster_id):
+	var monster : MobileTroop = create_monster(card_data, faction, monster_id)
 	monster.position = pos
 	add_troop(monster)
 	
@@ -91,22 +86,16 @@ func can_spawn(faction, card_to_spawn):
 			
 	return true
 	
-func consume_energy_and_remove_from_hand(faction, card_to_spawn):
-	if faction == Entity.EntityFaction.ALLY:
-		player_statue.consume_energy(card_to_spawn.energy_cost)
-		player_hand.remove_card_from_hand(card_to_spawn)
-	elif faction == Entity.EntityFaction.ENEMY:
-		enemy_statue.consume_energy(card_to_spawn.energy_cost)
-		enemy_hand.remove_card_from_hand(card_to_spawn)
 
-func create_monster(card_to_spawn, faction, monster_id) -> MobileTroop:
+
+func create_monster(card_data, faction, monster_id) -> MobileTroop:
 	var monster : MobileTroop = MONSTER.instantiate()
 	monster.name = monster_id
-	monster.card_id = card_to_spawn.card_id
-	var img_path = str("res://textures/cards/"+card_to_spawn.card_id+".png")
+	monster.card_id = card_data.card_id
+	var img_path = str("res://textures/cards/"+card_data.card_id+".png")
 	monster.get_node("Sprite2D").texture = load(img_path)
-	monster.set_attack_points(card_to_spawn.attack)
-	monster.set_total_life(card_to_spawn.health)
+	monster.set_attack_points(card_data.attack)
+	monster.set_total_life(card_data.health)
 	monster.set_faction(faction)
 	
 	return monster
