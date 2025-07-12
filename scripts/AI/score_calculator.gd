@@ -8,14 +8,14 @@ func init(grid: GridController):
 var weights = {
 	"alive_troops": 10,
 	"total_life": 1,
-	"attack_result": 40,
+	"attack_result": 30,
 	"area_control": 40,
 	"statue_damage": 50,
 	"victory": 10000,
 	"hunt_weak": 10,
 	"approach_invader": 40,
-	"attack_invader": 30,
-	"defense_approach": 30,
+	"attack_invader": 40,
+	"defense_approach": 50,
 	"defense_kill": 50
 }
 
@@ -131,6 +131,9 @@ func score_approach_invader(game_state, move):
 	for player_troop in game_state["player_troops"]:
 		if player_troop["hp"] <= 0:
 			continue
+		
+		if player_troop["pos"].x <= 0:
+			continue
 			
 		var distance = grid_controller.distance_to_tile(player_troop["pos"], old_pos)
 		if distance > 5:
@@ -158,7 +161,7 @@ func score_attack_invader(move):
 
 func score_approach_enemy_defense_statue(game_state):
 	var score = 0
-	var defense_positions = game_state["enemy_statue"]["attack_positions"]
+	var defense_positions = game_state["enemy_statue"]["defense_positions"]
 	
 	for player in game_state["player_troops"]:
 		if player["hp"] <= 0 or not (player["pos"] in defense_positions):
@@ -167,7 +170,7 @@ func score_approach_enemy_defense_statue(game_state):
 			if enemy["hp"] <= 0:
 				continue
 			
-			var distance = grid_controller.get_distance(enemy["pos"], player["pos"])
+			var distance = grid_controller.distance_to_tile(enemy["pos"], player["pos"])
 			if distance > 5:
 				continue
 				
@@ -179,7 +182,7 @@ func score_kill_enemy_defense_statue(game_state, move):
 		return 0
 		
 	var target_pos = move["target"].get_tile_pos()
-	var defense_positions = game_state["enemy_statue"]["attack_positions"]
+	var defense_positions = game_state["enemy_statue"]["defense_positions"]
 	
 	if target_pos in defense_positions:
 		var target = game_state["player_troops"].filter(func(t): 
