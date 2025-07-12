@@ -47,3 +47,5 @@ func remove_card_from_hand(card):
 	if card in player_hand:
 		player_hand.erase(card)
 		update_hand_position()
+	else:
+		push_error("CARD NOT IN PLAYER HAND")
