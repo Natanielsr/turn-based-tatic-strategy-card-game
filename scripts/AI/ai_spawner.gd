@@ -81,3 +81,9 @@ func get_valid_spawn_tiles():
 			valid_tiles.append(tile_pos)
 	return valid_tiles
 	
+func get_defense_tiles():
+	var defense_tiles = []
+	for marker in spawn_points:
+		var tile_pos = grid_controller.get_world_to_tile_pos(marker.global_position)
+		defense_tiles.append(tile_pos)
+	return defense_tiles
