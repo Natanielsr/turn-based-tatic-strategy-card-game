@@ -147,7 +147,8 @@ func test_score_approach_invader():
 		"enemy_troops": [{"pos": Vector2i(8,5), "hp": 5}],
 		"player_troops": [{"pos": Vector2i(7,5), "hp": 5}]
 	}
-	var score = score_calculator.score_approach_invader(game_state)
+	var move
+	var score = score_calculator.score_approach_invader(game_state, move)
 	assert_true(score > 0, "Deve retornar um score positivo")
 	
 # Testa score_approach_invader: aproximação de inimigos a invasores
