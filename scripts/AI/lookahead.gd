@@ -97,7 +97,7 @@ func get_all_possible_moves() -> Array:
 	
 	# Move troops
 	for troop in troop_manager.enemy_troops:
-		if troop.can_move():
+		if troop.can_move() and troop.is_alive():
 			for tile in get_valid_move_tiles(troop):
 				moves.append({
 					"type": "move_troop",
@@ -109,13 +109,14 @@ func get_all_possible_moves() -> Array:
 	
 	# Attack with troops
 	for troop in troop_manager.enemy_troops:
-		if troop.can_attack():
+		if troop.can_attack() and troop.is_alive():
 			for target in get_attackable_targets(troop):
-				moves.append({
-					"type": "attack",
-					"troop": troop,
-					"target": target,
-				})
+				if target.is_alive():
+					moves.append({
+						"type": "attack",
+						"troop": troop,
+						"target": target,
+					})
 	
 	return moves
 
