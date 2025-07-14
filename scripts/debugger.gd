@@ -13,7 +13,7 @@ func spawn_rat_ally():
 	spawn_test_troop(name_troop, faction)
 	
 func spawn_rat_enemy():
-	var name_troop = "rat"
+	var name_troop = "hobgoblin"
 	var faction = Entity.EntityFaction.ENEMY
 	spawn_test_troop(name_troop, faction)
 
