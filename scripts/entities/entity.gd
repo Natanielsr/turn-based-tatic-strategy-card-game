@@ -12,7 +12,7 @@ const Turn = TurnController.Turn
 @onready var grid_controller: GridController = $"../../Controllers/GridController"
 @onready var life_points_label: Label = $"./Status/LifePoints"
 @onready var life_background_sprite: Sprite2D = $"./Status/LifeSprite"
-@export var total_life_points : int = 2
+@export var total_life_points : int
 var current_life_points : int
 
 
@@ -23,12 +23,23 @@ enum EntityFaction{
 }
 @export var faction: EntityFaction = EntityFaction.ALLY
 
+var _effectsManager = preload("res://scripts/effects/effects_manager.gd")
+var effects_manager : EffectsManager
+
 func base_ready() -> void:
 	_set_current_life(total_life_points)
 	define_faction_color()
-	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
+	turn_controller.connect("changed_turn", Callable(self, "_on_base_changed_turn"))
 	
-func is_troop_turn():
+	effects_manager = _effectsManager.new(self)
+	
+func _on_base_changed_turn(_turn):	
+	_on_changed_turn(_turn)
+	
+func _on_changed_turn(_turn):
+	pass
+	
+func is_entity_turn():
 	var current_turn = turn_controller.turn
 	if faction == EntityFaction.ALLY and current_turn == Turn.PLAYER:
 		return true
@@ -41,9 +52,23 @@ func set_total_life(life : int):
 	total_life_points = life
 
 func take_damage(damage: int):
+	
 	_set_current_life(current_life_points - damage)
 	if current_life_points <= 0:
 		die()
+	else:
+		damage_effect()
+		
+func is_alive():
+	if current_life_points > 0:
+		return true
+	else:
+		return false
+		
+func damage_effect():
+	var tween = create_tween()
+	$Sprite2D.modulate = Color.RED
+	tween.tween_property($Sprite2D, "modulate", Color.WHITE, 1)
 	
 func die():
 	push_error("Method 'die' must be overridden in a subclass to ",name)
@@ -62,15 +87,17 @@ func update_life_label():
 	else:
 		life_points_label.text = str(current_life_points)
 		
-func toggle_outline(show_outline: bool):
-	$Sprite2D.use_parent_material = not show_outline	
+func toggle_outline(_show_outline: bool):
+	pass
+	#$Sprite2D.use_parent_material = not show_outline	
 	
 func define_faction_color():
 	if faction == EntityFaction.ENEMY:
-		$Sprite2D.material = ENEMY_OUTLINE
+		#$Sprite2D.material = ENEMY_OUTLINE
 		life_background_sprite.modulate = Color(1, 0, 0)
 	elif faction == EntityFaction.ALLY:
-		$Sprite2D.material = ALLY_OUTLINE
+		#$Sprite2D.material = ALLY_OUTLINE
+		pass
 		
 func get_distance(pos : Vector2) -> int:
 	var distance = grid_controller.get_distance(
