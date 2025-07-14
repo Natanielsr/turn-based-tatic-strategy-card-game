@@ -3,6 +3,10 @@ extends Node2D
 class_name TurnController
 
 signal changed_turn(turn : Turn)
+signal player_start_turn() 
+signal player_end_turn() 
+signal enemy_start_turn() 
+signal enemy_end_turn() 
 
 @onready var game_controller: GameController = $"../GameController"
 
@@ -21,10 +25,27 @@ func shift_turn():
 	game_controller.deselect_target()
 	
 	if turn == Turn.PLAYER:
+		_player_end_turn()
 		turn = Turn.ENEMY
+		_enemy_start_turn()
 		print("Enemy Turn")
 	else:
+		_enemy_end_turn()
 		turn = Turn.PLAYER
+		_player_start_turn()
 		print("Player Turn")
 		
 	emit_signal("changed_turn", turn)
+	
+	
+func _player_start_turn():
+	emit_signal("player_start_turn")
+	
+func _player_end_turn():
+	emit_signal("player_end_turn")
+
+func _enemy_start_turn():
+	emit_signal("enemy_start_turn")
+	
+func _enemy_end_turn():
+	emit_signal("enemy_end_turn")
