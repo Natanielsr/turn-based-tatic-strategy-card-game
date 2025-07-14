@@ -10,6 +10,7 @@ signal attack_finished()
 @onready var atk_points_label: Label = $"./Status/AtkPoints"
 @onready var walk_points_label: Label = $"./Status/WalkPoints"
 @onready var troop_manager: TroopManager = get_node("/root/Base/TroopManager")
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 var card_id : String
 var attack_points : int = 1
@@ -30,14 +31,16 @@ var is_moving: bool
 var _current_id_path: Array[Vector2i]
 var is_exausted = false
 
+var _skillManager = preload("res://scripts/skills/skill_manager.gd")
+var skill_manager : SkillManager
+
 func _on_changed_turn(_turn):
-	var troop_turn = is_troop_turn()
+	var troop_turn = is_entity_turn()
 		
 	if troop_turn:
 		invigorate()
 
 func _ready() -> void:
-	
 	base_ready()
 	#define the actual poistion not walkable
 	grid_controller.set_walkable_position(
@@ -54,6 +57,10 @@ func _ready() -> void:
 		$"./Status/AtkSprite".modulate = Color(1, 0, 0) 
 	
 	is_exausted = false
+	
+	#effects_manager.add_effect(PoisonedEffect.new())
+	skill_manager = SkillManager.new()
+	skill_manager.add(PoisonSkill.new())
 	
 func _physics_process(_delta: float) -> void:
 	if not is_moving:
@@ -132,6 +139,9 @@ func set_attack_points(atk : int):
 	attack_points = atk
 
 func attack(entity : Entity):
+	if not entity.is_alive():
+		return
+	
 	if is_attacking:
 		print("is already attacking")
 		return
@@ -174,10 +184,13 @@ func trigger_attack() -> void:
 	if oponent_to_attack is MobileTroop:
 		take_damage(oponent_to_attack.attack_points)
 		
+	skill_manager.activate_skill_attack(oponent_to_attack)
+		
 	set_exausted()
 	game_controller.deselect_troop()
 	oponent_to_attack = null
 	is_attacking = false
+	
 	emit_signal("attack_finished")
 	
 func invigorate():	
@@ -206,7 +219,12 @@ func get_distance(pos : Vector2):
 func die():
 	grid_controller.set_walkable_position(global_position, true)
 	troop_manager.remove_troop(self)
-	queue_free()
+	$Status.visible = false
+	animation_player.play("die")
+	
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "die":
+		queue_free()
 	
 func update_atk_label():
 	atk_points_label.text = str(attack_points)
