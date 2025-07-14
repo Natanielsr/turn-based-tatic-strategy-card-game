@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://sffymvjqa27r"]
+[gd_scene load_steps=14 format=3 uid="uid://sffymvjqa27r"]
 
 [ext_resource type="Script" uid="uid://bh3bxpswhs048" path="res://scripts/entities/mobile_troop.gd" id="1_i00s2"]
 [ext_resource type="Material" uid="uid://b7w588gjmshvi" path="res://materials/ally_outline.tres" id="2_4bdhk"]
@@ -24,6 +24,30 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-3.09944e-06, -8)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_yxdfv"]
@@ -55,6 +79,45 @@ tracks/1/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_mluuh"]
+resource_name = "die"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.466667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.5708]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.233333, 0.466667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-3.09944e-06, -8), Vector2(0, -23.665), Vector2(-3.09944e-06, -8)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.5, 0.966667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_tqbw1"]
 resource_name = "idle"
 
@@ -62,6 +125,7 @@ resource_name = "idle"
 _data = {
 &"RESET": SubResource("Animation_56jq0"),
 &"attack": SubResource("Animation_yxdfv"),
+&"die": SubResource("Animation_mluuh"),
 &"idle": SubResource("Animation_tqbw1")
 }
 
@@ -71,6 +135,7 @@ script = ExtResource("1_i00s2")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_4bdhk")
+use_parent_material = true
 position = Vector2(-3.09944e-06, -8)
 texture = ExtResource("3_yxdfv")
 
@@ -128,3 +193,5 @@ horizontal_alignment = 1
 libraries = {
 &"": SubResource("AnimationLibrary_mluuh")
 }
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
