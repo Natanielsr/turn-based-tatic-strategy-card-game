@@ -14,7 +14,7 @@ func _statue_ready() -> void:
 	
 func turn_set(_turn):
 
-	if is_troop_turn():
+	if is_entity_turn():
 		show_turn_sprite(true)
 		if max_energy < 10:
 			max_energy += 1
