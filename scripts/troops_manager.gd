@@ -10,14 +10,35 @@ signal monster_spawned(monster : MobileTroop)
 @onready var enemy_statue: EnemyStatue = $"../Statues/EnemyStatue"
 @onready var player_hand: PlayerHand = $"../CardSystem/PlayerHand"
 @onready var enemy_hand: EnemyHand = $"../EnemyAI/EnemyHand"
+@onready var turn_controller: TurnController = $"../Controllers/TurnController"
+
 
 const MONSTER = preload("res://prefabs/monster.tscn")
-
 
 var player_troops : Array[MobileTroop] = []
 var enemy_troops : Array[MobileTroop] = []
 
+func _ready() -> void:
+	turn_controller.player_start_turn.connect(_on_player_start_turn)
+	turn_controller.player_end_turn.connect(_on_player_end_turn)
+	turn_controller.enemy_start_turn.connect(_on_enemy_start_turn)
+	turn_controller.enemy_end_turn.connect(_on_enemy_end_turn)
 
+func _on_player_start_turn():
+	for troop in player_troops:
+		troop.effects_manager.process_effects_start_turn()
+
+func _on_player_end_turn():
+	for troop in player_troops:
+		troop.effects_manager.process_effects_end_turn()
+	
+func _on_enemy_start_turn():
+	for troop in enemy_troops:
+		troop.effects_manager.process_effects_start_turn()
+	
+func _on_enemy_end_turn():
+	for troop in enemy_troops:
+		troop.effects_manager.process_effects_end_turn()
 
 func add_troop(troop : MobileTroop):
 	add_child(troop)	
