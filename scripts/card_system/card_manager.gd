@@ -67,16 +67,20 @@ func finish_drag():
 			player_hand.remove_card_from_hand(card_being_dragged)
 			card_being_dragged.queue_free()
 			
+			
 			var monster_id = troop_manager.generate_id(
 				card_being_dragged.card_id, MobileTroop.EntityFaction.ALLY)
 				
 			var card_data = game_controller.card_database.CARDS[card_being_dragged.card_id]
+			
 			troop_manager.spawn_monster(
 				card_data,
 				card_slot_pos,
 				MobileTroop.EntityFaction.ALLY,
 				monster_id
 				)
+			
+			player_statue.consume_energy(card_data.energy_cost)
 		else:
 			player_hand.add_card_to_hand(card_being_dragged)
 	else:
