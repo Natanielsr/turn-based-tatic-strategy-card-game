@@ -3,11 +3,11 @@ extends Skill
 class_name PoisonSkill
 
 const POISON_PARTICLE = preload("res://particles/poison_particle.tscn")
-
+const CLOUD_POISON_0 = preload("res://textures/crawl-tiles Oct-5-2010/effect/cloud_poison0.png")
 var target : Entity
 
 func _init() -> void:
-	pass
+	super._init("Poison", "Deal 1 Damage in the end of turn", CLOUD_POISON_0)
 	
 func activate(_target : Entity):
 	self.target = _target
