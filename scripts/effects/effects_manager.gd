@@ -31,13 +31,14 @@ func process_effects_end_turn():
 			
 func expire_effects():
 	for effect in effects.duplicate():
+		effect.duration -= 1
 		if effect.duration <= 0:
 			effect.expire(entity)
 			effects.erase(effect)
 
 func add_effect(effect : Effect):
 	effects.append(effect)
-	if effect.apply_momment == Effect.Moment.FIX:
+	if effect.apply_momment == Effect.Moment.FIXED:
 		effect.apply_effect(entity)
 	
 func remove_effect(effect : Effect):
