@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://55oegygf6o2c"]
+
+[ext_resource type="LabelSettings" uid="uid://bumcjygy7d4en" path="res://font_settings/card_label.tres" id="1_oit8f"]
+[ext_resource type="Texture2D" uid="uid://dq1f4p3bcts8h" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/slot_eq_cursed.png" id="2_v2vbj"]
+
+[node name="Skills" type="Control"]
+z_index = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 117.0
+offset_bottom = 76.0
+color = Color(0, 0, 0, 0.521569)
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 32.0
+offset_right = 80.0
+offset_bottom = 45.0
+text = "$$$"
+label_settings = ExtResource("1_oit8f")
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="."]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 43.0
+offset_right = 113.0
+offset_bottom = 79.0
+text = "$$$$$$ $$$$$$$$$$ $$$$$$$$$$$$$$$$"
+label_settings = ExtResource("1_oit8f")
+horizontal_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="Image" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 42.0
+offset_right = 74.0
+offset_bottom = 32.0
+texture = ExtResource("2_v2vbj")
