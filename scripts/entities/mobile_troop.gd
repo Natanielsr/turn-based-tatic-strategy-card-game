@@ -5,6 +5,9 @@ class_name MobileTroop
 signal walk_finish()
 signal attack_finished()
 
+signal mouse_on(troop : MobileTroop)
+signal mouse_left(troop : MobileTroop)
+
 @onready var tile_grid: TileMapLayer = get_node("/root/Base/Tiles/TileGrid")
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var atk_points_label: Label = $"./Status/AtkPoints"
@@ -31,7 +34,6 @@ var is_moving: bool
 var _current_id_path: Array[Vector2i]
 var is_exausted = false
 
-var _skillManager = preload("res://scripts/skills/skill_manager.gd")
 var skill_manager : SkillManager
 
 func _on_changed_turn(_turn):
@@ -58,7 +60,8 @@ func _ready() -> void:
 	
 	is_exausted = false
 	
-	#effects_manager.add_effect(PoisonedEffect.new())
+	effects_manager.add_effect(PoisonedEffect.new())
+	effects_manager.add_effect(PoisonedEffect.new())
 	skill_manager = SkillManager.new()
 	skill_manager.add(PoisonSkill.new())
 	
@@ -246,3 +249,9 @@ func can_attack():
 		return true
 	else:
 		return false
+
+func _on_mouse_entered() -> void:
+	emit_signal("mouse_on", self)
+
+func _on_mouse_exited() -> void:
+	emit_signal("mouse_left", self)
