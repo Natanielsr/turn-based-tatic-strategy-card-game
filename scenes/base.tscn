@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=37 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
@@ -15,9 +15,11 @@
 [ext_resource type="Texture2D" uid="uid://snd47pf1fcpy" path="res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png" id="13_517kj"]
 [ext_resource type="Texture2D" uid="uid://bmh63053cptng" path="res://textures/crawl-tiles Oct-5-2010/item/weapon/long_sword1.png" id="14_ot4hf"]
 [ext_resource type="PackedScene" uid="uid://wk0f6s72b1fo" path="res://components/card_manager.tscn" id="17_isyof"]
+[ext_resource type="Script" uid="uid://c7ef0wke7ygjx" path="res://scripts/ui/status_ui.gd" id="17_s6kkj"]
 [ext_resource type="Texture2D" uid="uid://dxi6a7vjipgwr" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/statues/wucad_mu_statue.png" id="17_ycryd"]
 [ext_resource type="Script" uid="uid://d33yuisyg4cjx" path="res://scripts/entities/player_statue.gd" id="17_ystrd"]
 [ext_resource type="Script" uid="uid://xekf8f5bi1lf" path="res://scripts/ui/ui.gd" id="18_aomoi"]
+[ext_resource type="Texture2D" uid="uid://cnet4a6qsewmd" path="res://textures/crawl-tiles Oct-5-2010/item/armour/shields/buckler3.png" id="18_rtpsq"]
 [ext_resource type="PackedScene" uid="uid://bfcwvkko5hp87" path="res://components/player_hand.tscn" id="19_isyof"]
 [ext_resource type="Script" uid="uid://cqq0s4ucecu8n" path="res://scripts/ui/game_over_panel.gd" id="19_ntevj"]
 [ext_resource type="PackedScene" uid="uid://c6wsw6st1knk5" path="res://components/deck.tscn" id="20_b085t"]
@@ -146,6 +148,23 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("18_aomoi")
+
+[node name="Status" type="Control" parent="UI"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("17_s6kkj")
+
+[node name="PointA" type="Marker2D" parent="UI/Status"]
+position = Vector2(-320, -102)
+
+[node name="PointB" type="Marker2D" parent="UI/Status"]
+position = Vector2(320, 258)
+
+[node name="Window" type="Node2D" parent="UI/Status"]
+
+[node name="Sprite2D" type="Sprite2D" parent="UI/Status/Window"]
+texture = ExtResource("18_rtpsq")
 
 [node name="ActionButtons" type="Control" parent="UI"]
 visible = false
