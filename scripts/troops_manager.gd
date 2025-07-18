@@ -4,6 +4,9 @@ class_name TroopManager
 
 signal monster_spawned(monster : MobileTroop)
 
+signal mouse_on_troop(troop : MobileTroop)
+signal mouse_left_troop(troop : MobileTroop)
+
 @onready var grid_controller: GridController = $"../Controllers/GridController"
 @onready var game_controller: GameController = $"../Controllers/GameController"
 @onready var player_statue: PlayerStatue = $"../Statues/PlayerStatue"
@@ -49,12 +52,24 @@ func add_troop(troop : MobileTroop):
 	else:
 		push_error("No troop faction")
 		
-func remove_troop(troop):
+	troop.mouse_on.connect(_on_mouse_troop)
+	troop.mouse_left.connect(_on_mouse_left_troop)
+		
+func remove_troop(troop : MobileTroop):
 	if troop.faction == Entity.EntityFaction.ALLY:
 		player_troops.erase(troop)
 	elif troop.faction == Entity.EntityFaction.ENEMY:
 		enemy_troops.erase(troop)
 		
+	troop.mouse_on.disconnect(_on_mouse_troop)
+	troop.mouse_left.disconnect(_on_mouse_left_troop)
+	
+func _on_mouse_troop(troop):
+	emit_signal("mouse_on_troop", troop)
+	
+func _on_mouse_left_troop(troop):
+	emit_signal("mouse_left_troop", troop)
+	
 func sorted_opponents_by_distance(troop: MobileTroop) -> Array:
 	var distances = []
 	
@@ -107,8 +122,6 @@ func can_spawn(faction, card_to_spawn):
 			
 	return true
 	
-
-
 func create_monster(card_data, faction, monster_id) -> MobileTroop:
 	var monster : MobileTroop = MONSTER.instantiate()
 	monster.name = monster_id
