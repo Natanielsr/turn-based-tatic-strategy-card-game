@@ -4,6 +4,8 @@ class_name UI
 
 @onready var game_controller: GameController = get_node("/root/Base/Controllers/GameController")
 @onready var turn_controller: TurnController = $"../Controllers/TurnController"
+
+
 const Turn = TurnController.Turn
 
 @onready var grid_controller: GridController = get_node("/root/Base/Controllers/GridController")
@@ -12,6 +14,8 @@ const Turn = TurnController.Turn
 const cursor_attack_texture = preload("res://textures/crawl-tiles Oct-5-2010/item/weapon/long_sword1.png")
 const TRAVEL_EXCLUSION_CENTRE = preload("res://textures/crawl-tiles Oct-5-2010/dc-misc/travel_exclusion_centre.png")
 const BOOTS_1_BROWN = preload("res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png")
+
+
 
 func _ready() -> void:
 	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
@@ -31,6 +35,8 @@ func set_turn(turn):
 		enemy_finish_turn_btn.disabled = false
 	
 func _process(_delta: float) -> void:
+	show_effects()
+	
 	if game_controller.current_game_state != GameController.GameState.RUNNING:
 		cursor_normal()
 		return
@@ -49,6 +55,10 @@ func _process(_delta: float) -> void:
 			cursor_boots()
 		else:
 			cursor_cancel()
+			
+func show_effects():
+	
+	pass
 	
 func enemy_on_mouse() -> Entity:
 	var mouse_pos = get_global_mouse_position()
@@ -70,9 +80,6 @@ func enemy_on_mouse() -> Entity:
 				return enemy
 				
 	return null
-
-
-
 
 func _on_finish_turn_pressed() -> void:
 	turn_controller.shift_turn()
