@@ -46,6 +46,7 @@ func create_card(card_name):
 	new_card.get_node("Energy").text = str(card_data.energy_cost)
 	new_card.energy_cost = card_data.energy_cost
 	new_card.type = card_data.type
+	new_card.description = card_data.description
 	if card_data.type == "monster":
 		new_card.get_node("Attack").text = str(card_data.attack)
 		new_card.attack_points = int(card_data.attack)
