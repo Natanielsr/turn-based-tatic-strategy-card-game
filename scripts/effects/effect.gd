@@ -6,6 +6,8 @@ var effect_name
 var duration
 var apply_momment : Moment
 var image : CompressedTexture2D
+var particle
+
 enum Moment{
 	START_TURN,
 	END_TURN,
@@ -16,12 +18,14 @@ func _init(
 	_effect_name : String,
 	_duration_turn: int,
 	_apply_momment: Moment,
-	_image : CompressedTexture2D
+	_image : CompressedTexture2D,
+	_partcile
 	):
 	self.effect_name = _effect_name
 	self.duration = _duration_turn
 	self.apply_momment = _apply_momment
 	self.image = _image
+	self.particle = _partcile
 
 func apply_effect(_entity : Entity):
 	pass
@@ -37,3 +41,9 @@ func get_moment_string():
 			return "End Turn" 
 		Moment.FIXED:
 			return "Fixed" 
+			
+func spawn_particle(pos : Vector2):
+	var part = particle.instantiate()
+	self.entity.add_child(part)
+	part.global_position = pos
+	part.emitting = true
