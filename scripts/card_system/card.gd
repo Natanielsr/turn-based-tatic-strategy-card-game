@@ -10,8 +10,11 @@ var type
 var attack_points : int
 var life_points: int
 var energy_cost : int
+var description : String
 
 var start_position
+
+var is_dragging = false
 
 func _ready() -> void:
 	#All cards must be a child of CardManager or this will error
