@@ -56,13 +56,16 @@ func add_troop(troop : MobileTroop):
 	troop.mouse_left.connect(_on_mouse_left_troop)
 		
 func remove_troop(troop : MobileTroop):
+	if troop.mouse_on.is_connected(_on_mouse_troop):
+		troop.mouse_on.disconnect(_on_mouse_troop)
+		
+	if troop.mouse_left.is_connected(_on_mouse_left_troop):
+		troop.mouse_left.disconnect(_on_mouse_left_troop)
+	
 	if troop.faction == Entity.EntityFaction.ALLY:
 		player_troops.erase(troop)
 	elif troop.faction == Entity.EntityFaction.ENEMY:
 		enemy_troops.erase(troop)
-		
-	troop.mouse_on.disconnect(_on_mouse_troop)
-	troop.mouse_left.disconnect(_on_mouse_left_troop)
 	
 func _on_mouse_troop(troop):
 	emit_signal("mouse_on_troop", troop)
@@ -131,6 +134,9 @@ func create_monster(card_data, faction, monster_id) -> MobileTroop:
 	monster.set_attack_points(card_data.attack)
 	monster.set_total_life(card_data.health)
 	monster.set_faction(faction)
+	monster.skill_manager = SkillManager.new($"../FileManager")
+	monster.skill_manager.add_skill_name(card_data.ability)
+	
 	
 	return monster
 	
