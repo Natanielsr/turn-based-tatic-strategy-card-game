@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0xompgxvw6yr"]
+
+[ext_resource type="PackedScene" uid="uid://dgc5avkwwr0je" path="res://particles/blood_particle.tscn" id="1_r5jy6"]
+
+[node name="blood_particle" type="Node2D"]
+
+[node name="CPUParticles2D" parent="." instance=ExtResource("1_r5jy6")]

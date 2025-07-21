@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ckkervokqokmj"]
+[gd_scene load_steps=6 format=3 uid="uid://ckkervokqokmj"]
 
 [ext_resource type="Texture2D" uid="uid://bgg4f6w4vsyas" path="res://textures/crawl-tiles Oct-5-2010/effect/cloud_poison0.png" id="1_cum5b"]
+[ext_resource type="Script" uid="uid://xesv67fom3e4" path="res://scripts/auto_destroy.gd" id="2_clibb"]
 
 [sub_resource type="Gradient" id="Gradient_clibb"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
@@ -19,3 +20,4 @@ emitting = false
 texture = ExtResource("1_cum5b")
 one_shot = true
 process_material = SubResource("ParticleProcessMaterial_u0jt4")
+script = ExtResource("2_clibb")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=40 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://px8ipe6qsq1j" path="res://scripts/turn_controller.gd" id="6_aomoi"]
 [ext_resource type="Script" uid="uid://dasmpyp4m3edy" path="res://scripts/ui/draw_grid.gd" id="6_xvvcp"]
 [ext_resource type="Script" uid="uid://d4ke200blmpu3" path="res://scripts/debugger.gd" id="7_vs80n"]
+[ext_resource type="Script" uid="uid://68xpdvwy7bgn" path="res://scripts/file_manager.gd" id="9_ei55q"]
 [ext_resource type="PackedScene" uid="uid://b1ed0nfs8p63k" path="res://prefabs/statue_status.tscn" id="9_ycryd"]
 [ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="12_c8kgi"]
 [ext_resource type="Script" uid="uid://bl63w6mprwffw" path="res://scripts/action_buttons.gd" id="12_dmaw2"]
@@ -31,8 +32,10 @@
 [ext_resource type="Script" uid="uid://vls463oqcx6e" path="res://scripts/card_system/deck_enemy.gd" id="22_aomoi"]
 [ext_resource type="Script" uid="uid://dsoqkfpsx0r3k" path="res://scripts/AI/ai_spawner.gd" id="24_ktrk3"]
 [ext_resource type="Script" uid="uid://5ripxr2iqptj" path="res://scripts/troop_mover.gd" id="25_s5nuq"]
+[ext_resource type="PackedScene" uid="uid://c2xyq4whoj4fp" path="res://prefabs/ui/description.tscn" id="26_b73mi"]
 [ext_resource type="Script" uid="uid://3ap13enu1da8" path="res://scripts/card_system/enemy_hand.gd" id="26_lefm6"]
 [ext_resource type="Script" uid="uid://c6r08ftecn3fy" path="res://scripts/AI/ai_finder.gd" id="27_03t26"]
+[ext_resource type="Script" uid="uid://bekwtacsbhwq5" path="res://scripts/description.gd" id="27_qty1u"]
 [ext_resource type="Script" uid="uid://b7jm31u8uqk1e" path="res://scripts/AI/lookahead.gd" id="31_82vju"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uo6h6"]
@@ -51,12 +54,11 @@ tile_map_data = PackedByteArray("AAAAAP//AgALABMAAAAAAP7/AgALABQAAAABAP7/AgAKABQ
 tile_set = ExtResource("2_baglu")
 
 [node name="TileGrid" type="TileMapLayer" parent="Tiles"]
-tile_map_data = PackedByteArray("AAD5////AAABAAcAAAD5//3/AAAdAB0AAAD5//7/AAAdAB0AAAD5/wAAAAABAAcAAAD5/wEAAAABAAcAAAD5/wIAAAABAAcAAAD5/wMAAAAdAB0AAAD5/wQAAAAdAB0AAAD6//3/AAAXABkAAAD6//7/AAAXABoAAAD6////AAAdAB0AAAD6/wAAAAAdAB0AAAD6/wEAAAAdAB0AAAD6/wIAAAAdAB0AAAD6/wMAAAAdAB0AAAD6/wQAAAAdAB0AAAD7//7/AAAYABoAAAD7/wAAAAAdAB0AAAD7/wEAAAAdAB0AAAD7/wIAAAAOAAMAAAD7/wMAAAAdAB0AAAD7/wQAAAAdAB0AAAD8//3/AAAdAB0AAAD8//7/AAAdAB0AAAD8////AAAdAB0AAAD8/wAAAAAdAB0AAAD8/wEAAAAdAB0AAAD8/wIAAAAdAB0AAAD8/wMAAAAdAB0AAAD8/wQAAAAdAB0AAAD9//3/AAAdAB0AAAD9//7/AAAdAB0AAAD9////AAARAAQAAAD9/wAAAAAdAB0AAAD9/wEAAAAdAB0AAAD9/wIAAAAdAB0AAAD9/wQAAAAOAA8AAAD+//3/AAAdAB0AAAD+//7/AAAdAB0AAAD+////AAAdAB0AAAD+/wAAAAAdAB0AAAD+/wEAAAAdAB0AAAD+/wIAAAAdAB0AAAD+/wMAAAAdAB0AAAD+/wQAAAAdAB0AAAD///3/AAARAAQAAAD///7/AAARAAQAAAD/////AAARAAQAAAD//wAAAAAdAB0AAAD//wEAAAAdAB0AAAD//wIAAAAMAAMAAAD//wMAAAAdAB0AAAD//wQAAAAdAB0AAAAAAP3/AAAdAB0AAAAAAP7/AAAdAB0AAAAAAP//AAAdAB0AAAAAAAAAAAAdAB0AAAAAAAEAAAAdAB0AAAAAAAIAAAAdAB0AAAAAAAMAAAAdAB0AAAAAAAQAAAAdAB0AAAABAP3/AAAdAB0AAAABAP7/AAAdAB0AAAABAP//AAAdAB0AAAABAAAAAAAdAB0AAAABAAEAAAAdAB0AAAABAAIAAAAdAB0AAAABAAMAAAAdAB0AAAABAAQAAAAdAB0AAAACAP3/AAAdAB0AAAACAP7/AAAdAB0AAAACAAAAAAATAAgAAAACAAEAAAAdAB0AAAACAAIAAAARAAQAAAACAAMAAAARAAQAAAACAAQAAAARAAQAAAADAP3/AAAdAB0AAAADAP7/AAAdAB0AAAADAP//AAAdAB0AAAADAAAAAAAdAB0AAAADAAEAAAAdAB0AAAADAAIAAAAdAB0AAAADAAMAAAAdAB0AAAADAAQAAAAdAB0AAAAEAP3/AAAdAB0AAAAEAP7/AAAdAB0AAAAEAP//AAAdAB0AAAAEAAEAAAAdAB0AAAAEAAIAAAAdAB0AAAAEAAMAAAAdAB0AAAAEAAQAAAAdAB0AAAAFAP3/AAAdAB0AAAAFAP7/AAAdAB0AAAAFAP//AAAdAB0AAAAFAAAAAAAdAB0AAAAFAAEAAAAdAB0AAAAFAAMAAAAdAB0AAAAFAAQAAAAdAB0AAAACAP//AAAdAB0AAAD7//3/AAAYABkAAAD7////AAARAAQAAAD9/wMAAAAOAA8AAAAEAAAAAAAdAB0AAAAFAAIAAAAdAB0AAAAGAP7/AAAdAB0AAAAGAP3/AAAdAB0AAAAGAAQAAAAdAB0AAAAGAAMAAAAdAB0AAAAGAAIAAAAAAAcAAAAGAAEAAAAAAAcAAAAGAAAAAAAAAAcAAAAGAP//AAAAAAcAAAA=")
+tile_map_data = PackedByteArray("AAD5////AAABAAcAAAD5//3/AAAdAB0AAAD5//7/AAAdAB0AAAD5/wAAAAABAAcAAAD5/wEAAAABAAcAAAD5/wIAAAABAAcAAAD5/wMAAAAdAB0AAAD5/wQAAAAdAB0AAAD6//3/AAAdAB0AAAD6//7/AAAdAB0AAAD6////AAAdAB0AAAD6/wAAAAAdAB0AAAD6/wEAAAAdAB0AAAD6/wIAAAAdAB0AAAD6/wMAAAAdAB0AAAD6/wQAAAAdAB0AAAD7//7/AAAdAB0AAAD7/wAAAAAdAB0AAAD7/wEAAAAdAB0AAAD7/wIAAAAdAB0AAAD7/wMAAAAdAB0AAAD7/wQAAAAdAB0AAAD8//3/AAAdAB0AAAD8//7/AAAdAB0AAAD8////AAAMAAEAAAD8/wAAAAAdAB0AAAD8/wEAAAAdAB0AAAD8/wIAAAAOAAMAAAD8/wMAAAAdAB0AAAD8/wQAAAAdAB0AAAD9//3/AAAdAB0AAAD9//7/AAAOAA8AAAD9////AAAOAA8AAAD9/wAAAAARAAQAAAD9/wEAAAAdAB0AAAD9/wIAAAAOAA8AAAD9/wQAAAAdAB0AAAD+//3/AAAdAB0AAAD+////AAANAAMAAAD+/wAAAAAdAB0AAAD+/wEAAAAdAB0AAAD+/wIAAAANAAIAAAD+/wQAAAAdAB0AAAD///3/AAAdAB0AAAD///7/AAAdAB0AAAD/////AAAdAB0AAAD//wAAAAAdAB0AAAD//wEAAAAdAB0AAAD//wIAAAAdAB0AAAD//wMAAAAdAB0AAAD//wQAAAAdAB0AAAAAAP3/AAAdAB0AAAAAAP7/AAAdAB0AAAAAAP//AAAdAB0AAAAAAAAAAAAdAB0AAAAAAAEAAAAdAB0AAAAAAAIAAAAdAB0AAAAAAAMAAAAdAB0AAAAAAAQAAAAdAB0AAAABAP3/AAAdAB0AAAABAP//AAANAAIAAAABAAAAAAAdAB0AAAABAAEAAAAdAB0AAAABAAIAAAAOAA8AAAABAAQAAAAdAB0AAAACAP3/AAAdAB0AAAACAP7/AAARAAQAAAACAAAAAAAdAB0AAAACAAEAAAARAAQAAAACAAIAAAARAAQAAAACAAMAAAARAAQAAAACAAQAAAAdAB0AAAADAP3/AAAdAB0AAAADAP7/AAAdAB0AAAADAP//AAANAAIAAAADAAAAAAAdAB0AAAADAAEAAAAdAB0AAAADAAIAAAANAAMAAAADAAMAAAAdAB0AAAADAAQAAAAdAB0AAAAEAP3/AAAdAB0AAAAEAP7/AAAdAB0AAAAEAP//AAAdAB0AAAAEAAEAAAAdAB0AAAAEAAIAAAAdAB0AAAAEAAMAAAAdAB0AAAAEAAQAAAAdAB0AAAAFAP3/AAAdAB0AAAAFAP7/AAAdAB0AAAAFAP//AAAdAB0AAAAFAAAAAAAdAB0AAAAFAAEAAAAdAB0AAAAFAAMAAAAdAB0AAAAFAAQAAAAdAB0AAAACAP//AAAOAA8AAAD7//3/AAAdAB0AAAD7////AAAdAB0AAAD9/wMAAAAOAA8AAAAEAAAAAAAdAB0AAAAFAAIAAAAdAB0AAAAGAP7/AAAdAB0AAAAGAP3/AAAdAB0AAAAGAAQAAAAdAB0AAAAGAAMAAAAdAB0AAAAGAAIAAAAAAAcAAAAGAAEAAAAAAAcAAAAGAAAAAAAAAAcAAAAGAP//AAAAAAcAAAABAAMAAAAdAB0AAAD+/wMAAAAdAB0AAAD+//7/AAAdAB0AAAABAP7/AAAdAB0AAAA=")
 tile_set = ExtResource("2_40w10")
 
 [node name="OverlayTileMapLayer" type="TileMapLayer" parent="Tiles"]
 z_index = 4
-tile_map_data = PackedByteArray("AAACAP//AgATAAcAAAA=")
 tile_set = ExtResource("2_baglu")
 
 [node name="Controllers" type="Node2D" parent="."]
@@ -79,6 +81,9 @@ script = ExtResource("7_vs80n")
 
 [node name="TroopManager" type="Node2D" parent="."]
 script = ExtResource("6_33mrd")
+
+[node name="FileManager" type="Node" parent="."]
+script = ExtResource("9_ei55q")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, 78)
@@ -164,6 +169,7 @@ position = Vector2(320, 258)
 [node name="Window" type="Node2D" parent="UI/Status"]
 
 [node name="Sprite2D" type="Sprite2D" parent="UI/Status/Window"]
+visible = false
 texture = ExtResource("18_rtpsq")
 
 [node name="ActionButtons" type="Control" parent="UI"]
@@ -307,6 +313,10 @@ offset_bottom = 139.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Restart"
+
+[node name="Description" parent="UI" instance=ExtResource("26_b73mi")]
+layout_mode = 1
+script = ExtResource("27_qty1u")
 
 [node name="CardSystem" type="Node2D" parent="."]
 

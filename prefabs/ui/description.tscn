@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2xyq4whoj4fp"]
+
+[ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="1_fr14l"]
+
+[node name="Description" type="Control"]
+visible = false
+z_index = 5
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 174.0
+offset_bottom = 71.0
+color = Color(0, 0, 0, 0.494118)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 163.0
+offset_bottom = 63.0
+text = "$$$$$$$$$$$ $$$$$$$$$$$$$$$$$$$$$$$ $$$$$$$$$$$$$$$$$#$$$$$$$$$$$$$$$$$"
+label_settings = ExtResource("1_fr14l")
+horizontal_alignment = 1
+autowrap_mode = 2

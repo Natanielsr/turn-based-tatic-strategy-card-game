@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dgc5avkwwr0je"]
+
+[ext_resource type="Texture2D" uid="uid://bswqf6a2sn4kl" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/blood_red3.png" id="1_5s663"]
+[ext_resource type="Script" uid="uid://xesv67fom3e4" path="res://scripts/auto_destroy.gd" id="2_gqa7s"]
+
+[sub_resource type="Curve" id="Curve_eg6qb"]
+_data = [Vector2(0, 0.258427), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="BloodParticle" type="CPUParticles2D"]
+emitting = false
+amount = 30
+texture = ExtResource("1_5s663")
+one_shot = true
+explosiveness = 0.75
+spread = 180.0
+gravity = Vector2(0, 100)
+initial_velocity_min = 25.0
+initial_velocity_max = 50.0
+scale_amount_min = 0.0
+scale_amount_curve = SubResource("Curve_eg6qb")
+script = ExtResource("2_gqa7s")
