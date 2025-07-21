@@ -2,9 +2,9 @@ extends Control
 
 class_name StatusUI
 
-const EFFECTS_PREVIEW_UI = preload("res://prefabs/effects_preview_ui.tscn")
-const TROOP_PREVIEW_UI = preload("res://prefabs/troop_preview_ui.tscn")
-const SKILLS_PREVIEW_UI = preload("res://prefabs/skills_preview_ui.tscn")
+const EFFECTS_PREVIEW_UI = preload("res://prefabs/ui/effects_preview_ui.tscn")
+const TROOP_PREVIEW_UI = preload("res://prefabs/ui/troop_preview_ui.tscn")
+const SKILLS_PREVIEW_UI = preload("res://prefabs/ui/skills_preview_ui.tscn")
 
 const EFFECTS_HEIGHT = 40
 const SKILLS_HEIGHT = 76
@@ -84,7 +84,7 @@ func _draw():
 	var view_color = Color(1, 0, 0, 0.5)  # vermelho com 50% de transparência
 	
 	var view_rect_area = rect_view_area()
-	draw_rect(view_rect_area, view_color, false) 
+	#draw_rect(view_rect_area, view_color, false) 
 	
 	if troop == null:
 		return
@@ -92,7 +92,7 @@ func _draw():
 	var status_rect = status_area_rect()
 	
 	var border_color = Color(1, 0, 0, 0.5)  # vermelho com 50% de transparência
-	draw_rect(status_rect, border_color, false)  # false = só a borda
+	#draw_rect(status_rect, border_color, false)  # false = só a borda
 	
 func status_area_rect():
 	var effects_height = effects_ui.size() * EFFECTS_HEIGHT
