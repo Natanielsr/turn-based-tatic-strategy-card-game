@@ -1,6 +1,9 @@
 extends Node2D
 
 class_name CardManager
+signal hovered_card_on(card)
+signal hovered_card_off(card)
+signal start_drag_card(card)
 
 const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_CARD_SLOT = 4
@@ -46,10 +49,12 @@ func _process(_delta: float) -> void:
 				clamp(mouse_pos.y + OFF_SET_MOUSE_Y, screen_min.y, screen_max.y)
 			)
 
-func start_drag(card):
+func start_drag(card: Card):
 	card_being_dragged = card
+	card_being_dragged.is_dragging = true
 	#card_being_dragged.modulate.a = 0.25
 	card.scale = Vector2(CARD_SCALE, CARD_SCALE)
+	emit_signal("start_drag_card", card)
 	
 func on_left_click_released():
 	if card_being_dragged:
@@ -86,8 +91,10 @@ func finish_drag():
 	else:
 		player_hand.add_card_to_hand(card_being_dragged)
 		highlight_card(card_being_dragged, false)
-		
+	
+	card_being_dragged.is_dragging = false
 	card_being_dragged = null
+	
 	
 func can_spawn_card(card_slot_pos):
 	if not card_slot_pos:
@@ -122,6 +129,8 @@ func on_hovered_over_card(card):
 		is_hovering_on_card = true
 		highlight_card(card, true)
 	
+	emit_signal("hovered_card_on", card)
+	
 func on_hovered_off_card(card):
 	if card_being_dragged:
 		return
@@ -133,6 +142,8 @@ func on_hovered_off_card(card):
 		highlight_card(new_card_hovered, true)
 	else:
 		is_hovering_on_card = false
+	
+	emit_signal("hovered_card_off", card)
 	
 func highlight_card(card, hovered):
 	if hovered:
