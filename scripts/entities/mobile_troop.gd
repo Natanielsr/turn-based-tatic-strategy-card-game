@@ -60,11 +60,6 @@ func _ready() -> void:
 	
 	is_exausted = false
 	
-	effects_manager.add_effect(PoisonedEffect.new())
-	effects_manager.add_effect(PoisonedEffect.new())
-	skill_manager = SkillManager.new()
-	skill_manager.add(PoisonSkill.new())
-	
 func _physics_process(_delta: float) -> void:
 	if not is_moving:
 		return
