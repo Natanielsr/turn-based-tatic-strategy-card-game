@@ -8,8 +8,8 @@ const CARDS = {
 		"energy_cost": 1,
 		"attack": 1,
 		"health": 1,
-		"description": "...",
-		"ability": "..."
+		"description": "Just a smelly mouse",
+		"ability": ""
   	},
 	"spider": {
 		"card_id": "spider",
@@ -18,8 +18,8 @@ const CARDS = {
 		"energy_cost": 2,
 		"attack": 1,
 		"health": 2,
-		"description": "...",
-		"ability": "..."
+		"description": "Posion: Causes poisoning against the opponent when it attacks",
+		"ability": "poison"
   	},
 	"wolf": {
 		"card_id": "wolf",
@@ -28,18 +28,18 @@ const CARDS = {
 		"energy_cost": 3,
 		"attack": 2,
 		"health": 3,
-		"description": "...",
-		"ability": "..."
+		"description": "bites the opponent",
+		"ability": ""
   	},
 	"goblin": {
 		"card_id": "goblin",
 		"type": "monster",
 		"name": "Goblin",
 		"energy_cost": 4,
-		"attack": 3,
+		"attack": 2,
 		"health": 4,
-		"description": "Tropa goblin simples.",
-		"ability": "nothing"
+		"description": "Bleeding: Causes bleeding against the opponent when it attacks",
+		"ability": "bleeding"
  	},
 	"hobgoblin": {
 		"card_id": "hobgoblin",
@@ -48,8 +48,8 @@ const CARDS = {
 		"energy_cost": 5,
 		"attack": 4,
 		"health": 5,
-		"description": "Entra em modo berserk.",
-		"ability": "berserk"
+		"description": "Berserk: Increases attack when you are injured",
+		"ability": ""
   	},
 	"healing_spell": {
 		"card_id": "healing_spell",
