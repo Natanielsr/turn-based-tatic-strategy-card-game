@@ -1,12 +1,14 @@
-[gd_scene load_steps=14 format=3 uid="uid://sffymvjqa27r"]
+[gd_scene load_steps=16 format=3 uid="uid://sffymvjqa27r"]
 
 [ext_resource type="Script" uid="uid://bh3bxpswhs048" path="res://scripts/entities/mobile_troop.gd" id="1_i00s2"]
 [ext_resource type="Material" uid="uid://b7w588gjmshvi" path="res://materials/ally_outline.tres" id="2_4bdhk"]
+[ext_resource type="Texture2D" uid="uid://t2lppln6xpqo" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/slot_eq.png" id="2_tqbw1"]
 [ext_resource type="Texture2D" uid="uid://dq1f4p3bcts8h" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/slot_eq_cursed.png" id="3_yxdfv"]
 [ext_resource type="Texture2D" uid="uid://clfln8e51ruhi" path="res://textures/crawl-tiles Oct-5-2010/UNUSED/armour/shield_of_reflection.png" id="4_yxdfv"]
 [ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="5_tqbw1"]
 [ext_resource type="Texture2D" uid="uid://g1xfsjbyyifb" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/unseen_weapon.png" id="6_56jq0"]
 [ext_resource type="Texture2D" uid="uid://snd47pf1fcpy" path="res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png" id="7_mluuh"]
+[ext_resource type="PackedScene" uid="uid://dtgkhup011nr8" path="res://particles/attack_particles.tscn" id="10_mluuh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vqfsp"]
 size = Vector2(32, 32)
@@ -133,6 +135,13 @@ _data = {
 z_index = 2
 script = ExtResource("1_i00s2")
 
+[node name="CanMoveSprite" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.478431)
+position = Vector2(5.96046e-07, 9.53674e-07)
+scale = Vector2(1.125, 1.125)
+texture = ExtResource("2_tqbw1")
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_4bdhk")
 use_parent_material = true
@@ -141,6 +150,7 @@ texture = ExtResource("3_yxdfv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_vqfsp")
+metadata/_edit_lock_ = true
 
 [node name="Status" type="Node2D" parent="."]
 
@@ -193,6 +203,8 @@ horizontal_alignment = 1
 libraries = {
 &"": SubResource("AnimationLibrary_mluuh")
 }
+
+[node name="AttackParticles" parent="." instance=ExtResource("10_mluuh")]
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

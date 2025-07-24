@@ -340,10 +340,10 @@ position = Vector2(208, 32)
 script = ExtResource("24_ktrk3")
 
 [node name="pos_1" type="Marker2D" parent="EnemyAI/AISpawner"]
-position = Vector2(0, 15)
+position = Vector2(0, -17)
 
 [node name="pos_2" type="Marker2D" parent="EnemyAI/AISpawner"]
-position = Vector2(0, -17)
+position = Vector2(0, 15)
 
 [node name="pos_3" type="Marker2D" parent="EnemyAI/AISpawner"]
 position = Vector2(0, 48)

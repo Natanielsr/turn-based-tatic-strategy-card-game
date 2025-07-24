@@ -52,7 +52,8 @@ func _ready() -> void:
 	toggle_outline(false)
 	update_atk_label()
 	
-	set_walk_points(walk_distance) 
+	set_walk_points(walk_distance)
+	$CanMoveSprite.visible = true
 	_current_attack_count = 0 #start with no atack 
 	
 	if faction == EntityFaction.ENEMY:
@@ -86,6 +87,7 @@ func arrived():
 	game_controller.deselect_troop()
 	grid_controller.set_walkable_position(global_position, false)
 	_current_walk_points = 0
+	$CanMoveSprite.visible = false
 	if _current_attack_count <= 0:
 		set_exausted()
 	emit_signal("walk_finish")
@@ -194,16 +196,17 @@ func trigger_attack() -> void:
 func invigorate():	
 	_current_attack_count = total_attack_count
 	_current_walk_points = walk_distance
-	sprite_2d.modulate = Color(1, 1, 1)  
-	
+	$CanMoveSprite.visible = true
+	$AttackParticles.emitting = true
 	is_exausted = false
 	
 func set_exausted():
 	_current_attack_count = 0
 	_current_walk_points = 0
+	$CanMoveSprite.visible = false
+	$AttackParticles.emitting = false
 	
 	is_exausted = true
-	sprite_2d.modulate = Color(0.5, 0.5, 0.5)  
 
  
 func get_distance(pos : Vector2):

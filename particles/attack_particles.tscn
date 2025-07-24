@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtgkhup011nr8"]
+
+[ext_resource type="Texture2D" uid="uid://cor1spa6d5qqq" path="res://textures/crawl-tiles Oct-5-2010/item/weapon/orcish_long_sword.png" id="1_xrl2k"]
+
+[sub_resource type="Gradient" id="Gradient_xrl2k"]
+offsets = PackedFloat32Array(0, 0.24, 0.786667, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="AttackParticles" type="CPUParticles2D"]
+emitting = false
+amount = 3
+texture = ExtResource("1_xrl2k")
+lifetime = 0.5
+emission_shape = 1
+emission_sphere_radius = 21.41
+gravity = Vector2(0, -100)
+scale_amount_min = 0.3
+scale_amount_max = 0.3
+color_ramp = SubResource("Gradient_xrl2k")
