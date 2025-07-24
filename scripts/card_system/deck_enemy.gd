@@ -15,6 +15,11 @@ func load_deck():
 		"wolf",
 		"goblin",
 		"hobgoblin",
+		"troll",
+		"orc",
+		"ogre",
+		"elf_mage",
+		"dragon"
 		]
 
 func draw_card_after(card_drawn_name):

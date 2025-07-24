@@ -35,6 +35,9 @@ func draw_possible_path():
 	if current_mouse_path.size() - 1 > game_controller.selected_troop.get_current_walk_points():
 		return
 
+	if current_mouse_path.size() < 2:
+		return
+		
 	var color = Color(0, 0, 0, 0.5)  # trace color
 	draw_polyline(current_mouse_path, color, 4)
 	
