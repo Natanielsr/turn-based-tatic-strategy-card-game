@@ -4,8 +4,8 @@ class_name TroopManager
 
 signal monster_spawned(monster : MobileTroop)
 
-signal mouse_on_troop(troop : MobileTroop)
-signal mouse_left_troop(troop : MobileTroop)
+signal mouse_on_troop(entity)
+signal mouse_left_troop(entity)
 
 @onready var grid_controller: GridController = $"../Controllers/GridController"
 @onready var game_controller: GameController = $"../Controllers/GameController"
@@ -26,6 +26,9 @@ func _ready() -> void:
 	turn_controller.player_end_turn.connect(_on_player_end_turn)
 	turn_controller.enemy_start_turn.connect(_on_enemy_start_turn)
 	turn_controller.enemy_end_turn.connect(_on_enemy_end_turn)
+	
+	enemy_statue.mouse_on.connect(_on_mouse_troop)
+	enemy_statue.mouse_left.connect(_on_mouse_left_troop)
 
 func _on_player_start_turn():
 	for troop in player_troops:
@@ -67,11 +70,11 @@ func remove_troop(troop : MobileTroop):
 	elif troop.faction == Entity.EntityFaction.ENEMY:
 		enemy_troops.erase(troop)
 	
-func _on_mouse_troop(troop):
-	emit_signal("mouse_on_troop", troop)
+func _on_mouse_troop(entity):
+	emit_signal("mouse_on_troop", entity)
 	
-func _on_mouse_left_troop(troop):
-	emit_signal("mouse_left_troop", troop)
+func _on_mouse_left_troop(entity):
+	emit_signal("mouse_left_troop", entity)
 	
 func sorted_opponents_by_distance(troop: MobileTroop) -> Array:
 	var distances = []
