@@ -28,12 +28,10 @@ func shift_turn():
 		_player_end_turn()
 		turn = Turn.ENEMY
 		_enemy_start_turn()
-		print("Enemy Turn")
 	else:
 		_enemy_end_turn()
 		turn = Turn.PLAYER
 		_player_start_turn()
-		print("Player Turn")
 		
 	emit_signal("changed_turn", turn)
 	
