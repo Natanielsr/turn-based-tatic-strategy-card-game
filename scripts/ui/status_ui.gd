@@ -21,7 +21,7 @@ const STATUS_WIDTH = 242
 var troop_preview : Node
 var effects_ui : Array[Node]
 var skills_ui : Array[Node]
-var troop : MobileTroop
+var troop : Entity
 
 var status_pos_top_left : Vector2
 
@@ -29,7 +29,7 @@ func _ready() -> void:
 	troop_manager.mouse_on_troop.connect(_on_mouse_troop)
 	troop_manager.mouse_left_troop.connect(_on_mouse_left_troop)
 
-func _on_mouse_troop(_troop: MobileTroop):
+func _on_mouse_troop(_troop: Entity):
 	if self.troop != null and self.troop != _troop:
 		clean_status()
 	
@@ -149,7 +149,13 @@ func show_troop_effects():
 		effects_ui.append(status_ui)
 		
 func show_troop_skills():
-	var skills : Array[Skill] = troop.skill_manager.skills
+	
+	if troop is not MobileTroop:
+		return
+	
+	var mobile_troop = troop as MobileTroop
+	
+	var skills : Array[Skill] = mobile_troop.skill_manager.skills
 	
 	for i in range(skills.size()):
 		var skill : Skill = skills[i]
@@ -172,14 +178,19 @@ func show_troop_skills():
 		
 
 func show_troop_preview():
+	if troop is not MobileTroop:
+		return
+	
+	var mobile_troop = troop as MobileTroop
+	
 	if troop_preview == null:
 		troop_preview = TROOP_PREVIEW_UI.instantiate()
-		troop_preview.name = "Preview_"+troop.name+"_"+str(randi())
-		troop_preview.get_node("Name").text = troop.card_id
-		troop_preview.get_node("Image").texture = troop.get_node("Sprite2D").texture
+		troop_preview.name = "Preview_"+mobile_troop.name+"_"+str(randi())
+		troop_preview.get_node("Name").text = mobile_troop.card_id
+		troop_preview.get_node("Image").texture = mobile_troop.get_node("Sprite2D").texture
 		var pos_status = Vector2(
-			troop.global_position.x - 110,
-			troop.global_position.y - 20
+			mobile_troop.global_position.x - 110,
+			mobile_troop.global_position.y - 20
 		)
 		window.add_child(troop_preview)
 		troop_preview.global_position = pos_status
