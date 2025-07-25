@@ -30,7 +30,6 @@ func _on_changed_turn(turn: GameController.Turn):
 		_on_enemy_turn()
 
 func _on_enemy_turn():
-	print("HAND :", enemy_hand.hand)
 	find_move()
 	
 func find_move():
@@ -39,7 +38,7 @@ func find_move():
 	if best_move:
 		apply_move(best_move)
 	else:
-		print("No valid moves found")
+		print("EnemyAI: No valid moves found")
 		finish_turn() # No valid moves, end turn
 		
 func finish_turn():

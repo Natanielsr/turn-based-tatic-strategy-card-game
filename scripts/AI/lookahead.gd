@@ -33,9 +33,6 @@ func init():
 	enemy_statue = EnemyStatue.new()
 	player_statue = PlayerStatue.new()
 	score_calculator.init(grid_controller)
-
-#func simulate_moves():
-#	return simulate_moves_game_state(clone_game_state())
 	
 func simulate_moves():
 	var best_score = -INF
@@ -50,8 +47,6 @@ func simulate_moves():
 			best_score = score
 			best_move = move
 	
-	print("BEST MOVE: ", best_move)
-	print("BEST SCORE: ", best_score)
 	return best_move
 
 func simulate_moves_lookahead2():
@@ -78,7 +73,6 @@ func simulate_moves_lookahead2():
 					best_score = score
 					best_moves = [move1, move2]
 	
-	print("BEST SCORE (lookahead 2): ", best_score)
 	return best_moves
 
 func get_all_possible_moves() -> Array:
