@@ -2,6 +2,9 @@ extends Node2D
 
 class_name GameController
 
+signal on_select_tropp(troop: MobileTroop)
+signal on_deselect_troop(troop : MobileTroop)
+
 var selected_troop : MobileTroop
 var target: Entity
 
@@ -65,14 +68,21 @@ func select_a_troop(troop : Entity):
 		
 	deselect_troop()
 	selected_troop = troop
+	
+	emit_signal("on_select_tropp", selected_troop)
+	
 	#show_action_buttons(true)
 	selected_troop.toggle_outline(true)
+	
+	
 			
 func deselect_troop():
 	if selected_troop != null:
 		selected_troop.toggle_outline(false)
-		selected_troop = null
 		
+		emit_signal("on_deselect_troop", selected_troop)
+		
+		selected_troop = null
 	
 func current_troop_state():
 	if selected_troop != null:
