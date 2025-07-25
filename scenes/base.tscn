@@ -377,6 +377,8 @@ position = Vector2(-208, 80)
 [node name="LookAhead" type="Node2D" parent="EnemyAI"]
 script = ExtResource("31_82vju")
 
+[connection signal="mouse_entered" from="Statues/EnemyStatue" to="Statues/EnemyStatue" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Statues/EnemyStatue" to="Statues/EnemyStatue" method="_on_mouse_exited"]
 [connection signal="pressed" from="UI/ActionButtons/MoveBtn" to="UI/ActionButtons" method="_on_move_btn_pressed"]
 [connection signal="pressed" from="UI/ActionButtons/AtkBtn" to="UI/ActionButtons" method="_on_atk_btn_pressed"]
 [connection signal="pressed" from="UI/FinishTurnBtn" to="UI" method="_on_finish_turn_pressed"]
