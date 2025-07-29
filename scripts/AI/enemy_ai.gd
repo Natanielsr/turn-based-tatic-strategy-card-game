@@ -104,7 +104,7 @@ func _on_troop_move_finished():
 	find_move()
 		
 
-func _on_attack_finish():
+func _on_attack_finish(_attacker, _target):
 	if attacker_troop.is_connected("attack_finished", Callable(self, "_on_attack_finish")):
 		attacker_troop.disconnect("attack_finished", Callable(self, "_on_attack_finish"))
 		
