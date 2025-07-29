@@ -26,11 +26,11 @@ func process_effects_end_turn():
 	for effect in effects:
 		if effect.apply_momment == Effect.Moment.END_TURN:
 			effect.apply_effect(entity)
-			
+	
 	expire_effects()
 			
 func expire_effects():
-	for effect in effects.duplicate():
+	for effect in effects:
 		effect.duration -= 1
 		if effect.duration <= 0:
 			effect.expire(entity)
@@ -44,3 +44,9 @@ func add_effect(effect : Effect):
 func remove_effect(effect : Effect):
 	effects.erase(effect)
 	
+func get_provoke_effect() -> ProvokeEffect:
+	for effect in effects:
+		if effect is ProvokeEffect:
+			return effect
+	
+	return null
