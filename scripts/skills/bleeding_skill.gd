@@ -12,7 +12,8 @@ func _init() -> void:
 		"Bleeding",
 		"Deal 2 Damage against opponent at the beginning of opponent turn",
 		 BLOOD_RED_3,
-		BLEEDING_PARTICLE
+		BLEEDING_PARTICLE,
+		Type.ATTACK
 		)
 	
 func activate(_target : Entity):
