@@ -11,7 +11,8 @@ func _init() -> void:
 		"Poison",
 		"Deal 1 Damage against opponent in the end of opponent turn",
 		 CLOUD_POISON_0,
-		POISON_PARTICLE
+		POISON_PARTICLE,
+		Type.ATTACK
 		)
 	
 func activate(_target : Entity):
