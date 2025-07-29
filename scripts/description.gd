@@ -1,5 +1,7 @@
 extends Control
 
+class_name Description
+
 @onready var card_manager: CardManager = $"../../CardSystem/CardManager"
 var current_card
 
@@ -30,6 +32,6 @@ func _hovered_card_off(card):
 	if card == current_card:
 		visible = false
 		
-func _on_drag_card(card):
+func _on_drag_card(_card):
 	visible = false
 		
