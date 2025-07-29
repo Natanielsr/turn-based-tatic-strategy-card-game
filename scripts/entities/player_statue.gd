@@ -6,7 +6,7 @@ signal player_lost_the_game()
 func _ready() -> void:
 	_statue_ready()
 
-func die():
+func die(_killed_by):
 	print("You Lost")
 	emit_signal("player_lost_the_game")
 	
