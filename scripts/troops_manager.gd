@@ -137,7 +137,7 @@ func create_monster(card_data, faction, monster_id) -> MobileTroop:
 	monster.set_attack_points(card_data.attack)
 	monster.set_total_life(card_data.health)
 	monster.set_faction(faction)
-	monster.skill_manager = SkillManager.new($"../FileManager")
+	monster.skill_manager = SkillManager.new(monster)
 	monster.skill_manager.add_skill_name(card_data.ability)
 	
 	
