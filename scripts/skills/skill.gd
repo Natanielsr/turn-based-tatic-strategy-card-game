@@ -10,7 +10,8 @@ var particle
 enum Type{
 	ATTACK,
 	SPAWN,
-	AREA
+	AREA,
+	DEATH
 }
 var type : Type
 
@@ -18,14 +19,15 @@ func _init(
 	_skill_name : String,
 	_description : String,
 	_image : Texture2D,
-	_particle
+	_particle,
+	_type : Type
 	) -> void:
 		
 	self.skill_name = _skill_name
 	self.description = _description
 	self.image = _image
 	self.particle = _particle
-	
+	self.type = _type
 	
 
 func activate(_target : Entity):
