@@ -3,8 +3,6 @@ extends Entity
 class_name MobileTroop 
 
 signal walk_finish()
-signal attack_finished()
-
 signal mouse_on(troop : MobileTroop)
 signal mouse_left(troop : MobileTroop)
 
@@ -21,7 +19,6 @@ var attack_points : int = 1
 var _current_attack_count = total_attack_count
 @export var attack_distance : int = 1
 var oponent_to_attack : Entity
-var is_attacking = false
 
 var moviment_speed : float = 2
 @export var walk_distance = 5
@@ -86,10 +83,10 @@ func arrived():
 	is_moving = false
 	game_controller.deselect_troop()
 	grid_controller.set_walkable_position(global_position, false)
-	_current_walk_points = 0
-	$CanMoveSprite.visible = false
-	if _current_attack_count <= 0:
-		set_exausted()
+	
+	if _current_walk_points == 0:
+		$CanMoveSprite.visible = false
+	
 	emit_signal("walk_finish")
 
 func get_current_walk_points():
@@ -140,10 +137,13 @@ func set_attack_points(atk : int):
 
 func attack(entity : Entity):
 	if not entity.is_alive():
+		print(entity.name, "is NOT  Alive!")
+		emit_signal("attack_finished")
 		return
 	
 	if is_attacking:
 		print("is already attacking")
+		emit_signal("attack_finished")
 		return
 	
 	
@@ -157,6 +157,13 @@ func attack(entity : Entity):
 		print("too far to ", name, " attack ",entity.name," distance: ",distance)
 		emit_signal("attack_finished")
 		return
+	
+	var provoke_effect = effects_manager.get_provoke_effect()
+	if provoke_effect:
+		if provoke_effect.provoker != entity:
+			print("'", name, "' Cant attack '", entity.name,"' is provoked by '",provoke_effect.provoker.name,"'")
+			emit_signal("attack_finished")
+			return
 	
 	is_attacking = true
 	oponent_to_attack = entity
@@ -178,20 +185,22 @@ func _on_attack_animation_finished():
 	trigger_attack()
 
 func trigger_attack() -> void:
-	oponent_to_attack.take_damage(attack_points)
+	oponent_to_attack.take_damage_with_attacker(attack_points, self)
 	_current_attack_count -= 1
 	
-	if oponent_to_attack is MobileTroop:
-		take_damage(oponent_to_attack.attack_points)
-		
-	skill_manager.activate_skill_attack(oponent_to_attack)
-		
 	set_exausted()
 	game_controller.deselect_troop()
-	oponent_to_attack = null
-	is_attacking = false
 	
-	emit_signal("attack_finished")
+	emit_signal("attack_finished", self, oponent_to_attack)
+	take_rebound()
+	is_attacking = false
+		
+	oponent_to_attack = null
+	
+func take_rebound():
+	if oponent_to_attack is MobileTroop:
+		var mobile_troop_target = oponent_to_attack as MobileTroop
+		take_damage_with_attacker(mobile_troop_target.attack_points, mobile_troop_target)
 	
 func invigorate():	
 	_current_attack_count = total_attack_count
@@ -217,11 +226,13 @@ func get_distance(pos : Vector2):
 	
 	return distance
 	
-func die():
+func die(killed_by : Entity):
 	grid_controller.set_walkable_position(global_position, true)
 	troop_manager.remove_troop(self)
 	$Status.visible = false
+	toggle_outline(false)
 	animation_player.play("die")
+	emit_signal("died", self, killed_by)
 	
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "die":
@@ -253,3 +264,10 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
 	emit_signal("mouse_left", self)
+	
+func get_provoker():
+	var effect = effects_manager.get_provoke_effect()
+	if not effect:
+		return null
+		
+	return effect.provoker
