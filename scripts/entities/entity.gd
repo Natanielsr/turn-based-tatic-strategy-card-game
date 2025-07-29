@@ -2,6 +2,9 @@ extends Node2D
 
 class_name Entity
 
+signal died(entity_died : Entity, killed_by : Entity)
+signal attack_finished(attacker: Entity, target: Entity)
+
 const ALLY_OUTLINE = preload("res://materials/ally_outline.tres")
 const ENEMY_OUTLINE = preload("res://materials/enemy_outline.tres")
 
@@ -14,7 +17,7 @@ const Turn = TurnController.Turn
 @onready var life_background_sprite: Sprite2D = $"./Status/LifeSprite"
 @export var total_life_points : int
 var current_life_points : int
-
+var is_attacking = false
 
 enum EntityFaction{
 	NONE,
@@ -50,12 +53,15 @@ func is_entity_turn():
 		
 func set_total_life(life : int):
 	total_life_points = life
-
+	
 func take_damage(damage: int):
+	take_damage_with_attacker(damage, null)
+
+func take_damage_with_attacker(damage: int, attacker : Entity):
 	
 	_set_current_life(current_life_points - damage)
 	if current_life_points <= 0:
-		die()
+		die(attacker)
 	else:
 		damage_effect()
 		
@@ -70,7 +76,8 @@ func damage_effect():
 	$Sprite2D.modulate = Color.RED
 	tween.tween_property($Sprite2D, "modulate", Color.WHITE, 1)
 	
-func die():
+func die(killed_by : Entity):
+	emit_signal("died", self, killed_by)
 	push_error("Method 'die' must be overridden in a subclass to ",name)
 	
 func _set_current_life(life_points : int):
@@ -88,8 +95,9 @@ func update_life_label():
 		life_points_label.text = str(current_life_points)
 		
 func toggle_outline(_show_outline: bool):
-	pass
-	#$Sprite2D.use_parent_material = not show_outline	
+	if has_node("SelectSprite"):
+		$SelectSprite.texture = $Sprite2D.texture
+		$SelectSprite.visible = _show_outline	
 	
 func define_faction_color():
 	if faction == EntityFaction.ENEMY:
@@ -109,3 +117,7 @@ func get_distance(pos : Vector2) -> int:
 		
 func set_faction(fct):
 	faction = fct
+	
+func attack(entity : Entity):
+	is_attacking = true
+	emit_signal("attack_finished", self, entity)
