@@ -39,7 +39,7 @@ func _on_deselect_troop(_troop):
 	cursor_normal()
 	
 func _mouse_on_troop(troop):
-	if troop.faction == Entity.EntityFaction.ENEMY:
+	if game_controller.selected_troop and troop.faction == Entity.EntityFaction.ENEMY:
 		cursor_attack()
 	else:
 		cursor_normal()
