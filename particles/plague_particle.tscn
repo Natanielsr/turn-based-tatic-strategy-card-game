@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cy5txcpi7h4xv"]
+
+[ext_resource type="Texture2D" uid="uid://cipqoi25doq3y" path="res://textures/crawl-tiles Oct-5-2010/effect/cloud_black_smoke.png" id="1_iu1v2"]
+[ext_resource type="Script" uid="uid://xesv67fom3e4" path="res://scripts/auto_destroy.gd" id="2_xocl1"]
+
+[sub_resource type="Gradient" id="Gradient_xocl1"]
+offsets = PackedFloat32Array(0, 0.238806, 0.791045, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="PoisonParticle" type="CPUParticles2D"]
+emitting = false
+texture = ExtResource("1_iu1v2")
+lifetime = 0.3
+one_shot = true
+emission_shape = 1
+emission_sphere_radius = 14.76
+gravity = Vector2(0, -100)
+scale_amount_min = 0.3
+color_ramp = SubResource("Gradient_xocl1")
+script = ExtResource("2_xocl1")
+lifetime = 0.3
