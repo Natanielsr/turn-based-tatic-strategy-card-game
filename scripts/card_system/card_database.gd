@@ -8,8 +8,8 @@ const CARDS = {
 		"energy_cost": 1,
 		"attack": 1,
 		"health": 1,
-		"description": "Just a smelly mouse",
-		"ability": ""
+		"description": "When dies, causes a plague to the opponent who attacked him",
+		"ability": "plague"
   	},
 	"spider": {
 		"card_id": "spider",
@@ -26,10 +26,10 @@ const CARDS = {
 		"type": "monster",
 		"name": "Wolf",
 		"energy_cost": 3,
-		"attack": 2,
-		"health": 3,
-		"description": "bites the opponent",
-		"ability": ""
+		"attack": 1,
+		"health": 4,
+		"description": "bites the opponent causing provocation",
+		"ability": "provoke"
   	},
 	"goblin": {
 		"card_id": "goblin",
