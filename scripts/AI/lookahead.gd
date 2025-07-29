@@ -295,6 +295,10 @@ func get_valid_move_tiles(troop: MobileTroop) -> Array:
 
 func get_attackable_targets(troop: MobileTroop) -> Array[Entity]:
 	var targets = ai_finder.get_attackable_targets(troop)
+	
+	if troop.get_provoker(): #provoked
+		return targets
+	
 	var attack_player_positions = ai_finder.get_attack_player_tiles()
 	
 	for pos in attack_player_positions:
