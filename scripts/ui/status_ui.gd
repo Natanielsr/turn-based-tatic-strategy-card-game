@@ -46,11 +46,11 @@ func _on_mouse_troop(_troop: Entity):
 	show_troop_skills()
 	show_troop_effects()
 	
-	position_status_in_screen()
+	set_position_status_inside_screen()
 
 	queue_redraw()
 	
-func position_status_in_screen():
+func set_position_status_inside_screen():
 	if window.global_position.y < point_a.global_position.y :
 		window.global_position.y = point_a.global_position.y
 		
@@ -81,18 +81,7 @@ func clean_status():
 	troop = null
 
 func _draw(): 
-	var view_color = Color(1, 0, 0, 0.5)  # vermelho com 50% de transparência
-	
-	var view_rect_area = rect_view_area()
-	#draw_rect(view_rect_area, view_color, false) 
-	
-	if troop == null:
-		return
-
-	var status_rect = status_area_rect()
-	
-	var border_color = Color(1, 0, 0, 0.5)  # vermelho com 50% de transparência
-	#draw_rect(status_rect, border_color, false)  # false = só a borda
+	pass
 	
 func status_area_rect():
 	var effects_height = effects_ui.size() * EFFECTS_HEIGHT
@@ -188,6 +177,8 @@ func show_troop_preview():
 		troop_preview.name = "Preview_"+mobile_troop.name+"_"+str(randi())
 		troop_preview.get_node("Name").text = mobile_troop.card_id
 		troop_preview.get_node("Image").texture = mobile_troop.get_node("Sprite2D").texture
+		troop_preview.get_node("AttackPoints").text = str(mobile_troop.get_attack_count())
+		troop_preview.get_node("WalkPoints").text = str(mobile_troop.get_current_walk_points())
 		var pos_status = Vector2(
 			mobile_troop.global_position.x - 110,
 			mobile_troop.global_position.y - 20
