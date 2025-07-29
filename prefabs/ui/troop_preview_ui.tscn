@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://d112th8i8145k"]
+[gd_scene load_steps=5 format=3 uid="uid://d112th8i8145k"]
 
 [ext_resource type="LabelSettings" uid="uid://bumcjygy7d4en" path="res://font_settings/card_label.tres" id="1_m7fso"]
 [ext_resource type="Texture2D" uid="uid://dq1f4p3bcts8h" path="res://textures/crawl-tiles Oct-5-2010/dc-misc/slot_eq_cursed.png" id="2_w8tqy"]
+[ext_resource type="Texture2D" uid="uid://cor1spa6d5qqq" path="res://textures/crawl-tiles Oct-5-2010/item/weapon/orcish_long_sword.png" id="3_bjt5o"]
+[ext_resource type="Texture2D" uid="uid://snd47pf1fcpy" path="res://textures/crawl-tiles Oct-5-2010/item/armour/boots1_brown.png" id="4_w6a2k"]
 
 [node name="TroopPreview" type="Control"]
 z_index = 4
@@ -23,7 +25,7 @@ layout_mode = 0
 offset_left = 37.0
 offset_top = 4.0
 offset_right = 84.0
-offset_bottom = 27.0
+offset_bottom = 16.0
 text = "NAME"
 label_settings = ExtResource("1_m7fso")
 
@@ -34,3 +36,41 @@ offset_top = 4.0
 offset_right = 35.0
 offset_bottom = 36.0
 texture = ExtResource("2_w8tqy")
+
+[node name="WalkPoints" type="Label" parent="."]
+layout_mode = 0
+offset_left = 46.0
+offset_top = 21.0
+offset_right = 53.0
+offset_bottom = 33.0
+text = "0"
+label_settings = ExtResource("1_m7fso")
+horizontal_alignment = 1
+
+[node name="AttackPoints" type="Label" parent="."]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 21.0
+offset_right = 77.0
+offset_bottom = 33.0
+text = "0"
+label_settings = ExtResource("1_m7fso")
+horizontal_alignment = 1
+
+[node name="AttackIcon" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 22.0
+offset_right = 91.0
+offset_bottom = 54.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("3_bjt5o")
+
+[node name="WalkIcon" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 22.0
+offset_right = 67.0
+offset_bottom = 54.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("4_w6a2k")
