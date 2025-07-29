@@ -9,7 +9,7 @@ signal enemy_die()
 func _ready() -> void:
 	_statue_ready()
 	
-func die():
+func die(_killed_by):
 	print("You Destroy the Enemy")
 	emit_signal("enemy_die")
 	
