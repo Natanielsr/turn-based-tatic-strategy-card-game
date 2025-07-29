@@ -8,12 +8,12 @@ class_name Debugger
 
 
 func spawn_rat_ally():
-	var name_troop = "rat"
+	var name_troop = "wolf"
 	var faction = Entity.EntityFaction.ALLY
 	spawn_test_troop(name_troop, faction)
 	
 func spawn_rat_enemy():
-	var name_troop = "hobgoblin"
+	var name_troop = "rat"
 	var faction = Entity.EntityFaction.ENEMY
 	spawn_test_troop(name_troop, faction)
 
