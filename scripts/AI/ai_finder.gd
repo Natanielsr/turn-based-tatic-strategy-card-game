@@ -159,11 +159,19 @@ func get_attackable_targets(troop: MobileTroop) -> Array[Entity]:
 			
 			var test_target : Entity = grid_controller.get_entity_in_pos(test_pos)
 			
-			if test_target:
-				if test_target.faction == troop.faction:
-					continue
+			if not test_target:
+				continue
+			
+			if test_target.faction == troop.faction:
+				continue
 				
+			var provoker = troop.get_provoker()
+			if provoker == null:
 				attackable_targets.append(test_target)
+			else:
+				if provoker == test_target:
+					attackable_targets.append(test_target)
+				
 	
 	return attackable_targets
 
