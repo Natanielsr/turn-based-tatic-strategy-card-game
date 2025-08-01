@@ -23,9 +23,8 @@ func set_provoker(_provoker : Entity):
 	
 func activate(_target : Entity):
 	target = _target
-	var old_effect = target.effects_manager.get_provoke_effect()
-	if old_effect:
-		target.effects_manager.remove_effect(old_effect)
+	
+	remove_old_effect(target, ProvokeEffect)
 	
 	var effect = ProvokeEffect.new(provoker, target)
 	target.effects_manager.add_effect(effect)
