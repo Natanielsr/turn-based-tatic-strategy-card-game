@@ -73,8 +73,6 @@ func select_a_troop(troop : Entity):
 	
 	#show_action_buttons(true)
 	selected_troop.toggle_outline(true)
-	
-	
 			
 func deselect_troop():
 	if selected_troop != null:
