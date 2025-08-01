@@ -135,7 +135,6 @@ func on_hovered_off_card(card):
 	if card_being_dragged:
 		return
 	
-	#print(card.name)
 	highlight_card(card, false)
 	var new_card_hovered = raycast_check_for_card()
 	if new_card_hovered:
@@ -147,14 +146,11 @@ func on_hovered_off_card(card):
 	
 func highlight_card(card, hovered):
 	if hovered:
-		#card.position.y = card.start_position.y - 65
 		card.scale = Vector2(CARD_HIGHLIGHT, CARD_HIGHLIGHT)
 		card.z_index = Z_INDEX_CARD_HOVERED
 	else:
 		card.scale = Vector2(CARD_SCALE, CARD_SCALE)
 		card.z_index = Z_INDEX_CARD
-		#if not card.get_node("Area2D/CollisionShape2D").disabled:
-		#	card.position = card.start_position
 
 
 
