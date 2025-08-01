@@ -44,9 +44,9 @@ func add_effect(effect : Effect):
 func remove_effect(effect : Effect):
 	effects.erase(effect)
 	
-func get_provoke_effect() -> ProvokeEffect:
+func get_effect(effect_class_type):
 	for effect in effects:
-		if effect is ProvokeEffect:
+		if effect.get_script() == effect_class_type:
 			return effect
 	
 	return null
