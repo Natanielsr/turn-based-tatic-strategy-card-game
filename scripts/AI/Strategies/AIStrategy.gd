@@ -92,7 +92,7 @@ func move_trop_pos(_troop):
 	push_error("Subclass '%s' must implement 'move_trop_pos()'" % subclass_name)
 	
 func end_turn():
-	print("Turno da IA finalizado")
+	print("AITurno da IA finalizado")
 	enemy_ai.finish_turn()
 	
 func get_subclass_name() -> String:
