@@ -17,7 +17,7 @@ func _init(_provoker : Entity, _target : Entity) -> void:
 func apply_effect(_entity : Entity):
 	self.entity = _entity
 	spawn_particle(_entity.global_position)
-	print("%s provoked by %s!" % [entity.name, provoker.name])
+	print("ProvokeEffect > apply_effect: %s provoked by %s!" % [entity.name, provoker.name])
 	
 func _on_provoker_died(_provoker, _killed_by):
 	if entity:

@@ -119,11 +119,11 @@ func add_monster(card_data, pos, faction, monster_id):
 func can_spawn(faction, card_to_spawn):
 	if faction == Entity.EntityFaction.ALLY:
 		if card_to_spawn.energy_cost > player_statue._current_energy:
-			print("player without enough energy")
+			print("TroopManager > can_spawn: player without enough energy")
 			return false
 	elif faction == Entity.EntityFaction.ENEMY:
 		if card_to_spawn.energy_cost > enemy_statue._current_energy:
-			print("enemy without enough energy")
+			print("TroopManager > can_spawn: enemy without enough energy")
 			return false
 			
 	return true
@@ -139,7 +139,6 @@ func create_monster(card_data, faction, monster_id) -> MobileTroop:
 	monster.set_faction(faction)
 	monster.skill_manager = SkillManager.new(monster)
 	monster.skill_manager.add_skill_name(card_data.ability)
-	
 	
 	return monster
 	

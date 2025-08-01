@@ -38,7 +38,7 @@ func set_walkable_position(pos : Vector2, walkable : bool):
 	
 func is_walkable_position(pos: Vector2):
 	if not in_bounds(pos):
-		print("out bounds")
+		print("GridController > is_walkable_position: out bounds")
 		return false
 		
 	var tile_position = tile_grid.local_to_map(pos)
@@ -58,7 +58,7 @@ func calculate_path(start : Vector2, end : Vector2) -> Array[Vector2i]:
 		return []
 		
 	if not is_walkable_position(end):
-		print("not walkable position ", end)
+		print("GridController > calculate_path: not walkable position ", end)
 		return []
 		
 	var id_path = astar_grid.get_id_path(
@@ -127,11 +127,11 @@ func calculate_point_path(start : Vector2, end : Vector2) -> PackedVector2Array:
 		return []
 	
 	if not in_bounds(start):
-		print("start position out bounds: ",start)
+		print("GridController > calculate_point_path: start position out bounds: ",start)
 		return []
 		
 	if not in_bounds(end):
-		print("end position out bounds: ",end)
+		print("GridController > calculate_point_path: end position out bounds: ",end)
 		return []
 		
 	var current_point_path = astar_grid.get_point_path(

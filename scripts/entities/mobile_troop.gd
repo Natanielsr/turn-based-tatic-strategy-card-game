@@ -102,7 +102,7 @@ func move_troop(pos_to_go):
 		return false
 		
 	if _current_walk_points <= 0:
-		print("Troop ",name," Dont Have Walk Points")
+		print("MobileTroop > move_troop: Troop ",name," Dont Have Walk Points")
 		emit_signal("walk_finish")
 		return
 	
@@ -111,13 +111,12 @@ func move_troop(pos_to_go):
 		pos_to_go)
 	
 	if id_path.is_empty(): #verify have path
-		
-		print("path return 0")
+		print("MobileTroop > move_troop: path return 0")
 		emit_signal("walk_finish")
 		return false
 		
 	if id_path.size() > _current_walk_points:
-		print("walk distance is to far to ", name)
+		print("MobileTroop > move_troop: walk distance is to far to ", name)
 		emit_signal("walk_finish")
 		return false
 	
@@ -137,32 +136,32 @@ func set_attack_points(atk : int):
 
 func attack(entity : Entity):
 	if not entity.is_alive():
-		print(entity.name, "is NOT  Alive!")
-		emit_signal("attack_finished")
+		print("MobileTroop > attack: ",entity.name, "is NOT  Alive!")
+		emit_signal("attack_finished", self, entity)
 		return
 	
 	if is_attacking:
-		print("is already attacking")
-		emit_signal("attack_finished")
+		print("MobileTroop > attack: is already attacking")
+		emit_signal("attack_finished", self, entity)
 		return
 	
 	
 	if _current_attack_count <= 0:
-		print( name, " dont have attack points ")
-		emit_signal("attack_finished")
+		print("MobileTroop > attack: ", name, " dont have attack points ")
+		emit_signal("attack_finished", self, entity)
 		return
 	
 	var distance = entity.get_distance(global_position)
 	if distance > attack_distance:
-		print("too far to ", name, " attack ",entity.name," distance: ",distance)
-		emit_signal("attack_finished")
+		print("MobileTroop > attack: too far to ", name, " attack ",entity.name," distance: ",distance)
+		emit_signal("attack_finished", self, entity)
 		return
 	
-	var provoke_effect = effects_manager.get_provoke_effect()
+	var provoke_effect = effects_manager.get_effect(ProvokeEffect)
 	if provoke_effect:
 		if provoke_effect.provoker != entity:
-			print("'", name, "' Cant attack '", entity.name,"' is provoked by '",provoke_effect.provoker.name,"'")
-			emit_signal("attack_finished")
+			print("MobileTroop > attack: '", name, "' Cant attack '", entity.name,"' is provoked by '",provoke_effect.provoker.name,"'")
+			emit_signal("attack_finished", self, entity)
 			return
 	
 	is_attacking = true
@@ -266,7 +265,7 @@ func _on_mouse_exited() -> void:
 	emit_signal("mouse_left", self)
 	
 func get_provoker():
-	var effect = effects_manager.get_provoke_effect()
+	var effect = effects_manager.get_effect(ProvokeEffect)
 	if not effect:
 		return null
 		

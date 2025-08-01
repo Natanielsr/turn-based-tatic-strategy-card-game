@@ -14,4 +14,4 @@ func apply_effect(_entity : Entity):
 	self.entity = _entity
 	self.entity.take_damage(2) #DAMAGE
 	spawn_particle(_entity.global_position)
-	print("%s lost 2 life by bleeding!" % entity.name)
+	print("BleedingEffect > apply_effect: %s lost 2 life by bleeding!" % entity.name)

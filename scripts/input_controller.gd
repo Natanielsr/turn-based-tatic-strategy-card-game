@@ -67,7 +67,7 @@ func raycast_at_cursor():
 		elif obj.get_parent() is DeckPlayer:
 			click_on_deck(obj)
 		else:
-			print("other")
+			print("InputController > raycast_at_cursor: other")
 
 func click_on_entity(entity : Entity):
 	game_controller.click_on_entity(entity)

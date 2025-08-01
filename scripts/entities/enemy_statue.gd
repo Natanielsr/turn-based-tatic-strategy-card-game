@@ -10,7 +10,7 @@ func _ready() -> void:
 	_statue_ready()
 	
 func die(_killed_by):
-	print("You Destroy the Enemy")
+	print("EnemyStatue > die: You Destroy the Enemy")
 	emit_signal("enemy_die")
 	
 func get_distance(pos : Vector2):

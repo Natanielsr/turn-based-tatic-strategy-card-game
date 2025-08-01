@@ -33,7 +33,7 @@ func init():
 
 func select_and_spawn_best_monster():
 	await wait(0.3)
-	print("enemy hand: ",enemy_hand.hand)
+	print("AISpawner > select_and_spawn_best_monster: enemy hand: ",enemy_hand.hand)
 	for card in enemy_hand.hand:
 		await wait(0.3)
 		selected_card = get_strongest_card()

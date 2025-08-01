@@ -16,8 +16,6 @@ class_name EnemyAI
 var selected_card
 var selected_monster : MobileTroop
 
-var strategy : AIStrategy
-
 var mover_troop : MobileTroop
 var attacker_troop : MobileTroop
 var best_move
@@ -38,7 +36,7 @@ func find_move():
 	if best_move:
 		apply_move(best_move)
 	else:
-		print("EnemyAI: No valid moves found")
+		print("EnemyAI > find_move: No valid moves found")
 		finish_turn() # No valid moves, end turn
 		
 func finish_turn():

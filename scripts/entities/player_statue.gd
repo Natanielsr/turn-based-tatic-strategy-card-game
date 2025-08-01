@@ -7,7 +7,7 @@ func _ready() -> void:
 	_statue_ready()
 
 func die(_killed_by):
-	print("You Lost")
+	print("PlayerStatue > die: You Lost")
 	emit_signal("player_lost_the_game")
 	
 func get_distance(pos : Vector2):

@@ -35,7 +35,7 @@ func add_skill_name(skill_name : String):
 			if skill_instance is ProvokeSkill:
 				skill_instance.set_provoker(skill_owner)
 			add(skill_instance)
-			print("Instance: ", skill_instance.name)
+			print("SkillManager > add_skill_name: Instance: ", script_path)
 		else:
 			push_error("SKILL SCRIPT CANT LOAD")
 		
@@ -55,3 +55,5 @@ func _on_attack_trigger(_attacker : Entity, _target : Entity):
 func _on_died_trigger(_dead_entity : Entity, killed_by : Entity):
 	if not _dead_entity.is_attacking:
 		activate_skill(killed_by, Skill.Type.DEATH)
+		
+	
