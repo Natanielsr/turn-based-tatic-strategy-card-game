@@ -11,7 +11,8 @@ enum Type{
 	ATTACK,
 	SPAWN,
 	AREA,
-	DEATH
+	DEATH,
+	DAMAGE
 }
 var type : Type
 
@@ -38,3 +39,8 @@ func spawn_particle(pos : Vector2):
 	self.target.add_child(part)
 	part.global_position = pos
 	part.emitting = true
+
+func remove_old_effect(_target: Entity, effect_class_type):
+	var old_effect = _target.effects_manager.get_effect(effect_class_type)
+	if old_effect:
+		_target.effects_manager.remove_effect(old_effect)
