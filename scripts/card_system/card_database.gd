@@ -49,7 +49,7 @@ const CARDS = {
 		"attack": 4,
 		"health": 5,
 		"description": "Berserk: Increases attack when you are injured",
-		"ability": ""
+		"ability": "berserk"
   	},
 	"troll": {
 		"card_id": "troll",
