@@ -15,6 +15,7 @@ signal mouse_left(troop : MobileTroop)
 
 var card_id : String
 var attack_points : int = 1
+var original_attack_points : int = attack_points
 @export var total_attack_count : int = 1
 var _current_attack_count = total_attack_count
 @export var attack_distance : int = 1
@@ -30,8 +31,6 @@ var final_walk_position : Vector2
 var is_moving: bool
 var _current_id_path: Array[Vector2i]
 var is_exausted = false
-
-var skill_manager : SkillManager
 
 func _on_changed_turn(_turn):
 	var troop_turn = is_entity_turn()
@@ -132,36 +131,37 @@ func move_troop(pos_to_go):
 	return is_moving
 	
 func set_attack_points(atk : int):
+	original_attack_points = atk
 	attack_points = atk
 
 func attack(entity : Entity):
 	if not entity.is_alive():
 		print("MobileTroop > attack: ",entity.name, "is NOT  Alive!")
-		emit_signal("attack_finished", self, entity)
+		emit_signal("attack_finished", null, null)
 		return
 	
 	if is_attacking:
 		print("MobileTroop > attack: is already attacking")
-		emit_signal("attack_finished", self, entity)
+		emit_signal("attack_finished", null, null)
 		return
 	
 	
 	if _current_attack_count <= 0:
 		print("MobileTroop > attack: ", name, " dont have attack points ")
-		emit_signal("attack_finished", self, entity)
+		emit_signal("attack_finished", null, null)
 		return
 	
 	var distance = entity.get_distance(global_position)
 	if distance > attack_distance:
 		print("MobileTroop > attack: too far to ", name, " attack ",entity.name," distance: ",distance)
-		emit_signal("attack_finished", self, entity)
+		emit_signal("attack_finished", null, null)
 		return
 	
 	var provoke_effect = effects_manager.get_effect(ProvokeEffect)
 	if provoke_effect:
 		if provoke_effect.provoker != entity:
 			print("MobileTroop > attack: '", name, "' Cant attack '", entity.name,"' is provoked by '",provoke_effect.provoker.name,"'")
-			emit_signal("attack_finished", self, entity)
+			emit_signal("attack_finished", null, null)
 			return
 	
 	is_attacking = true
@@ -239,6 +239,12 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	
 func update_atk_label():
 	atk_points_label.text = str(attack_points)
+	if attack_points > original_attack_points:
+		atk_points_label.modulate = Color.GREEN
+	elif attack_points < original_attack_points:
+		atk_points_label.modulate = Color.RED
+	else:
+		atk_points_label.modulate = Color.WHITE
 	
 func get_attack_count():
 	return _current_attack_count
