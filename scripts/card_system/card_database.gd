@@ -59,7 +59,7 @@ const CARDS = {
 		"attack": 5,
 		"health": 6,
 		"description": "A big strong and powerful troll",
-		"ability": ""
+		"ability": "attack_in_area"
   	},
 	"orc": {
 		"card_id": "orc",
