@@ -10,6 +10,7 @@ var effects : Array[Effect]
 func _init(_entity : Entity) -> void:
 	self.entity = _entity
 	entity.died.connect(_on_entity_died)
+	name = "EffectsManager"
 
 func _on_entity_died(_entity_died, _killed_by) -> void:
 	queue_free()
