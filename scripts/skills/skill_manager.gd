@@ -10,12 +10,14 @@ const SKILL_PATHS = [
 	"res://scripts/skills/poison_skill.gd",
 	"res://scripts/skills/plague_skill.gd",
 	"res://scripts/skills/provoke_skill.gd",
+	"res://scripts/skills/berserk_skill.gd",
 ]
 
 func _init(_skill_owner : Entity) -> void:
 	skill_owner = _skill_owner
 	skill_owner.attack_finished.connect(_on_attack_trigger)
 	skill_owner.died.connect(_on_died_trigger)
+	skill_owner.damaged.connect(_on_damage_trigger)
 
 func add(skill : Skill):
 	skills.append(skill)
@@ -46,14 +48,17 @@ func get_skill_path_by_name(_name: String) -> String:
 		if file_name.begins_with(_name + "_"):
 			return path
 	
-	push_error("SKILL NAME NOT FOUND IN SKILL PATH")	
+	push_error("SKILL: ",_name," NAME NOT FOUND IN SKILL PATH")	
 	return ""
 	
 func _on_attack_trigger(_attacker : Entity, _target : Entity):
-	activate_skill(_target, Skill.Type.ATTACK)
+	if _target:
+		activate_skill(_target, Skill.Type.ATTACK)
 	
 func _on_died_trigger(_dead_entity : Entity, killed_by : Entity):
 	if not _dead_entity.is_attacking:
 		activate_skill(killed_by, Skill.Type.DEATH)
 		
+func _on_damage_trigger(entity: Entity):
+		activate_skill(skill_owner, Skill.Type.DAMAGE)
 	
