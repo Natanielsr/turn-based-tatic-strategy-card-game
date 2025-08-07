@@ -19,7 +19,9 @@ This is a tactical strategy game where players use cards to perform actions on a
 
 - **Engine:** [Godot Engine](https://godotengine.org/) (Version 4.4.1)
 - **Language:** GDScript
-- **Art / Assets:** hyptosis_tile-art-batch-1 [OpenGameArt.org](https://opengameart.org/)
+- **Art / Assets:** hyptosis_tile-art-batch-1 [OpenGameArt.org](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis/)
+- **Art / Assets:** craw-tiles [The RLTiles](https://rltiles.sourceforge.net/)
+- **Art / Assets:** fantasy-card-assets [The RLTiles](https://cafedraw.itch.io/fantasy-card-assets)
 
 ## 🚀 Getting Started:
 
