@@ -31,20 +31,16 @@ func _ready() -> void:
 	enemy_statue.mouse_left.connect(_on_mouse_left_troop)
 
 func _on_player_start_turn():
-	for troop in player_troops:
-		troop.effects_manager.process_effects_start_turn()
+	pass
 
 func _on_player_end_turn():
-	for troop in player_troops:
-		troop.effects_manager.process_effects_end_turn()
+	pass
 	
 func _on_enemy_start_turn():
-	for troop in enemy_troops:
-		troop.effects_manager.process_effects_start_turn()
+	pass
 	
 func _on_enemy_end_turn():
-	for troop in enemy_troops:
-		troop.effects_manager.process_effects_end_turn()
+	pass
 
 func add_troop(troop : MobileTroop):
 	add_child(troop)	
@@ -137,7 +133,7 @@ func create_monster(card_data, faction, monster_id) -> MobileTroop:
 	monster.set_attack_points(card_data.attack)
 	monster.set_total_life(card_data.health)
 	monster.set_faction(faction)
-	monster.skill_manager = SkillManager.new(monster)
+	
 	monster.skill_manager.add_skill_name(card_data.ability)
 	
 	return monster
