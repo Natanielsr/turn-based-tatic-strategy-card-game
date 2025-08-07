@@ -46,7 +46,7 @@ const CARDS = {
 		"type": "monster",
 		"name": "Hobgoblin",
 		"energy_cost": 5,
-		"attack": 4,
+		"attack": 2,
 		"health": 5,
 		"description": "Berserk: Increases attack when you are injured",
 		"ability": "berserk"
