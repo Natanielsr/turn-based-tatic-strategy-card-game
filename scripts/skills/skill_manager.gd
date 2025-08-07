@@ -11,6 +11,7 @@ const SKILL_PATHS = [
 	"res://scripts/skills/plague_skill.gd",
 	"res://scripts/skills/provoke_skill.gd",
 	"res://scripts/skills/berserk_skill.gd",
+	"res://scripts/skills/attack_in_area_skill.gd",
 ]
 
 func _init(_skill_owner : Entity) -> void:
@@ -18,9 +19,11 @@ func _init(_skill_owner : Entity) -> void:
 	skill_owner.attack_finished.connect(_on_attack_trigger)
 	skill_owner.died.connect(_on_died_trigger)
 	skill_owner.damaged.connect(_on_damage_trigger)
+	name = "SkillManager"
 
 func add(skill : Skill):
 	skills.append(skill)
+	add_child(skill)
 			
 func activate_skill(target: Entity, skill_type : Skill.Type):
 	for skill : Skill in skills:
@@ -33,11 +36,8 @@ func add_skill_name(skill_name : String):
 		
 		var script = load(script_path)
 		if script:
-			var skill_instance = script.new()
-			if skill_instance is ProvokeSkill:
-				skill_instance.set_provoker(skill_owner)
+			var skill_instance = script.new(skill_owner)
 			add(skill_instance)
-			print("SkillManager > add_skill_name: Instance: ", script_path)
 		else:
 			push_error("SKILL SCRIPT CANT LOAD")
 		
