@@ -7,6 +7,7 @@ var duration
 var apply_momment : Moment
 var image : CompressedTexture2D
 var particle
+var entity
 
 enum Moment{
 	START_TURN,

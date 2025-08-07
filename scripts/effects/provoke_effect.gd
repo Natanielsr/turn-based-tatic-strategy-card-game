@@ -5,7 +5,6 @@ class_name ProvokeEffect
 const CLOUD_BLACK_SMOKE = preload("res://textures/crawl-tiles Oct-5-2010/effect/cloud_black_smoke.png")
 const PLAGUE_PARTICLE = preload("res://particles/plague_particle.tscn")
 
-var entity : Entity
 var provoker : Entity
 
 func _init(_provoker : Entity, _target : Entity) -> void:
