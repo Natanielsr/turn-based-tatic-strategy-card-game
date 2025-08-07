@@ -25,8 +25,8 @@ func activate(_target : Entity):
 	
 	remove_old_effect(target, BerserkEffect)
 	
-	var effect = BerserkEffect.new(provoker, target)
+	var effect = BerserkEffect.new()
 	target.effects_manager.add_effect(effect)
 	
-	spawn_particle(target.global_position)
+	#spawn_particle(target.global_position)
 	
