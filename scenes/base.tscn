@@ -92,7 +92,7 @@ zoom = Vector2(2, 2)
 [node name="PlayerStatue" type="Node2D" parent="Statues"]
 position = Vector2(-270, 15)
 script = ExtResource("17_ystrd")
-total_life_points = 10
+original_life_points = 10
 
 [node name="Sprite2D" type="Sprite2D" parent="Statues/PlayerStatue"]
 scale = Vector2(2, 2)
@@ -116,7 +116,7 @@ label_settings = ExtResource("12_c8kgi")
 [node name="EnemyStatue" type="Area2D" parent="Statues"]
 position = Vector2(270, 15)
 script = ExtResource("20_uo6h6")
-total_life_points = 10
+original_life_points = 10
 faction = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="Statues/EnemyStatue"]
