@@ -350,7 +350,7 @@ func get_pos_to_troop(point_a : Vector2, point_b : Vector2, walk_points : int):
 	else:
 		return null
 
-func get_entity_in_pos(tile_pos):
+func get_entity_in_pos(tile_pos : Vector2i) -> Entity:
 	var world_pos = tile_grid.map_to_local(tile_pos)  # se estiver usando TileMap
 	var space_state = get_world_2d().direct_space_state
 
