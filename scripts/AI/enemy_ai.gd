@@ -36,7 +36,6 @@ func find_move():
 	if best_move:
 		apply_move(best_move)
 	else:
-		print("EnemyAI > find_move: No valid moves found")
 		finish_turn() # No valid moves, end turn
 		
 func finish_turn():
