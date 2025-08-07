@@ -135,3 +135,4 @@ func set_faction(fct):
 func attack(entity : Entity):
 	is_attacking = true
 	emit_signal("attack_finished", self, entity)
+	
