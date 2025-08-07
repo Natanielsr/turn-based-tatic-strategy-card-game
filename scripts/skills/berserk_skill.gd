@@ -4,21 +4,17 @@ class_name BerserkSkill
 
 const PLAGUE_PARTICLE = preload("res://particles/plague_particle.tscn")
 const CLOUD_BLACK_SMOKE = preload("res://textures/crawl-tiles Oct-5-2010/effect/cloud_black_smoke.png")
-var provoker : Entity
 
-var target : Entity
-
-func _init() -> void:
+func _init(_skill_owner : Entity) -> void:
 	super._init(
 		"Berserk",
 		"When troops receive damage, their attack increases",
 		 CLOUD_BLACK_SMOKE,
 		PLAGUE_PARTICLE,
-		Type.DAMAGE
+		Type.DAMAGE,
+		_skill_owner
 		)
 		
-func set_provoker(_provoker : Entity):
-	provoker = _provoker
 	
 func activate(_target : Entity):
 	target = _target
