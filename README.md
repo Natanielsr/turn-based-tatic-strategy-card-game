@@ -28,5 +28,7 @@ This is a tactical strategy game where players use cards to perform actions on a
 ```bash
 git clone https://github.com/Natanielsr/turn-based-tatic-strategy-card-game.git
 
+```
 
+## 🎮 Playable Web Version:
 Playable web version in itch.io https://niel-sr.itch.io/master-of-troops
