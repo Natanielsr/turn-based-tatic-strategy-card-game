@@ -1,6 +1,6 @@
 # Turn-Based Tactical Strategy Card Game
 
-![Screenshot](screenshot.png)
+![Screenshot](thumb_v2.png)
 
 A small prototype for a turn-based tactical strategy card game built using the Godot Engine.
 
