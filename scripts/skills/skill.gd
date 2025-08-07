@@ -6,6 +6,7 @@ var skill_name : String
 var description : String
 var image : Texture2D
 var particle
+var target : Entity
 
 enum Type{
 	ATTACK,
@@ -15,13 +16,15 @@ enum Type{
 	DAMAGE
 }
 var type : Type
+var skill_owner : Entity
 
 func _init(
 	_skill_name : String,
 	_description : String,
 	_image : Texture2D,
 	_particle,
-	_type : Type
+	_type : Type,
+	_skill_owner : Entity
 	) -> void:
 		
 	self.skill_name = _skill_name
@@ -29,6 +32,7 @@ func _init(
 	self.image = _image
 	self.particle = _particle
 	self.type = _type
+	self.skill_owner = _skill_owner
 	
 
 func activate(_target : Entity):

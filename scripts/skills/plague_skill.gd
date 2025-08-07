@@ -4,15 +4,15 @@ class_name Plague
 
 const PLAGUE_PARTICLE = preload("res://particles/plague_particle.tscn")
 const CLOUD_BLACK_SMOKE = preload("res://textures/crawl-tiles Oct-5-2010/effect/cloud_black_smoke.png")
-var target : Entity
 
-func _init() -> void:
+func _init(_skill_owner : Entity) -> void:
 	super._init(
 		"Plague",
 		"When dies, causes a plague to the opponent who attacked him",
 		 CLOUD_BLACK_SMOKE,
 		PLAGUE_PARTICLE,
-		Type.DEATH
+		Type.DEATH,
+		_skill_owner
 		)
 	
 func activate(_target : Entity):

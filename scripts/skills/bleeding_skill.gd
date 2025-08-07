@@ -5,15 +5,14 @@ class_name BleedingSkill
 const BLEEDING_PARTICLE = preload("res://particles/blood_particle.tscn")
 const BLOOD_RED_3 = preload("res://textures/crawl-tiles Oct-5-2010/dc-misc/blood_red3.png")
 
-var target : Entity
-
-func _init() -> void:
+func _init(_skill_owner : Entity) -> void:
 	super._init(
 		"Bleeding",
 		"Deal 2 Damage against opponent at the beginning of opponent turn",
 		 BLOOD_RED_3,
 		BLEEDING_PARTICLE,
-		Type.ATTACK
+		Type.ATTACK,
+		skill_owner
 		)
 	
 func activate(_target : Entity):
