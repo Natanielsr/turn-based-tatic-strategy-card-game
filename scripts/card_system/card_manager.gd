@@ -34,6 +34,9 @@ var is_hovering_on_card
 @onready var enemy_statue: EnemyStatue = $"../../Statues/EnemyStatue"
 @onready var enemy_hand: EnemyHand = $"../../EnemyAI/EnemyHand"
 
+const PLAYCARD = preload("res://sounds/Cardsounds/cockatrice/playcard.wav")
+const ERROR = preload("res://sounds/Cardsounds/cockatrice/error.wav")
+
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
 	screen_min = -(screen_size / 2)
@@ -55,6 +58,9 @@ func start_drag(card: Card):
 	#card_being_dragged.modulate.a = 0.25
 	card.scale = Vector2(CARD_SCALE, CARD_SCALE)
 	emit_signal("start_drag_card", card)
+	
+	$AudioStreamPlayer2D.stream = PLAYCARD
+	$AudioStreamPlayer2D.play()
 	
 func on_left_click_released():
 	if card_being_dragged:
@@ -86,8 +92,13 @@ func finish_drag():
 				)
 			
 			player_statue.consume_energy(card_data.energy_cost)
+			
+			
+			
 		else:
 			player_hand.add_card_to_hand(card_being_dragged)
+			$AudioStreamPlayer2D.stream = ERROR
+			$AudioStreamPlayer2D.play()
 	else:
 		player_hand.add_card_to_hand(card_being_dragged)
 		highlight_card(card_being_dragged, false)
