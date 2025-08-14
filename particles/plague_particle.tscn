@@ -18,4 +18,3 @@ gravity = Vector2(0, -100)
 scale_amount_min = 0.3
 color_ramp = SubResource("Gradient_xocl1")
 script = ExtResource("2_xocl1")
-lifetime = 0.3
