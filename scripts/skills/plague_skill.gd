@@ -18,6 +18,7 @@ func _init(_skill_owner : Entity) -> void:
 func activate(_target : Entity):
 	self.target = _target
 	var effect = PlagueEffect.new()
-	self.target.effects_manager.add_effect(effect)
-	spawn_particle(target.global_position)
+	if target != null:
+		self.target.effects_manager.add_effect(effect)
+		spawn_particle(target.global_position)
 	
