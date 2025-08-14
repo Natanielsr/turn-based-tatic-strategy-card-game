@@ -6,6 +6,7 @@ signal walk_finish()
 signal mouse_on(troop : MobileTroop)
 signal mouse_left(troop : MobileTroop)
 
+
 @onready var tile_grid: TileMapLayer = get_node("/root/Base/Tiles/TileGrid")
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var atk_points_label: Label = $"./Status/AtkPoints"
@@ -32,6 +33,8 @@ var is_moving: bool
 var _current_id_path: Array[Vector2i]
 var is_exausted = false
 
+const PUNCH__009 = preload("res://sounds/Punch__009.ogg")
+
 func _on_changed_turn(_turn):
 	var troop_turn = is_entity_turn()
 		
@@ -56,6 +59,8 @@ func _ready() -> void:
 		$"./Status/AtkSprite".modulate = Color(1, 0, 0) 
 	
 	is_exausted = false
+	
+	
 	
 func _physics_process(_delta: float) -> void:
 	if not is_moving:
@@ -92,6 +97,11 @@ func get_current_walk_points():
 	return _current_walk_points
 			
 func move_troop(pos_to_go):
+	if not game_controller.is_running_state():
+		print("MobileTroop > move_troop: only moves in running state")
+		emit_signal("walk_finish")
+		return
+	
 	if is_exausted:
 		emit_signal("walk_finish")
 		return
@@ -177,8 +187,19 @@ func _perform_attack_animation():
 	var tween = create_tween()
 	tween.tween_property(self, "global_position", charge_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "global_position", attack_pos, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_callback(Callable(self, "_show_attack_fx"))
 	tween.tween_property(self, "global_position", start_pos, 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.connect("finished", Callable(self, "_on_attack_animation_finished"))
+
+func _show_attack_fx():
+	$AudioStreamPlayer2D.stream = PUNCH__009
+	$AudioStreamPlayer2D.play()
+	
+	var particle = load("res://particles/hit_attack.tscn")
+	var part = particle.instantiate()
+	oponent_to_attack.add_child(part)
+	part.global_position = oponent_to_attack.global_position
+	part.emitting = true
 
 func _on_attack_animation_finished():
 	trigger_attack()
@@ -195,6 +216,8 @@ func trigger_attack() -> void:
 	is_attacking = false
 		
 	oponent_to_attack = null
+	
+	
 	
 func take_rebound():
 	if oponent_to_attack is MobileTroop:
