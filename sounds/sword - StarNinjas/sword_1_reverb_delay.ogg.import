@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bddiex1gdn5l5"
+path="res://.godot/imported/sword_1_reverb_delay.ogg-36e9ddcda3eeb322438b8eceb9d8a467.oggvorbisstr"
+
+[deps]
+
+source_file="res://sounds/sword - StarNinjas/sword_1_reverb_delay.ogg"
+dest_files=["res://.godot/imported/sword_1_reverb_delay.ogg-36e9ddcda3eeb322438b8eceb9d8a467.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
