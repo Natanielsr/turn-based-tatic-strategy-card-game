@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bxue6snghicrx"]
+
+[ext_resource type="Texture2D" uid="uid://bnoklnwwfhd5f" path="res://textures/crawl-tiles Oct-5-2010/effect/cloud_grey_smoke.png" id="1_cjl57"]
+[ext_resource type="Script" uid="uid://xesv67fom3e4" path="res://scripts/auto_destroy.gd" id="2_yannd"]
+
+[sub_resource type="Gradient" id="Gradient_xlf0b"]
+offsets = PackedFloat32Array(0, 0.514925, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="SmokeParticle" type="CPUParticles2D"]
+emitting = false
+amount = 64
+texture = ExtResource("1_cjl57")
+lifetime = 0.3
+one_shot = true
+emission_shape = 1
+emission_sphere_radius = 10.97
+gravity = Vector2(0, -500)
+scale_amount_min = 0.1
+scale_amount_max = 2.0
+color_ramp = SubResource("Gradient_xlf0b")
+script = ExtResource("2_yannd")
+time_to_destroy = 5.0
