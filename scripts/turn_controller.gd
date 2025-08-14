@@ -17,6 +17,9 @@ enum Turn{
 var turn : Turn = Turn.PLAYER
 	
 func shift_turn():
+	if not game_controller.is_running_state():
+		return
+	
 	var selected_troop = game_controller.selected_troop
 	if selected_troop and selected_troop.is_moving:
 		return
@@ -47,3 +50,9 @@ func _enemy_start_turn():
 	
 func _enemy_end_turn():
 	emit_signal("enemy_end_turn")
+	
+func is_player_turn():
+	if turn == Turn.PLAYER:
+		return true
+	else:
+		return false
