@@ -12,6 +12,7 @@ const SKILL_PATHS = [
 	"res://scripts/skills/provoke_skill.gd",
 	"res://scripts/skills/berserk_skill.gd",
 	"res://scripts/skills/attack_in_area_skill.gd",
+	"res://scripts/skills/lightning_skill.gd",
 ]
 
 func _init(_skill_owner : Entity) -> void:
@@ -19,6 +20,7 @@ func _init(_skill_owner : Entity) -> void:
 	skill_owner.attack_finished.connect(_on_attack_trigger)
 	skill_owner.died.connect(_on_died_trigger)
 	skill_owner.damaged.connect(_on_damage_trigger)
+	skill_owner.spawned.connect(_on_spawned_trigger)
 	name = "SkillManager"
 
 func add(skill : Skill):
@@ -59,6 +61,9 @@ func _on_died_trigger(_dead_entity : Entity, killed_by : Entity):
 	if not _dead_entity.is_attacking:
 		activate_skill(killed_by, Skill.Type.DEATH)
 		
-func _on_damage_trigger(entity: Entity):
+func _on_damage_trigger(_entity: Entity):
 		activate_skill(skill_owner, Skill.Type.DAMAGE)
+		
+func _on_spawned_trigger(_entity: Entity):
+		activate_skill(skill_owner, Skill.Type.SPAWN)
 	
