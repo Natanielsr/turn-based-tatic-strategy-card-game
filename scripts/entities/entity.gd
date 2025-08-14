@@ -5,9 +5,12 @@ class_name Entity
 signal died(entity_died : Entity, killed_by : Entity)
 signal attack_finished(attacker: Entity, target: Entity)
 signal damaged(entity: Entity)
+signal spawned(troop : MobileTroop)
 
 const ALLY_OUTLINE = preload("res://materials/ally_outline.tres")
 const ENEMY_OUTLINE = preload("res://materials/enemy_outline.tres")
+
+var card_name : String
 
 @onready var game_controller: GameController = get_node("/root/Base/Controllers/GameController")
 @onready var turn_controller: TurnController = get_node("/root/Base/Controllers/TurnController")
@@ -17,6 +20,7 @@ const Turn = TurnController.Turn
 @onready var life_points_label: Label = $"./Status/LifePoints"
 @onready var life_background_sprite: Sprite2D = $"./Status/LifeSprite"
 @export var original_life_points : int
+
 var current_life_points : int
 var is_attacking = false
 
@@ -41,6 +45,7 @@ func base_ready() -> void:
 	define_faction_color()
 	turn_controller.connect("changed_turn", Callable(self, "_on_base_changed_turn"))
 	effects_manager.set_turn_controller(turn_controller)
+	emit_signal("spawned", self)
 	
 func _on_base_changed_turn(_turn):	
 	_on_changed_turn(_turn)
@@ -136,3 +141,8 @@ func attack(entity : Entity):
 	is_attacking = true
 	emit_signal("attack_finished", self, entity)
 	
+func is_player_faction():
+	if faction == EntityFaction.ALLY:
+		return true
+	else:
+		return false
