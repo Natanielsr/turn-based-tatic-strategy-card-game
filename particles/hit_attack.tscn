@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://bh6r3ywtjyfen"]
+
+[ext_resource type="Texture2D" uid="uid://loq8amo5x32p" path="res://textures/hit_fx.png" id="1_ifon2"]
+[ext_resource type="Script" uid="uid://xesv67fom3e4" path="res://scripts/auto_destroy.gd" id="2_daqm3"]
+
+[sub_resource type="Curve" id="Curve_daqm3"]
+_data = [Vector2(0.0375, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_xlf0b"]
+offsets = PackedFloat32Array(0, 0.365672, 0.61194, 1)
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="HitAttack" type="CPUParticles2D"]
+emitting = false
+amount = 1
+texture = ExtResource("1_ifon2")
+lifetime = 0.3
+one_shot = true
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("Curve_daqm3")
+color_ramp = SubResource("Gradient_xlf0b")
+script = ExtResource("2_daqm3")
