@@ -3,6 +3,8 @@ extends Node2D
 signal left_mouse_button_clicked
 signal left_mouse_button_released
 
+signal clicked_on_entity(entity : Entity)
+
 @onready var game_controller: GameController = $"../GameController"
 @onready var turn_controller: TurnController = $"../TurnController"
 const Turn = TurnController.Turn
@@ -17,8 +19,6 @@ const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_DECK = 4
 
 func _input(event):
-	if game_controller.current_game_state != GameController.GameState.RUNNING:
-		return
 	
 	if turn_controller.turn != Turn.PLAYER:
 		return
@@ -41,16 +41,10 @@ func _input(event):
 		if event.pressed:
 			game_controller.deselect_target()
 			game_controller.deselect_troop()
+			
+	debug_inputs(event)
 	
-	if not OS.has_feature("template"):
-		if event is InputEventKey and event.pressed and not event.echo:
-			if event.keycode == KEY_E:
-				debugger.spawn_rat_enemy()
-		
-		if event is InputEventKey and event.pressed and not event.echo:
-			if event.keycode == KEY_A:
-				debugger.spawn_rat_ally()
-
+	
 func raycast_at_cursor():
 	var space_state = get_world_2d().direct_space_state
 	var parameters = PhysicsPointQueryParameters2D.new()
@@ -71,6 +65,8 @@ func raycast_at_cursor():
 
 func click_on_entity(entity : Entity):
 	game_controller.click_on_entity(entity)
+	
+	emit_signal("clicked_on_entity", entity)
 
 func click_on_card(obj):
 	game_controller.deselect_troop()
@@ -80,3 +76,13 @@ func click_on_card(obj):
 		
 func click_on_deck(_obj):
 	deck_player.draw_card()
+	
+func debug_inputs(event):
+	if not OS.has_feature("template"):
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.keycode == KEY_E:
+				debugger.spawn_enemy()
+		
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.keycode == KEY_A:
+				debugger.spawn_ally()
