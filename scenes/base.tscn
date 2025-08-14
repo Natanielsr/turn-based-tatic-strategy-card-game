@@ -38,7 +38,7 @@
 [ext_resource type="AudioStream" uid="uid://cqfnu7gfwv886" path="res://sounds/Cardsounds/cockatrice/draw.wav" id="30_7wyq8"]
 [ext_resource type="Script" uid="uid://b7jm31u8uqk1e" path="res://scripts/AI/lookahead.gd" id="31_82vju"]
 [ext_resource type="AudioStream" uid="uid://d4ihh105mqd5i" path="res://sounds/CHIPTUNE_Loop_Minstrel_Dance.ogg" id="37_b73mi"]
-[ext_resource type="Script" uid="uid://bts5hpsqssvxv" path="res://scripts/sound/sound.gd" id="37_qty1u"]
+[ext_resource type="Script" uid="uid://bts5hpsqssvxv" path="res://scripts/sound/game_over_sound_fx.gd" id="37_qty1u"]
 [ext_resource type="AudioStream" uid="uid://bceyqxqkskdqe" path="res://sounds/winneris.ogg" id="39_sa2y1"]
 [ext_resource type="AudioStream" uid="uid://brdpab1gdd3fr" path="res://sounds/ThisGameIsOver.wav" id="40_wklje"]
 [ext_resource type="Script" uid="uid://dsyhovr0x0oor" path="res://scripts/sound/sound_fx.gd" id="41_wklje"]
