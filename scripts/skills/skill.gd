@@ -34,9 +34,12 @@ func _init(
 	self.type = _type
 	self.skill_owner = _skill_owner
 	
-
 func activate(_target : Entity):
 	pass
+	
+func spawn_particle_target(_target : Entity):
+	self.target = _target
+	spawn_particle(target.position)
 	
 func spawn_particle(pos : Vector2):
 	var part = particle.instantiate()
