@@ -17,6 +17,8 @@ signal mouse_left_troop(entity)
 
 
 const MONSTER = preload("res://prefabs/monster.tscn")
+const SWORD_1_REVERB_DELAY = preload("res://sounds/sword - StarNinjas/sword_1_reverb_delay.ogg")
+const WHITE_SMOKE_PARTICLE = preload("res://particles/white_smoke_particle.tscn")
 
 var player_troops : Array[MobileTroop] = []
 var enemy_troops : Array[MobileTroop] = []
@@ -99,7 +101,7 @@ func spawn_monster(card_data, card_slot_pos, faction, monster_id):
 	var monster = null
 	if not can_spawn(faction, card_data):
 		return
-	
+		
 	monster = await add_monster(card_data, card_slot_pos, faction, monster_id)
 	
 	return monster
@@ -109,8 +111,18 @@ func add_monster(card_data, pos, faction, monster_id):
 	monster.position = pos
 	add_troop(monster)
 	
+	$AudioStreamPlayer2D.stream = SWORD_1_REVERB_DELAY
+	$AudioStreamPlayer2D.play()	
+	spaw_particle(monster)
+	
 	await game_controller.wait(1)
 	emit_signal("monster_spawned", monster)
+	
+func spaw_particle(monster):
+	var part = WHITE_SMOKE_PARTICLE.instantiate()
+	monster.add_child(part)
+	part.global_position = monster.global_position
+	part.emitting = true
 
 func can_spawn(faction, card_to_spawn):
 	if faction == Entity.EntityFaction.ALLY:
@@ -128,6 +140,7 @@ func create_monster(card_data, faction, monster_id) -> MobileTroop:
 	var monster : MobileTroop = MONSTER.instantiate()
 	monster.name = monster_id
 	monster.card_id = card_data.card_id
+	monster.card_name = card_data.name
 	var img_path = str("res://textures/cards/"+card_data.card_id+".png")
 	monster.get_node("Sprite2D").texture = load(img_path)
 	monster.set_attack_points(card_data.attack)
