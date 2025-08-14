@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://c2s7v31xvmeq8"]
+
+[ext_resource type="Script" uid="uid://fhpem6onhe20" path="res://scripts/fx/lightning.gd" id="1_6a6tf"]
+[ext_resource type="AudioStream" uid="uid://byxlwitwna5pd" path="res://sounds/lightning-strike.mp3" id="2_kguda"]
+
+[sub_resource type="Animation" id="Animation_kguda"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Line2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_6a6tf"]
+resource_name = "flash"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Line2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.102462, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 1, 1, 0.486275), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mpbbh"]
+_data = {
+&"RESET": SubResource("Animation_kguda"),
+&"flash": SubResource("Animation_6a6tf")
+}
+
+[node name="Lightning" type="Node2D"]
+script = ExtResource("1_6a6tf")
+
+[node name="Line2D" type="Line2D" parent="."]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_kguda")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_mpbbh")
+}
