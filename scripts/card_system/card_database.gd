@@ -58,7 +58,7 @@ const CARDS = {
 		"energy_cost": 6,
 		"attack": 5,
 		"health": 6,
-		"description": "A big strong and powerful troll",
+		"description": "Attack in area: your attack hits multiple targets",
 		"ability": "attack_in_area"
   	},
 	"orc": {
@@ -68,8 +68,8 @@ const CARDS = {
 		"energy_cost": 4,
 		"attack": 3,
 		"health": 4,
-		"description": "an unpleasant creature",
-		"ability": ""
+		"description": "Berserk: Increases attack when you are injured",
+		"ability": "berserk"
   	},
 	"ogre": {
 		"card_id": "ogre",
@@ -78,8 +78,8 @@ const CARDS = {
 		"energy_cost": 6,
 		"attack": 6,
 		"health": 5,
-		"description": "an ogre that can release a terrible roar",
-		"ability": ""
+		"description": "Attack in area: your attack hits multiple targets",
+		"ability": "attack_in_area"
   	},
 	"elf_mage": {
 		"card_id": "elf_mage",
@@ -88,8 +88,8 @@ const CARDS = {
 		"energy_cost": 7,
 		"attack": 7,
 		"health": 5,
-		"description": "an elf that casts magic",
-		"ability": ""
+		"description": "When invoked, launch an electrical beam at a target",
+		"ability": "lightning"
   	},
 	"dragon": {
 		"card_id": "dragon",
