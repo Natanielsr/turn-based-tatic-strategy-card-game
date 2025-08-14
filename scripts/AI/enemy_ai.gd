@@ -11,6 +11,8 @@ class_name EnemyAI
 @onready var look_ahead: LookAhead = $LookAhead
 @onready var enemy_hand: EnemyHand = $EnemyHand
 @onready var enemy_statue: EnemyStatue = $"../Statues/EnemyStatue"
+@onready var player_statue: PlayerStatue = $"../Statues/PlayerStatue"
+
 
 
 var selected_card
@@ -42,23 +44,12 @@ func finish_turn():
 	turn_controller.shift_turn()
 	
 func apply_move(move):
+	if not game_controller.is_running_state():
+		return
+	
 	match move["type"]:
 		"play_card":
-			var card_name = move["card"]
-			var card_data = game_controller.card_database.CARDS[card_name]
-			
-			var pos_to_spawn = grid_controller.get_tile_to_world_pos(move["tile"]) 
-			if not troop_manager.is_connected("monster_spawned", Callable(self, "_on_monster_spawned")):
-				troop_manager.monster_spawned.connect(_on_monster_spawned)
-			troop_manager.spawn_monster(
-				card_data,
-				pos_to_spawn,
-				Entity.EntityFaction.ENEMY,
-				move["monster_id"]
-				)
-				
-			enemy_statue.consume_energy(card_data.energy_cost)
-			enemy_hand.remove_card_from_hand(card_data.card_id)
+			play_card(move)
 				
 		"move_troop":
 			mover_troop = move["troop"]
@@ -81,7 +72,45 @@ func apply_move(move):
 				attacker_troop.attack(target)
 			else:
 				find_move()
-
+				
+func play_card(move):
+	var card_name = move["card"]
+	var card_data = game_controller.card_database.CARDS[card_name]
+	
+	var pos_to_spawn = grid_controller.get_tile_to_world_pos(move["tile"]) 
+	if not troop_manager.is_connected("monster_spawned", Callable(self, "_on_monster_spawned")):
+		troop_manager.monster_spawned.connect(_on_monster_spawned)
+	troop_manager.spawn_monster(
+		card_data,
+		pos_to_spawn,
+		Entity.EntityFaction.ENEMY,
+		move["monster_id"]
+		)
+		
+	check_target_skill()
+		
+	enemy_statue.consume_energy(card_data.energy_cost)
+	enemy_hand.remove_card_from_hand(card_data.card_id)
+	
+func check_target_skill():
+	if game_controller.is_looking_for_target_state():
+		var targets: Array[Entity] = []
+		for troop in troop_manager.player_troops:
+			targets.append(troop as Entity)
+			
+		targets.append(player_statue)
+		
+		targets.sort_custom(_compare_life_points)
+		
+		game_controller.target_skill.target_entity(targets[0])
+		
+# Função de comparação
+func _compare_life_points(a, b):
+	if a.current_life_points < b.current_life_points:
+		return true
+	elif a.current_life_points > b.current_life_points:
+		return false
+	return false
 			
 func _on_monster_spawned(monster : MobileTroop):
 	if (monster.faction != Entity.EntityFaction.ENEMY):
