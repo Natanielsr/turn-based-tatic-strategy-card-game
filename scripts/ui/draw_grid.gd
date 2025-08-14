@@ -54,8 +54,6 @@ func draw_path():
 	draw_polyline(point_path, color, 4)
 	
 func draw_mouse_position_rect():
-	if game_controller.current_game_state != game_controller.GameState.RUNNING:
-		return
 	
 	target_position = get_tile_grid_mouse_position()
 		
