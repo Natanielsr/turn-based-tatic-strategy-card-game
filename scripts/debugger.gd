@@ -7,13 +7,13 @@ class_name Debugger
 @onready var grid_controller: GridController = $"../GridController"
 
 
-func spawn_rat_ally():
-	var name_troop = "troll"
+func spawn_ally():
+	var name_troop = "elf_mage"
 	var faction = Entity.EntityFaction.ALLY
 	spawn_test_troop(name_troop, faction)
 	
-func spawn_rat_enemy():
-	var name_troop = "rat"
+func spawn_enemy():
+	var name_troop = "elf_mage"
 	var faction = Entity.EntityFaction.ENEMY
 	spawn_test_troop(name_troop, faction)
 
