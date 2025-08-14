@@ -35,6 +35,9 @@ func _on_mouse_troop(_troop: Entity):
 	
 	self.troop = _troop
 	
+	if not troop.died.is_connected(_on_troop_died):
+		troop.died.connect(_on_troop_died)
+	
 	status_pos_top_left = Vector2(
 			troop.global_position.x - 110,
 			troop.global_position.y - 20
@@ -77,6 +80,9 @@ func clean_status():
 	for skill in skills_ui.duplicate():
 		skills_ui.erase(skill)
 		skill.queue_free()
+		
+	if troop.died.is_connected(_on_troop_died):
+		troop.died.disconnect(_on_troop_died)
 		
 	troop = null
 
@@ -175,7 +181,7 @@ func show_troop_preview():
 	if troop_preview == null:
 		troop_preview = TROOP_PREVIEW_UI.instantiate()
 		troop_preview.name = "Preview_"+mobile_troop.name+"_"+str(randi())
-		troop_preview.get_node("Name").text = mobile_troop.card_id
+		troop_preview.get_node("Name").text = mobile_troop.card_name
 		troop_preview.get_node("Image").texture = mobile_troop.get_node("Sprite2D").texture
 		troop_preview.get_node("AttackPoints").text = str(mobile_troop.get_attack_count())
 		troop_preview.get_node("WalkPoints").text = str(mobile_troop.get_current_walk_points())
@@ -186,3 +192,5 @@ func show_troop_preview():
 		window.add_child(troop_preview)
 		troop_preview.global_position = pos_status
 		
+func _on_troop_died(_entity, _killer):
+	clean_status()
