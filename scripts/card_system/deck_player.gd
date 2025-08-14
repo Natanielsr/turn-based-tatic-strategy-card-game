@@ -5,6 +5,7 @@ class_name DeckPlayer
 const CARD_SCENE_PATH = "res://prefabs/card.tscn"
 @onready var card_scene = preload(CARD_SCENE_PATH)
 
+
 func _ready() -> void:
 	_base_ready()
 	$RichTextLabel.text = str(deck.size())
@@ -37,6 +38,8 @@ func draw_card_after(card_drawn_name):
 	
 	$"../PlayerHand".add_card_to_hand(new_card)
 	new_card.get_node("AnimationPlayer").play("card_flip")
+	
+	$AudioStreamPlayer2D.play()
 
 func create_card(card_name):
 	
