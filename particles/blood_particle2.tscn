@@ -1,7 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://d0xompgxvw6yr"]
+[gd_scene load_steps=3 format=3 uid="uid://d0xompgxvw6yr"]
 
+[ext_resource type="Script" uid="uid://xesv67fom3e4" path="res://scripts/auto_destroy.gd" id="1_jr5dx"]
 [ext_resource type="PackedScene" uid="uid://dgc5avkwwr0je" path="res://particles/blood_particle.tscn" id="1_r5jy6"]
 
 [node name="blood_particle" type="Node2D"]
+script = ExtResource("1_jr5dx")
 
 [node name="CPUParticles2D" parent="." instance=ExtResource("1_r5jy6")]
+script = null
