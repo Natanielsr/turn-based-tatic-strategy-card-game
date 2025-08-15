@@ -8,6 +8,8 @@ var image : Texture2D
 var particle
 var target : Entity
 
+var sound_fx : SoundFX
+
 enum Type{
 	ATTACK,
 	SPAWN,
@@ -33,6 +35,9 @@ func _init(
 	self.particle = _particle
 	self.type = _type
 	self.skill_owner = _skill_owner
+	
+func _ready() -> void:
+	sound_fx = get_node("/root/Base/Sound/SoundFX")
 	
 func activate(_target : Entity):
 	pass
