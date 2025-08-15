@@ -5,6 +5,7 @@ class_name ProvokeSkill
 const PLAGUE_PARTICLE = preload("res://particles/plague_particle.tscn")
 const CLOUD_BLACK_SMOKE = preload("res://textures/crawl-tiles Oct-5-2010/effect/cloud_black_smoke.png")
 var provoker : Entity
+const WOLF_MONSTER = preload("res://sounds/wolf_monster.ogg")
 
 func _init(_skill_owner : Entity) -> void:
 	super._init(
@@ -23,5 +24,6 @@ func activate(_target : Entity):
 	
 	var effect = ProvokeEffect.new(skill_owner, target)
 	target.effects_manager.add_effect(effect)
+	sound_fx.play_temp_sound(WOLF_MONSTER, _target.position)
 	spawn_particle(target.global_position)
 	
