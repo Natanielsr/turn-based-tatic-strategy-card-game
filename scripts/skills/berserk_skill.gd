@@ -5,6 +5,7 @@ class_name BerserkSkill
 const PLAGUE_PARTICLE = preload("res://particles/plague_particle.tscn")
 const CLOUD_BLACK_SMOKE = preload("res://textures/crawl-tiles Oct-5-2010/effect/cloud_black_smoke.png")
 
+
 func _init(_skill_owner : Entity) -> void:
 	super._init(
 		"Berserk",
