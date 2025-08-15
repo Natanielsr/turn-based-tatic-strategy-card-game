@@ -14,6 +14,8 @@ signal mouse_left(troop : MobileTroop)
 @onready var troop_manager: TroopManager = get_node("/root/Base/TroopManager")
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
+
+
 var card_id : String
 var attack_points : int = 1
 var original_attack_points : int = attack_points
@@ -33,7 +35,10 @@ var is_moving: bool
 var _current_id_path: Array[Vector2i]
 var is_exausted = false
 
+@onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 const PUNCH__009 = preload("res://sounds/Punch__009.ogg")
+const STEP_GRASS_03 = preload("res://sounds/player_movement_samples/03_Step_grass_03.wav")
+const DIE = preload("res://sounds/die.wav")
 
 func _on_changed_turn(_turn):
 	var troop_turn = is_entity_turn()
@@ -73,7 +78,8 @@ func _physics_process(_delta: float) -> void:
 	if global_position == target_position:
 		_current_id_path.pop_front() #remove the position
 		set_walk_points(_current_walk_points - 1) #remove walk point
-		
+		audio_stream_player_2d.stream = STEP_GRASS_03
+		audio_stream_player_2d.play()
 		if not _current_id_path.is_empty(): #verify if have next position
 			target_position = tile_grid.map_to_local(_current_id_path.front()) #pass to next position
 		else: #arrived
@@ -252,8 +258,13 @@ func die(killed_by : Entity):
 	grid_controller.set_walkable_position(global_position, true)
 	troop_manager.remove_troop(self)
 	$Status.visible = false
+	$CanMoveSprite.visible = false
+	$SelectSprite.visible = false
+	$AttackParticles.visible = false
 	toggle_outline(false)
 	animation_player.play("die")
+	audio_stream_player_2d.stream = DIE
+	audio_stream_player_2d.play()
 	emit_signal("died", self, killed_by)
 	
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
