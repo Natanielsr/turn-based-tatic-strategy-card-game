@@ -9,6 +9,8 @@ var image : CompressedTexture2D
 var particle
 var entity
 
+var sound_fx : SoundFX
+
 enum Moment{
 	START_TURN,
 	END_TURN,
@@ -27,6 +29,9 @@ func _init(
 	self.apply_momment = _apply_momment
 	self.image = _image
 	self.particle = _partcile
+
+func _ready() -> void:
+	sound_fx = get_node("/root/Base/Sound/SoundFX")
 
 func apply_effect(_entity : Entity):
 	pass
@@ -48,3 +53,4 @@ func spawn_particle(pos : Vector2):
 	self.entity.add_child(part)
 	part.global_position = pos
 	part.emitting = true
+	
