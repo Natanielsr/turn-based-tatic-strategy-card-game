@@ -6,6 +6,7 @@ const PLAGUE_PARTICLE = preload("res://particles/plague_particle.tscn")
 const CLOUD_BLACK_SMOKE = preload("res://textures/crawl-tiles Oct-5-2010/effect/cloud_black_smoke.png")
 
 var grid_controller : GridController
+const IMPACT = preload("res://sounds/impact.ogg")
 
 
 func _init(_skill_owner : Entity) -> void:
@@ -22,6 +23,7 @@ func _init(_skill_owner : Entity) -> void:
 	name = "AttackInAreaSkill"
 	
 func _ready() -> void:
+	super._ready()
 	grid_controller = get_node("/root/Base/Controllers/GridController")
 	
 func activate(_target : Entity):
@@ -31,12 +33,14 @@ func activate(_target : Entity):
 		
 		var radius: int = 1
 		var center_tile_pos: Vector2i = troop.get_tile_pos()
-
+		sound_fx.play_temp_sound(IMPACT, target.position)
+		
 		for x_offset in range(-radius, radius + 1):
 			for y_offset in range(-radius, radius + 1):
 				var test_pos = center_tile_pos + Vector2i(x_offset, y_offset)
 				
 				spawn_particle(grid_controller.get_tile_to_world_pos(test_pos))
+				
 				var test_target = grid_controller.get_entity_in_pos(test_pos)
 				
 				if not test_target:
