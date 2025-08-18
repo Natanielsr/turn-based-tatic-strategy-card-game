@@ -1,9 +1,9 @@
 extends DeckBase
 
 class_name DeckEnemy
+
 @onready var enemy_ai: EnemyAI = $".."
 @onready var enemy_hand: EnemyHand = $"../EnemyHand"
-
 
 func _ready() -> void:
 	_base_ready()
@@ -30,3 +30,6 @@ func is_my_turn():
 		return true
 	else:
 		return false
+
+func count_cards_hand():
+	return enemy_hand.hand.size()

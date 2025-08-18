@@ -8,14 +8,14 @@ func init(grid: GridController):
 var weights = {
 	"alive_troops": 10,
 	"total_life": 1,
-	"attack_result": 30,
+	"attack_result": 50,
 	"area_control": 40,
 	"statue_damage": 50,
 	"victory": 10000,
 	"hunt_weak": 10,
 	"approach_invader": 40,
-	"attack_invader": 40,
-	"defense_approach": 50,
+	"attack_invader": 50,
+	"defense_approach": 40,
 	"defense_kill": 50
 }
 
@@ -70,7 +70,7 @@ func score_attack_result(game_state, move):
 	if target["hp"] <= 0 and attacker["hp"] > 0:
 		return 1
 	elif attacker["hp"] <= 0 and target["hp"] > 0:
-		return -1
+		return 0
 	return 0
 
 func score_area_control(game_state):

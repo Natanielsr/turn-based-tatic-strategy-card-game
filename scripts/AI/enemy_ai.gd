@@ -12,8 +12,7 @@ class_name EnemyAI
 @onready var enemy_hand: EnemyHand = $EnemyHand
 @onready var enemy_statue: EnemyStatue = $"../Statues/EnemyStatue"
 @onready var player_statue: PlayerStatue = $"../Statues/PlayerStatue"
-
-
+@onready var portal: PortalEnemy = $Portal
 
 var selected_card
 var selected_monster : MobileTroop
@@ -38,8 +37,28 @@ func find_move():
 	if best_move:
 		apply_move(best_move)
 	else:
-		finish_turn() # No valid moves, end turn
-		
+		if portal.have_points_to_trade() and enemy_hand.hand.size() > 0:
+			trade_card()
+		else:
+			finish_turn() # No valid moves, end turn
+
+func trade_card():
+	var card_to_trade : Card = get_highest_energy_card()
+	if card_to_trade != null:
+		portal.trade_card(card_to_trade)
+	
+	find_move()
+	
+func get_highest_energy_card() -> Card:
+	var highest_energy = 0
+	var highest_energy_card : Card = null
+	for card : Card in enemy_hand.hand:
+		if card.energy_cost > highest_energy:
+			highest_energy = card.energy_cost
+			highest_energy_card = card
+			
+	return highest_energy_card
+	
 func finish_turn():
 	turn_controller.shift_turn()
 	
@@ -74,9 +93,8 @@ func apply_move(move):
 				find_move()
 				
 func play_card(move):
-	var card_name = move["card"]
-	var card_data = game_controller.card_database.CARDS[card_name]
-	
+	var card = move["card"]
+	var card_data = game_controller.card_database.CARDS[card.card_id]
 	var pos_to_spawn = grid_controller.get_tile_to_world_pos(move["tile"]) 
 	if not troop_manager.is_connected("monster_spawned", Callable(self, "_on_monster_spawned")):
 		troop_manager.monster_spawned.connect(_on_monster_spawned)
@@ -90,7 +108,7 @@ func play_card(move):
 	check_target_skill()
 		
 	enemy_statue.consume_energy(card_data.energy_cost)
-	enemy_hand.remove_card_from_hand(card_data.card_id)
+	enemy_hand.remove_card_id_from_hand(card_data.card_id)
 	
 func check_target_skill():
 	if game_controller.is_looking_for_target_state():

@@ -4,6 +4,7 @@ class_name CardManager
 signal hovered_card_on(card)
 signal hovered_card_off(card)
 signal start_drag_card(card)
+signal finished_drag_card(card)
 
 const COLLISION_MASK_CARD = 2
 const COLLISION_MASK_CARD_SLOT = 4
@@ -18,6 +19,7 @@ const OFF_SET_MOUSE_X = 40
 const OFF_SET_MOUSE_Y = 50
 
 var card_being_dragged : Card
+
 var screen_size
 var screen_min
 var screen_max
@@ -67,45 +69,58 @@ func on_left_click_released():
 		finish_drag()
 	
 func finish_drag():
+	emit_signal("finished_drag_card", card_being_dragged)
+	
 	if not card_being_dragged:
 		return
-
+		
 	card_being_dragged.scale = Vector2(CARD_SCALE, CARD_SCALE)
-	
 	if card_being_dragged.type == "monster":
-		var card_slot_pos = check_for_card_slot()
-		if can_spawn_card(card_slot_pos):
-			player_hand.remove_card_from_hand(card_being_dragged)
-			card_being_dragged.queue_free()
-			
-			
-			var monster_id = troop_manager.generate_id(
-				card_being_dragged.card_id, MobileTroop.EntityFaction.ALLY)
-				
-			var card_data = game_controller.card_database.CARDS[card_being_dragged.card_id]
-			
-			troop_manager.spawn_monster(
-				card_data,
-				card_slot_pos,
-				MobileTroop.EntityFaction.ALLY,
-				monster_id
-				)
-			
-			player_statue.consume_energy(card_data.energy_cost)
-			
-			
-			
-		else:
-			player_hand.add_card_to_hand(card_being_dragged)
-			$AudioStreamPlayer2D.stream = ERROR
-			$AudioStreamPlayer2D.play()
+		_handle_monster_card_drop()
 	else:
-		player_hand.add_card_to_hand(card_being_dragged)
-		highlight_card(card_being_dragged, false)
+		_handle_non_monster_card_drop()
 	
 	card_being_dragged.is_dragging = false
 	card_being_dragged = null
+
+func _handle_monster_card_drop():
+	var card_slot_pos = check_for_card_slot()
+	if can_spawn_card(card_slot_pos):
+		_spawn_monster_from_card(card_slot_pos)
+	elif player_hand.is_card_in_hand(card_being_dragged):
+		_return_card_to_hand_with_error()
+
+func _spawn_monster_from_card(card_slot_pos):
+	card_being_dragged.global_position = card_slot_pos
+	remove_card(card_being_dragged)
+
+	var monster_id = troop_manager.generate_id(
+		card_being_dragged.card_id, MobileTroop.EntityFaction.ALLY)
+
+	var card_data = game_controller.card_database.CARDS[card_being_dragged.card_id]
+
+	troop_manager.spawn_monster(
+		card_data,
+		card_slot_pos,
+		MobileTroop.EntityFaction.ALLY,
+		monster_id
+	)
+
+	player_statue.consume_energy(card_data.energy_cost)
 	
+func remove_card(card):
+	card.get_node("Area2D").get_node("CollisionShape2D").disabled = true
+	card.get_node("AnimationPlayer").play("disappear")
+	player_hand.remove_card_from_hand(card)
+
+func _return_card_to_hand_with_error():
+	player_hand.add_card_to_hand(card_being_dragged)
+	$AudioStreamPlayer2D.stream = ERROR
+	$AudioStreamPlayer2D.play()
+
+func _handle_non_monster_card_drop():
+	player_hand.add_card_to_hand(card_being_dragged)
+	highlight_card(card_being_dragged, false)
 	
 func can_spawn_card(card_slot_pos):
 	if not card_slot_pos:
@@ -127,14 +142,11 @@ func check_for_card_slot():
 		return grid_controller.get_tile_world_position(mouse_position)
 	else:
 		return null
-
-
 	
 func connect_card_signals(card):
 	card.connect("hovered", on_hovered_over_card)
 	card.connect("hovered_off", on_hovered_off_card)
 
-	
 func on_hovered_over_card(card):
 	if not is_hovering_on_card:
 		is_hovering_on_card = true
@@ -162,8 +174,6 @@ func highlight_card(card, hovered):
 	else:
 		card.scale = Vector2(CARD_SCALE, CARD_SCALE)
 		card.z_index = Z_INDEX_CARD
-
-
 
 func raycast_check_for_card():
 	var space_state = get_world_2d().direct_space_state

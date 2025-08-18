@@ -49,49 +49,23 @@ func simulate_moves():
 	
 	return best_move
 
-func simulate_moves_lookahead2():
-	var best_score = -INF
-	var best_moves = []
-	var possible_moves = get_all_possible_moves()
-	
-	for move1 in possible_moves:
-		var state1 = clone_game_state()
-		apply_move(state1, move1)
-		
-		var moves2 = get_all_possible_moves_for_state(state1)
-		if moves2.is_empty():
-			var score = evaluate_move(state1, move1)
-			if score > best_score:
-				best_score = score
-				best_moves = [move1]
-		else:
-			for move2 in moves2:
-				var state2 = state1.duplicate()
-				apply_move(state2, move2)
-				var score = evaluate_move(state2, move2)
-				if score > best_score:
-					best_score = score
-					best_moves = [move1, move2]
-	
-	return best_moves
-
 func get_all_possible_moves() -> Array:
 	var moves = []
 	
 	# Play cards from hand
-	for card in enemy_hand.hand:
+	for card : Card in enemy_hand.hand:
 		if can_play_the_card(card):
 			for tile in get_valid_spawn_tiles():
 				moves.append({
 					"type": "play_card",
 					"card": card,
 					"tile": tile,
-					"monster_id": troop_manager.generate_id(card, Entity.EntityFaction.ENEMY)
+					"monster_id": troop_manager.generate_id(card.card_id, Entity.EntityFaction.ENEMY)
 				})
 	
 	# Move troops
 	for troop in troop_manager.enemy_troops:
-		if troop.can_move() and troop.is_alive():
+		if troop.get_current_walk_points() == 5 and troop.is_alive():
 			for tile in get_valid_move_tiles(troop):
 				moves.append({
 					"type": "move_troop",
@@ -114,42 +88,6 @@ func get_all_possible_moves() -> Array:
 	
 	return moves
 
-func get_all_possible_moves_for_state(state: Dictionary) -> Array:
-	var moves = []
-	
-	# Play cards from hand
-	for card in state["enemy_hand"]:
-		if can_play_the_card(card["name"]):
-			for tile in state["enemy_statue"]["attack_positions"]:
-				moves.append({
-					"type": "play_card",
-					"card": card["name"],
-					"tile": tile,
-					"monster_id": card_manager.generate_id(card["name"], Entity.EntityFaction.ENEMY)
-				})
-	
-	# Move troops
-	for troop in state["enemy_troops"]:
-		for tile in get_valid_move_tiles_for_state(troop, state):
-			moves.append({
-				"type": "move_troop",
-				"troop": troop,
-				"tile": tile,
-				"troop_pos": troop["pos"]
-			})
-	
-	# Attack with troops
-	for troop in state["enemy_troops"]:
-		for target in get_attackable_targets_for_state(troop, state):
-			moves.append({
-				"type": "attack",
-				"troop": troop,
-				"troop_pos": troop["pos"],
-				"target": target,
-				"target_pos": target["pos"]
-			})
-	
-	return moves
 
 func get_valid_move_tiles_for_state(troop: Dictionary, state: Dictionary) -> Array:
 	var tiles = []
@@ -190,7 +128,7 @@ func apply_move(state: Dictionary, move: Dictionary) -> void:
 			# Remove card from hand
 			for i in state["enemy_hand"].size():
 				var card = state["enemy_hand"][i]
-				if card["name"] == move["card"]:
+				if card["name"] == move["card"].card_id:
 					# Add troop to board
 					state["enemy_troops"].append({
 						"name": move["monster_id"],
@@ -253,12 +191,12 @@ func clone_game_state() -> Dictionary:
 	}
 	
 	# Clone hand
-	for card in enemy_hand.hand:
-		var card_data = game_controller.card_database.CARDS[card]
+	for card : Card in enemy_hand.hand:
 		state["enemy_hand"].append({
-			"name": card_data.card_id,
-			"attack": card_data.attack,
-			"life": card_data.health
+			"name": card.card_id,
+			"attack": card.attack_points,
+			"life": card.life_points,
+			"energy_cost" : card.energy_cost
 		})
 	
 	# Clone troops
@@ -307,5 +245,8 @@ func get_attackable_targets(troop: MobileTroop) -> Array[Entity]:
 	
 	return targets
 
-func can_play_the_card(card) -> bool:
-	return card_manager.can_play_the_card(card, Entity.EntityFaction.ENEMY)
+func can_play_the_card(card : Card) -> bool:
+	if enemy_statue._current_energy >= card.energy_cost:
+		return true
+	else:
+		return false

@@ -4,6 +4,7 @@ class_name DeckPlayer
 
 const CARD_SCENE_PATH = "res://prefabs/card.tscn"
 @onready var card_scene = preload(CARD_SCENE_PATH)
+@onready var player_hand: PlayerHand = $"../PlayerHand"
 
 
 func _ready() -> void:
@@ -42,33 +43,14 @@ func draw_card_after(card_drawn_name):
 	$AudioStreamPlayer2D.play()
 
 func create_card(card_name):
-	
 	var new_card : Card = card_scene.instantiate()
 	
 	var card_data = game_controller.card_database.CARDS[card_name]
+	new_card.set_card_data(card_data, Entity.EntityFaction.ALLY)
 	
-	new_card.card_id = card_name
-	var card_image_path = str("res://textures/cards/"+card_name+".png")
-	new_card.get_node("CardImage").texture = load(card_image_path)
-	new_card.get_node("Name").text = str(card_data.name)
-	new_card.get_node("Energy").text = str(card_data.energy_cost)
-	new_card.energy_cost = card_data.energy_cost
-	new_card.type = card_data.type
-	new_card.description = card_data.description
-	if card_data.type == "monster":
-		new_card.get_node("Attack").text = str(card_data.attack)
-		new_card.attack_points = int(card_data.attack)
-		new_card.get_node("Health").text = str(card_data.health)
-		new_card.life_points = int(card_data.health)
-	else:
-		new_card.get_node("Attack").visible = false 
-		new_card.get_node("Health").visible = false
-		new_card.get_node("CardTemplate/Atk").visible = false 
-		new_card.get_node("CardTemplate/Life").visible = false
-		
 	new_card.position = position
+	
 	new_card.z_index = card_manager.Z_INDEX_CARD
-	new_card.name = str(card_data.name)
 	
 	return new_card
 
@@ -77,3 +59,6 @@ func is_my_turn():
 		return true
 	else:
 		return false
+		
+func count_cards_hand():
+	return player_hand.hand.size()

@@ -21,12 +21,15 @@ func _base_ready() -> void:
 		draw_card()
 
 func _on_changed_turn(_turn: GameController.Turn):
-	if is_my_turn():
+	if is_my_turn() and count_cards_hand() < 6:
 		cards_to_drawn = 1
 		draw_card()
 		
 func is_my_turn():
-	return false
+	pass #implements in children
+	
+func count_cards_hand():
+	pass #implements in children
 
 func load_deck():
 	pass
@@ -34,6 +37,7 @@ func load_deck():
 func draw_card():
 	
 	if cards_to_drawn == 0:
+		push_error("ERROR: cant draw, cards to draw is 0")
 		return
 	
 	if deck.size() == 0:

@@ -5,29 +5,29 @@ class_name PlayerHand
 const CARD_WIDTH = 80
 const HAND_Y_POSITION = 210
 
-var player_hand = []
+var hand = []
 var center_screen_x
 
 func _ready() -> void:
 	center_screen_x = get_world_center().x
 		
 func add_card_to_hand(new_card):
-	if new_card not in player_hand:
-		player_hand.append(new_card)
+	if new_card not in hand:
+		hand.append(new_card)
 		update_hand_position()
 	else:
 		animate_card_to_position(new_card, new_card.start_position)
 	
 func update_hand_position():
-	for i in range(player_hand.size()):
+	for i in range(hand.size()):
 		var new_position = Vector2(calculate_card_position(i), HAND_Y_POSITION)
-		var card = player_hand[i]
+		var card = hand[i]
 		card.start_position = new_position
 		animate_card_to_position(card, new_position)
 	
 		
 func calculate_card_position(index):
-	var total_width = (player_hand.size() -1) * CARD_WIDTH
+	var total_width = (hand.size() -1) * CARD_WIDTH
 	var x_offset = center_screen_x - total_width / 2.0 + index * CARD_WIDTH
 	return x_offset
 
@@ -44,8 +44,15 @@ func get_world_center():
 		push_error('No camera')
 	
 func remove_card_from_hand(card):
-	if card in player_hand:
-		player_hand.erase(card)
+	if card in hand:
+		hand.erase(card)
 		update_hand_position()
 	else:
 		push_error("CARD NOT IN PLAYER HAND")
+
+func is_card_in_hand(card : Card):
+	if hand.has(card):
+		return true
+	else:
+		return false
+	

@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=50 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://68xpdvwy7bgn" path="res://scripts/file_manager.gd" id="9_ei55q"]
 [ext_resource type="PackedScene" uid="uid://b1ed0nfs8p63k" path="res://prefabs/statue_status.tscn" id="9_ycryd"]
 [ext_resource type="LabelSettings" uid="uid://badbvapsffh67" path="res://font_settings/troop_label.tres" id="12_c8kgi"]
+[ext_resource type="Texture2D" uid="uid://cn7bmne2eh6kx" path="res://textures/crawl-tiles Oct-5-2010/item/staff/i-staff_energy.png" id="14_q5qra"]
 [ext_resource type="PackedScene" uid="uid://wk0f6s72b1fo" path="res://components/card_manager.tscn" id="17_isyof"]
 [ext_resource type="Script" uid="uid://c7ef0wke7ygjx" path="res://scripts/ui/status_ui.gd" id="17_s6kkj"]
 [ext_resource type="Texture2D" uid="uid://dxi6a7vjipgwr" path="res://textures/crawl-tiles Oct-5-2010/dc-mon/statues/wucad_mu_statue.png" id="17_ycryd"]
@@ -37,11 +38,19 @@
 [ext_resource type="Script" uid="uid://bekwtacsbhwq5" path="res://scripts/description.gd" id="27_qty1u"]
 [ext_resource type="AudioStream" uid="uid://cqfnu7gfwv886" path="res://sounds/Cardsounds/cockatrice/draw.wav" id="30_7wyq8"]
 [ext_resource type="Script" uid="uid://b7jm31u8uqk1e" path="res://scripts/AI/lookahead.gd" id="31_82vju"]
+[ext_resource type="Script" uid="uid://da88kivjg7suk" path="res://scripts/card_system/portal_player.gd" id="32_npva4"]
 [ext_resource type="AudioStream" uid="uid://d4ihh105mqd5i" path="res://sounds/CHIPTUNE_Loop_Minstrel_Dance.ogg" id="37_b73mi"]
 [ext_resource type="Script" uid="uid://bts5hpsqssvxv" path="res://scripts/sound/game_over_sound_fx.gd" id="37_qty1u"]
 [ext_resource type="AudioStream" uid="uid://bceyqxqkskdqe" path="res://sounds/winneris.ogg" id="39_sa2y1"]
 [ext_resource type="AudioStream" uid="uid://brdpab1gdd3fr" path="res://sounds/ThisGameIsOver.wav" id="40_wklje"]
+[ext_resource type="Script" uid="uid://7m452c5wn7qj" path="res://scripts/card_system/portal_enemy.gd" id="41_q5qra"]
 [ext_resource type="Script" uid="uid://dsyhovr0x0oor" path="res://scripts/sound/sound_fx.gd" id="41_wklje"]
+[ext_resource type="PackedScene" uid="uid://cn7i6x7yjh08f" path="res://prefabs/portal.tscn" id="43_wt3to"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_q5qra"]
+font_size = 200
+outline_size = 145
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uo6h6"]
 size = Vector2(61, 127)
@@ -115,13 +124,20 @@ texture = ExtResource("21_aomoi")
 [node name="Status" parent="Statues/PlayerStatue" instance=ExtResource("9_ycryd")]
 position = Vector2(0, 50)
 
+[node name="EnergySprite" type="Sprite2D" parent="Statues/PlayerStatue"]
+position = Vector2(-21, -111)
+scale = Vector2(3, 3)
+texture = ExtResource("14_q5qra")
+
 [node name="Energy" type="Label" parent="Statues/PlayerStatue"]
-offset_left = -12.0
-offset_top = -87.0
-offset_right = 15.0
-offset_bottom = -73.0
+offset_left = -32.0
+offset_top = -98.0
+offset_right = 728.0
+offset_bottom = 175.0
+scale = Vector2(0.09, 0.09)
 text = "10/10"
-label_settings = ExtResource("12_c8kgi")
+label_settings = SubResource("LabelSettings_q5qra")
+horizontal_alignment = 1
 
 [node name="EnemyStatue" type="Area2D" parent="Statues"]
 position = Vector2(270, 15)
@@ -147,13 +163,20 @@ texture = ExtResource("21_aomoi")
 [node name="Status" parent="Statues/EnemyStatue" instance=ExtResource("9_ycryd")]
 position = Vector2(0, 50)
 
+[node name="EnergySprite" type="Sprite2D" parent="Statues/EnemyStatue"]
+position = Vector2(-21, -111)
+scale = Vector2(3, 3)
+texture = ExtResource("14_q5qra")
+
 [node name="Energy" type="Label" parent="Statues/EnemyStatue"]
-offset_left = -12.0
-offset_top = -87.0
-offset_right = 15.0
-offset_bottom = -73.0
+offset_left = -32.0
+offset_top = -98.0
+offset_right = 728.0
+offset_bottom = 175.0
+scale = Vector2(0.09, 0.09)
 text = "10/10"
-label_settings = ExtResource("12_c8kgi")
+label_settings = SubResource("LabelSettings_q5qra")
+horizontal_alignment = 1
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -337,11 +360,15 @@ scale = Vector2(0.75, 0.75)
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="CardSystem/DeckPlayer"]
 stream = ExtResource("30_7wyq8")
 
+[node name="Portal" parent="CardSystem" instance=ExtResource("43_wt3to")]
+position = Vector2(-266, 198)
+script = ExtResource("32_npva4")
+
 [node name="EnemyAI" type="Node2D" parent="."]
-visible = false
 script = ExtResource("22_33mrd")
 
 [node name="DeckEnemy" type="Node2D" parent="EnemyAI"]
+position = Vector2(272, -51)
 script = ExtResource("22_aomoi")
 
 [node name="AISpawner" type="Node2D" parent="EnemyAI"]
@@ -366,7 +393,8 @@ script = ExtResource("25_s5nuq")
 [node name="AIFinder" type="Node" parent="EnemyAI"]
 script = ExtResource("27_03t26")
 
-[node name="EnemyHand" type="Node" parent="EnemyAI"]
+[node name="EnemyHand" type="Node2D" parent="EnemyAI"]
+position = Vector2(271, 109)
 script = ExtResource("26_lefm6")
 
 [node name="AttackArea" type="Node2D" parent="EnemyAI"]
@@ -386,22 +414,30 @@ position = Vector2(-208, 80)
 [node name="LookAhead" type="Node2D" parent="EnemyAI"]
 script = ExtResource("31_82vju")
 
+[node name="Portal" type="Node2D" parent="EnemyAI"]
+script = ExtResource("41_q5qra")
+
 [node name="Sound" type="Node2D" parent="."]
 script = ExtResource("37_qty1u")
+metadata/_edit_lock_ = true
 
 [node name="Music" type="AudioStreamPlayer2D" parent="Sound"]
 stream = ExtResource("37_b73mi")
 volume_db = -7.0
 autoplay = true
+metadata/_edit_lock_ = true
 
 [node name="AudioStreamPlayerVictory" type="AudioStreamPlayer2D" parent="Sound"]
 stream = ExtResource("39_sa2y1")
+metadata/_edit_lock_ = true
 
 [node name="AudioStreamPlayerDefeat" type="AudioStreamPlayer2D" parent="Sound"]
 stream = ExtResource("40_wklje")
+metadata/_edit_lock_ = true
 
 [node name="SoundFX" type="AudioStreamPlayer2D" parent="Sound"]
 script = ExtResource("41_wklje")
+metadata/_edit_lock_ = true
 
 [connection signal="mouse_entered" from="Statues/EnemyStatue" to="Statues/EnemyStatue" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Statues/EnemyStatue" to="Statues/EnemyStatue" method="_on_mouse_exited"]

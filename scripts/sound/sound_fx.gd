@@ -20,11 +20,11 @@ func draw_card():
 func play_temp_sound(sound: AudioStream, _position: Vector2):
 	play_temp_sound_with_volume(sound, _position, 0)
 	
-func play_temp_sound_with_volume(sound: AudioStream, _position: Vector2, volume_db):
+func play_temp_sound_with_volume(sound: AudioStream, _position: Vector2, _volume_db):
 	var player = AudioStreamPlayer2D.new()
 	player.stream = sound
 	player.position = _position
-	player.volume_db = volume_db
+	player.volume_db = _volume_db
 	player.autoplay = false
 	add_child(player)
 	

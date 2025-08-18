@@ -10,6 +10,8 @@ var fade_duration := 2.0
 
 func _ready() -> void:
 	game_controller.game_over.connect(fade_out_music)
+	if not OS.has_feature("template"):
+		$Music.volume_db = -100
 	
 func fade_out_music(victory):
 	var player = $Music
