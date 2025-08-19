@@ -1,6 +1,6 @@
 extends Node2D
 
-class_name DeckBase
+class_name Deck
 
 var deck = []
 
@@ -8,6 +8,9 @@ var deck = []
 @onready var game_controller: GameController = get_node("/root/Base/Controllers/GameController")
 @onready var turn_controller: TurnController = get_node("/root/Base/Controllers/TurnController")
 const Turn = TurnController.Turn
+
+@onready var sound_fx: SoundFX = get_node("/root/Base/Sound/SoundFX")
+const DRAW = preload("res://sounds/Cardsounds/cockatrice/draw.wav")
 
 var cards_to_drawn = 3
 
@@ -17,8 +20,8 @@ func _base_ready() -> void:
 	deck.shuffle()
 	
 	
-	for i in cards_to_drawn:
-		draw_card()
+	#for i in cards_to_drawn:
+	#	draw_card()
 
 func _on_changed_turn(_turn: GameController.Turn):
 	if is_my_turn() and count_cards_hand() < 6:
@@ -49,9 +52,16 @@ func draw_card():
 	
 	cards_to_drawn -= 1
 	
-	#card_manager.add_card_to_hand(card_drawn_name)
-	draw_card_after(card_drawn_name)
+	sound_fx.play_temp_sound(DRAW, self.position)
 	
+	#card_manager.add_card_to_hand(card_drawn_name)
+	return draw_card_after(card_drawn_name)
+	
+func draw_cards(quantity : int):
+	cards_to_drawn = quantity
+	for i in range(cards_to_drawn):
+		await Waiter.wait(0.3)
+		draw_card()
 
 func draw_card_after(_card_drawn_name):
 	pass

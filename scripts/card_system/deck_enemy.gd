@@ -1,4 +1,4 @@
-extends DeckBase
+extends Deck
 
 class_name DeckEnemy
 
@@ -23,7 +23,7 @@ func load_deck():
 		]
 
 func draw_card_after(card_drawn_name):
-	enemy_hand.add_card_to_hand(card_drawn_name)
+	return enemy_hand.add_card_to_hand(card_drawn_name)
 	
 func is_my_turn():
 	if turn_controller.turn == Turn.ENEMY:

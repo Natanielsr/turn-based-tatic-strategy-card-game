@@ -55,6 +55,9 @@ func _process(_delta: float) -> void:
 			)
 
 func start_drag(card: Card):
+	if game_controller.is_choose_card_state():
+		return
+		
 	card_being_dragged = card
 	card_being_dragged.is_dragging = true
 	#card_being_dragged.modulate.a = 0.25
@@ -92,6 +95,7 @@ func _handle_monster_card_drop():
 
 func _spawn_monster_from_card(card_slot_pos):
 	card_being_dragged.global_position = card_slot_pos
+	
 	remove_card(card_being_dragged)
 
 	var monster_id = troop_manager.generate_id(
@@ -109,8 +113,6 @@ func _spawn_monster_from_card(card_slot_pos):
 	player_statue.consume_energy(card_data.energy_cost)
 	
 func remove_card(card):
-	card.get_node("Area2D").get_node("CollisionShape2D").disabled = true
-	card.get_node("AnimationPlayer").play("disappear")
 	player_hand.remove_card_from_hand(card)
 
 func _return_card_to_hand_with_error():

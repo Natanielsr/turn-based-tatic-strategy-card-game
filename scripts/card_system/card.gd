@@ -18,6 +18,8 @@ var is_dragging = false
 
 var faction : Entity.EntityFaction
 
+var discarded = false
+
 func _ready() -> void:
 	#All cards must be a child of CardManager or this will error
 	if get_parent().has_method("connect_card_signals"):
@@ -29,9 +31,7 @@ func _on_area_2d_mouse_entered() -> void:
 func _on_area_2d_mouse_exited() -> void:
 	emit_signal("hovered_off", self)
 	
-func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-	if anim_name == "disappear":
-		queue_free()
+
 
 func set_card_data(card_data, _faction):
 	
@@ -62,3 +62,13 @@ func set_card_data(card_data, _faction):
 	
 func generate_id():
 	return str(card_id + "_"+Entity.EntityFaction.keys()[faction] +"_"+str(randi()))
+
+func remove_card():
+	discarded = true
+	$Area2D/CollisionShape2D.disabled = true
+	$AnimationPlayer.play("disappear")
+	$RemoveSprite.visible = false
+	
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "disappear":
+		queue_free()

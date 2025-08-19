@@ -106,9 +106,11 @@ func play_card(move):
 		)
 		
 	check_target_skill()
+	
+	var pos_to_animate = Vector2(-50, pos_to_spawn.y - 108)
 		
 	enemy_statue.consume_energy(card_data.energy_cost)
-	enemy_hand.remove_card_id_from_hand(card_data.card_id)
+	enemy_hand.remove_card_id_from_hand_and_animate(card_data.card_id, pos_to_animate)
 	
 func check_target_skill():
 	if game_controller.is_looking_for_target_state():

@@ -24,6 +24,7 @@ var current_point_path: PackedVector2Array
 var possible_path
 
 enum GameState{
+	CHOOSE_START_CARDS,
 	RUNNING,
 	GAME_OVER,
 	PLAYER_WIN,
@@ -37,6 +38,7 @@ var target_skill : TargetSkill
 func _ready() -> void:
 	player_statue.player_lost_the_game.connect(_game_over)
 	enemy_statue.enemy_die.connect(_win_game)
+	current_game_state = GameState.CHOOSE_START_CARDS
 	
 func change_game_state(game_state : GameState):
 	current_game_state = game_state
@@ -47,6 +49,12 @@ func change_to_target_waiting(_target_skill: TargetSkill):
 	
 func is_looking_for_target_state():
 	if current_game_state == GameState.LOOKING_FOR_TARGET:
+		return true
+	else:
+		return false
+		
+func is_choose_card_state():
+	if current_game_state == GameState.CHOOSE_START_CARDS:
 		return true
 	else:
 		return false

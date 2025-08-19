@@ -12,7 +12,7 @@ func _ready() -> void:
 	turn_controller.player_start_turn.connect(on_player_turn_starts)
 	
 func on_player_turn_starts():
-	cards_to_trade += 1
+	cards_to_trade = 1
 	$AnimationPlayer.play("enable")
 
 func on_finish_drag(_card : Card):

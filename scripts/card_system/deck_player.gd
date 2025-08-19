@@ -1,4 +1,4 @@
-extends DeckBase
+extends Deck
 
 class_name DeckPlayer
 
@@ -40,7 +40,7 @@ func draw_card_after(card_drawn_name):
 	$"../PlayerHand".add_card_to_hand(new_card)
 	new_card.get_node("AnimationPlayer").play("card_flip")
 	
-	$AudioStreamPlayer2D.play()
+	return new_card
 
 func create_card(card_name):
 	var new_card : Card = card_scene.instantiate()

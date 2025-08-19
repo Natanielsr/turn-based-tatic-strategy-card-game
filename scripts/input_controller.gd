@@ -6,6 +6,7 @@ signal left_mouse_button_released
 signal clicked_on_entity(entity : Entity)
 
 @onready var game_controller: GameController = $"../GameController"
+@onready var choose_cards: ChooseCards = $"../../CardSystem/ChooseCards"
 @onready var turn_controller: TurnController = $"../TurnController"
 const Turn = TurnController.Turn
 
@@ -68,7 +69,12 @@ func click_on_entity(entity : Entity):
 	
 	emit_signal("clicked_on_entity", entity)
 
-func click_on_card(obj):
+func click_on_card(obj : Area2D):
+	
+	if game_controller.is_choose_card_state():
+		choose_cards.mark_a_card(obj.get_parent())
+		return
+		
 	game_controller.deselect_troop()
 	var card_found = obj.get_parent()
 	if card_found:

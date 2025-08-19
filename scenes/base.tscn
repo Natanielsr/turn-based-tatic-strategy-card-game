@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=4 uid="uid://bxv4lsegobjck"]
+[gd_scene load_steps=51 format=4 uid="uid://bxv4lsegobjck"]
 
 [ext_resource type="TileSet" uid="uid://cljo5ftlcsyel" path="res://tileset/grid_tile_set.tres" id="2_40w10"]
 [ext_resource type="TileSet" uid="uid://drv2otavstb7h" path="res://tileset/base_tile.tres" id="2_baglu"]
@@ -36,15 +36,16 @@
 [ext_resource type="Script" uid="uid://3ap13enu1da8" path="res://scripts/card_system/enemy_hand.gd" id="26_lefm6"]
 [ext_resource type="Script" uid="uid://c6r08ftecn3fy" path="res://scripts/AI/ai_finder.gd" id="27_03t26"]
 [ext_resource type="Script" uid="uid://bekwtacsbhwq5" path="res://scripts/description.gd" id="27_qty1u"]
-[ext_resource type="AudioStream" uid="uid://cqfnu7gfwv886" path="res://sounds/Cardsounds/cockatrice/draw.wav" id="30_7wyq8"]
 [ext_resource type="Script" uid="uid://b7jm31u8uqk1e" path="res://scripts/AI/lookahead.gd" id="31_82vju"]
 [ext_resource type="Script" uid="uid://da88kivjg7suk" path="res://scripts/card_system/portal_player.gd" id="32_npva4"]
+[ext_resource type="Script" uid="uid://brnsupm21sivj" path="res://scripts/card_system/choose_cards.gd" id="34_pma8h"]
 [ext_resource type="AudioStream" uid="uid://d4ihh105mqd5i" path="res://sounds/CHIPTUNE_Loop_Minstrel_Dance.ogg" id="37_b73mi"]
 [ext_resource type="Script" uid="uid://bts5hpsqssvxv" path="res://scripts/sound/game_over_sound_fx.gd" id="37_qty1u"]
 [ext_resource type="AudioStream" uid="uid://bceyqxqkskdqe" path="res://sounds/winneris.ogg" id="39_sa2y1"]
 [ext_resource type="AudioStream" uid="uid://brdpab1gdd3fr" path="res://sounds/ThisGameIsOver.wav" id="40_wklje"]
 [ext_resource type="Script" uid="uid://7m452c5wn7qj" path="res://scripts/card_system/portal_enemy.gd" id="41_q5qra"]
 [ext_resource type="Script" uid="uid://dsyhovr0x0oor" path="res://scripts/sound/sound_fx.gd" id="41_wklje"]
+[ext_resource type="Script" uid="uid://ddcnedkrqey6i" path="res://scripts/card_system/choose_start_cards_enemy.gd" id="42_pma8h"]
 [ext_resource type="PackedScene" uid="uid://cn7i6x7yjh08f" path="res://prefabs/portal.tscn" id="43_wt3to"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_q5qra"]
@@ -357,12 +358,20 @@ z_index = 0
 position = Vector2(264, 208)
 scale = Vector2(0.75, 0.75)
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="CardSystem/DeckPlayer"]
-stream = ExtResource("30_7wyq8")
-
 [node name="Portal" parent="CardSystem" instance=ExtResource("43_wt3to")]
 position = Vector2(-266, 198)
 script = ExtResource("32_npva4")
+
+[node name="ChooseCards" type="Node2D" parent="CardSystem"]
+script = ExtResource("34_pma8h")
+
+[node name="ChooseBtn" type="Button" parent="CardSystem/ChooseCards"]
+visible = false
+offset_left = -32.0
+offset_top = 175.0
+offset_right = 33.0
+offset_bottom = 206.0
+text = "Choose"
 
 [node name="EnemyAI" type="Node2D" parent="."]
 script = ExtResource("22_33mrd")
@@ -417,6 +426,9 @@ script = ExtResource("31_82vju")
 [node name="Portal" type="Node2D" parent="EnemyAI"]
 script = ExtResource("41_q5qra")
 
+[node name="Choose" type="Node2D" parent="EnemyAI"]
+script = ExtResource("42_pma8h")
+
 [node name="Sound" type="Node2D" parent="."]
 script = ExtResource("37_qty1u")
 metadata/_edit_lock_ = true
@@ -445,3 +457,4 @@ metadata/_edit_lock_ = true
 [connection signal="pressed" from="UI/EnemyFinishTurnBtn" to="UI" method="_on_enemy_finish_turn_pressed"]
 [connection signal="pressed" from="UI/GameOverPanel/Restart" to="UI/GameOverPanel" method="_on_restart_pressed"]
 [connection signal="pressed" from="UI/WinPanel/Restart" to="UI/WinPanel" method="_on_restart_pressed"]
+[connection signal="pressed" from="CardSystem/ChooseCards/ChooseBtn" to="CardSystem/ChooseCards" method="_on_choose_btn_pressed"]
