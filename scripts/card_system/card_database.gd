@@ -66,7 +66,7 @@ const CARDS = {
 		"type": "monster",
 		"name": "Orc",
 		"energy_cost": 4,
-		"attack": 3,
+		"attack": 1,
 		"health": 4,
 		"description": "Berserk: Increases attack when you are injured",
 		"ability": "berserk"
@@ -90,6 +90,16 @@ const CARDS = {
 		"health": 5,
 		"description": "When invoked, launch an electrical beam at a target",
 		"ability": "lightning"
+  	},
+	"giant_snail": {
+		"card_id": "giant_snail",
+		"type": "monster",
+		"name": "Giant Snail",
+		"energy_cost": 8,
+		"attack": 8,
+		"health": 8,
+		"description": "strong and slow: has strong attributes but only moves 1 space per turn",
+		"ability": "slow"
   	},
 	"dragon": {
 		"card_id": "dragon",
