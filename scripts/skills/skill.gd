@@ -40,7 +40,7 @@ func _ready() -> void:
 	sound_fx = get_node("/root/Base/Sound/SoundFX")
 	
 func activate(_target : Entity):
-	pass
+	push_error("Implements activate skill")
 	
 func spawn_particle_target(_target : Entity):
 	self.target = _target
