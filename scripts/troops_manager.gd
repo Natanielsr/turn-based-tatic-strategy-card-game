@@ -151,9 +151,6 @@ func create_monster(card_data, faction, monster_id) -> MobileTroop:
 	
 	return monster
 	
-func generate_id(card_id, faction):
-	return str(card_id + "_"+Entity.EntityFaction.keys()[faction] +"_"+str(randi()))
-	
 func find_troop_by_name(troop_name):
 	for troop in enemy_troops:
 		if troop.name == troop_name:
