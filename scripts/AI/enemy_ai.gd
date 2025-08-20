@@ -96,21 +96,17 @@ func play_card(move):
 	var card = move["card"]
 	var card_data = game_controller.card_database.CARDS[card.card_id]
 	var pos_to_spawn = grid_controller.get_tile_to_world_pos(move["tile"]) 
+	
 	if not troop_manager.is_connected("monster_spawned", Callable(self, "_on_monster_spawned")):
 		troop_manager.monster_spawned.connect(_on_monster_spawned)
-	troop_manager.spawn_monster(
-		card_data,
-		pos_to_spawn,
-		Entity.EntityFaction.ENEMY,
-		move["monster_id"]
-		)
+		
+	card_manager.spawn_monster(card, pos_to_spawn, Entity.EntityFaction.ENEMY)
 		
 	check_target_skill()
 	
-	var pos_to_animate = Vector2(-50, pos_to_spawn.y - 108)
+	var pos_to_animate_card = Vector2(-50, pos_to_spawn.y - 108)
 		
-	enemy_statue.consume_energy(card_data.energy_cost)
-	enemy_hand.remove_card_id_from_hand_and_animate(card_data.card_id, pos_to_animate)
+	enemy_hand.animate_card_to_position_with_time(card, pos_to_animate_card, 0.3)
 	
 func check_target_skill():
 	if game_controller.is_looking_for_target_state():
