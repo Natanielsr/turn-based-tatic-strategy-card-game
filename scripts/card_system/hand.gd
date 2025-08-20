@@ -44,6 +44,10 @@ func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, 0.2)
 	
+func animate_card_to_position_with_time(card, new_position, time):
+	var tween = get_tree().create_tween()
+	tween.tween_property(card, "position", new_position, time)
+	
 func remove_card_from_hand(card: Card):
 	if card in hand:
 		hand.erase(card)
