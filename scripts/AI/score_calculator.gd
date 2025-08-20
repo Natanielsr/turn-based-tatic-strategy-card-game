@@ -12,9 +12,9 @@ var weights = {
 	"area_control": 40,
 	"statue_damage": 50,
 	"victory": 10000,
-	"hunt_weak": 10,
-	"approach_invader": 40,
-	"attack_invader": 50,
+	"hunt_weak": 20,
+	"approach_invader": 50,
+	"attack_invader": 60,
 	"defense_approach": 40,
 	"defense_kill": 50
 }
