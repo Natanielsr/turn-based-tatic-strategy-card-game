@@ -6,7 +6,6 @@ class_name PortalPlayer
 @onready var deck_player: DeckPlayer = $"../DeckPlayer"
 @onready var turn_controller: TurnController = $"../../Controllers/TurnController"
 
-
 func _ready() -> void:
 	card_manager.finished_drag_card.connect(on_finish_drag)
 	turn_controller.player_start_turn.connect(on_player_turn_starts)
@@ -23,8 +22,6 @@ func on_finish_drag(_card : Card):
 	
 	if shape is RectangleShape2D and shape.get_rect().has_point(local_mouse_pos):
 		trade_card(_card)
-	else:
-		print("Card not dropped in portal")
 		
 func execute_trade(_card):
 	_card.global_position = global_position
