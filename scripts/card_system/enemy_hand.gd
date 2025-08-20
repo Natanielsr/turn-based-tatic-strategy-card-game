@@ -20,27 +20,6 @@ func get_y_pos():
 		
 func get_card_width():
 	return CARD_WIDTH
-
-func add_card_to_hand(card_id) -> Card:
-	var card : Card = preload(CARD_SCENE_PATH).instantiate()
-	var card_data = game_controller.card_database.CARDS[card_id]
-	card.get_node("Area2D").get_node("CollisionShape2D").disabled = true
-	card.get_node("CardBackImage").visible = false
-	card.get_node("Name").visible = false
-	card.get_node("Energy").visible = false
-	card.get_node("Attack").visible = false
-	card.get_node("Health").visible = false
-	card.get_node("CardBackImageEnemy").visible = true
-	card.scale = Vector2(0.3, 0.3)
-	card.set_card_data(card_data, Entity.EntityFaction.ENEMY)
-	hand.append(card)
-	add_child(card)
-	card.global_position = Vector2(global_position.x + 50, global_position.y)
-	
-	update_hand_position()
-	animate_card_to_position(card, card.start_position)
-	
-	return card
 		
 func calculate_card_position(index):
 	var total_width = (hand.size() -1) * CARD_WIDTH
