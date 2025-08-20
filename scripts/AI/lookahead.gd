@@ -60,12 +60,13 @@ func get_all_possible_moves() -> Array:
 					"type": "play_card",
 					"card": card,
 					"tile": tile,
-					"monster_id": troop_manager.generate_id(card.card_id, Entity.EntityFaction.ENEMY)
+					"monster_id": Uid.generate_id(card.card_id, Entity.EntityFaction.ENEMY)
 				})
 	
 	# Move troops
 	for troop in troop_manager.enemy_troops:
-		if troop.get_current_walk_points() == 5 and troop.is_alive():
+		var targets = get_attackable_targets(troop)
+		if targets.size() == 0 and troop.is_alive():
 			for tile in get_valid_move_tiles(troop):
 				moves.append({
 					"type": "move_troop",
@@ -216,7 +217,7 @@ func create_mobile_obj(troop: MobileTroop) -> Dictionary:
 		"pos": pos,
 		"hp": troop.current_life_points,
 		"attack_points": troop.attack_points,
-		"monster_id": troop_manager.generate_id(troop.card_id, Entity.EntityFaction.ENEMY)
+		"monster_id": Uid.generate_id(troop.card_id, Entity.EntityFaction.ENEMY)
 	}
 
 func evaluate_move(game_state: Dictionary, move: Dictionary) -> int:
