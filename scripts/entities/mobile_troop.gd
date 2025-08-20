@@ -237,6 +237,10 @@ func invigorate():
 	$AttackParticles.emitting = true
 	is_exausted = false
 	
+func set_total_walk_points(walk_points):
+	walk_distance = walk_points
+	_current_walk_points = walk_points
+	
 func set_exausted():
 	_current_attack_count = 0
 	_current_walk_points = 0
