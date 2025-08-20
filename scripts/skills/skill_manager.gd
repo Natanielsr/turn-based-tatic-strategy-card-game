@@ -13,6 +13,7 @@ const SKILL_PATHS = [
 	"res://scripts/skills/berserk_skill.gd",
 	"res://scripts/skills/attack_in_area_skill.gd",
 	"res://scripts/skills/lightning_skill.gd",
+	"res://scripts/skills/slow_skill.gd",
 ]
 
 func _init(_skill_owner : Entity) -> void:
