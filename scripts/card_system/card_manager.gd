@@ -89,28 +89,27 @@ func finish_drag():
 func _handle_monster_card_drop():
 	var card_slot_pos = check_for_card_slot()
 	if can_spawn_card(card_slot_pos):
-		_spawn_monster_from_card(card_slot_pos)
+		spawn_monster(card_being_dragged, card_slot_pos, Entity.EntityFaction.ALLY)
 	elif player_hand.is_card_in_hand(card_being_dragged):
 		_return_card_to_hand_with_error()
-
-func _spawn_monster_from_card(card_slot_pos):
-	card_being_dragged.global_position = card_slot_pos
 	
-	remove_card(card_being_dragged)
-
-	var monster_id = troop_manager.generate_id(
-		card_being_dragged.card_id, MobileTroop.EntityFaction.ALLY)
-
-	var card_data = game_controller.card_database.CARDS[card_being_dragged.card_id]
+func spawn_monster(card : Card, pos_to_spawn : Vector2, faction : Entity.EntityFaction):
+	var card_data = game_controller.card_database.CARDS[card.card_id]
 
 	troop_manager.spawn_monster(
 		card_data,
-		card_slot_pos,
-		MobileTroop.EntityFaction.ALLY,
-		monster_id
+		pos_to_spawn,
+		faction,
+		Uid.generate_id(card.card_id, faction)
 	)
-
-	player_statue.consume_energy(card_data.energy_cost)
+	
+	if faction == Entity.EntityFaction.ALLY:
+		card.global_position = pos_to_spawn
+		player_statue.consume_energy(card.energy_cost)
+		player_hand.remove_card_from_hand(card)
+	elif faction == Entity.EntityFaction.ENEMY:
+		enemy_statue.consume_energy(card.energy_cost)
+		enemy_hand.remove_card_from_hand(card)
 	
 func remove_card(card):
 	player_hand.remove_card_from_hand(card)
