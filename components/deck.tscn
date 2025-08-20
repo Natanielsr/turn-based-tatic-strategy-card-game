@@ -21,6 +21,7 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_3jbsy")
+disabled = true
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 visible = false
