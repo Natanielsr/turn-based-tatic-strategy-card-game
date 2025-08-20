@@ -41,14 +41,6 @@ func add_card_to_hand(card_id) -> Card:
 	animate_card_to_position(card, card.start_position)
 	
 	return card
-
-func remove_card_id_from_hand_and_animate(card_id, pos):
-	
-	for card in hand:
-		if card.card_id == card_id:
-			animate_card_to_position(card, pos)
-			remove_card_from_hand(card)
-			break
 		
 func calculate_card_position(index):
 	var total_width = (hand.size() -1) * CARD_WIDTH
