@@ -7,7 +7,7 @@ var hand: Hand
 
 @onready var sound_fx: SoundFX = get_node("/root/Base/Sound/SoundFX")
 const CUCKOO = preload("res://sounds/Cardsounds/cockatrice/cuckoo.wav")
-
+const TAP = preload("res://sounds/Cardsounds/cockatrice/tap.wav")
 var cards = []
 var selected_cards = []
 
@@ -31,6 +31,8 @@ func mark_a_card(card : Card):
 	else:
 		card.get_node("RemoveSprite").visible = false
 		selected_cards.erase(card)
+		
+	sound_fx.play_temp_sound(TAP, self.position)
 
 func confirm_choose() -> void:
 	
