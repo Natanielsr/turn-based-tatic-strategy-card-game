@@ -18,10 +18,6 @@ func _base_ready() -> void:
 	turn_controller.connect("changed_turn", Callable(self, "_on_changed_turn"))
 	load_deck()
 	deck.shuffle()
-	
-	
-	#for i in cards_to_drawn:
-	#	draw_card()
 
 func _on_changed_turn(_turn: GameController.Turn):
 	if is_my_turn() and count_cards_hand() < 6:
